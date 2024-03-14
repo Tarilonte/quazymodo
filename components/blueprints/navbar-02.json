@@ -1,0 +1,15 @@
+{
+  "template" : "navbar-01",
+  "data" : [
+    {
+      "data-slot": "navbar-start",
+      "data-type": "template",
+      "data-source": "logo-01"
+    },
+    {
+      "data-slot": "navbar-end",
+      "data-type": "component",
+      "data-source": "btn-themeSelector-01"
+    }
+  ]
+}

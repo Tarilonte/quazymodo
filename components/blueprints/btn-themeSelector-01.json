@@ -1,0 +1,12 @@
+{
+  "template" : "btn-themeSelector-01",
+  "js" : "btn-themeSelector-01.js",
+  "data": [
+    {
+      "data-slot": "",
+      "data-type": "",
+      "data-source": ""
+    }
+  ]
+
+}

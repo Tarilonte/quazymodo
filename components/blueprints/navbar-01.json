@@ -1,0 +1,30 @@
+{
+  "template" : "navbar-01",
+  "data" : [
+    {
+      "data-slot": "navbar-start",
+      "data-type": "template",
+      "data-source": "logo-01"
+    },
+    {
+      "data-slot": "navbar-end",
+      "data-type": "component",
+      "data-source": "btn-themeSelector-01"
+    },
+    {
+      "data-slot": "navbar-end",
+      "data-type": "template",
+      "data-source": "btn-navbarInbox"
+    },
+    {
+      "data-slot": "navbar-end",
+      "data-type": "template",
+      "data-source": "btn-navbarLogin"
+    },
+    {
+      "data-slot": "navbar-end",
+      "data-type": "component",
+      "data-source": "dropdown-userMenu"
+    }
+  ]
+}

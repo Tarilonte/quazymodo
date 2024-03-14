@@ -1,0 +1,48 @@
+
+<div class="min-h-dvh flex grow justify-center items-center">
+  <form 
+    id="register-form"
+    class="grid columns-1 bg-base-100 gap-7 p-6 md:p-8 rounded-lg md:shadow-base-300 md:shadow-2xl md:max-w-[420px]" 
+    action="/User/processRegisterForm"
+    method="POST">
+
+    <input type="hidden" name="csrf-token" value="{{ csrf-token }}">
+    {{ site-logo }}
+    <h1 class="text-3xl font-rubik font-semibold">Crie sua conta no mundofii.com</h1>
+
+    {{ login-terceiros }}
+
+    <div class="divider m-0">Ou</div>
+
+    <span class="flex items-center gap-2 w-full border-0 border-b border-neutral-content focus-within:border-tomato">
+      <span class="mdi mdi-account-outline text-2xl"></span>
+      <input required name="nome" type="text" placeholder="Seu nome" maxlength="15" class="input outline-none grow text-tomato caret-tomato" />
+    </span>
+
+    <span class="flex items-center gap-2 w-full border-b border-neutral-content focus-within:border-tomato">
+      <span class="mdi mdi-at text-2xl"></span>
+      <input required name="email" type="email" placeholder="Seu e-mail" maxlength="50" class="input outline-none grow text-tomato caret-tomato" />
+    </span>
+
+    <span class="flex items-center gap-2 w-full border-b border-neutral-content focus-within:border-tomato relative">
+      <span class="mdi mdi-lock-outline text-2xl"></span>      
+      <label class="pw-viewer swap text-2xl absolute right-2 cursor-pointer rounded-lg w-8 text-center">
+        <span class="mdi mdi-eye-closed swap-on"></span>
+        <span class="mdi mdi-eye-outline swap-off"></span>
+      </label>
+      <input required name="password" type="password" placeholder="Crie uma senha" minlength="6" maxlength="20" class="pw-input input outline-none grow text-tomato caret-tomato pr-11" />
+    </span>
+
+    <label class="flex items-center gap-2 w-full text-sm cursor-pointer">
+      <input required name="agreedTerms" type="checkbox" class="checkbox checkbox-sm ml-0.5 border-base-content" />
+      <span>Declaro que li e concordo com os <a class="underline inline" href="/About/termos-de-uso">Termos de uso</a></span>
+    </label>
+
+    <button id="submit-btn" class="btn btn-loading btn-lg btn-accent">Criar conta</button>
+
+    <span class="flex justify-center">
+      Já tem uma conta?
+      <a href="/User/login" class="ml-1 underline text-primary-content">Fazer login</a>
+    </span>
+  </form>
+</div>

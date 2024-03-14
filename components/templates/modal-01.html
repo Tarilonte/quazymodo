@@ -1,0 +1,17 @@
+<dialog id="modal" class="modal modal-bottom md:modal-middle">
+  <div id="modal-box" class="modal-box p-8 min-w-fit max-w-5xl shadow-2xl {{ modal-class }}">
+    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 modal-close">
+      <span class="mdi mdi-close-thick text-2xl"></span>
+    </button>
+      <h3 class="modal-header font-bold text-lg flex items-center">
+        {{ modal-header }}
+      </h3>
+    <p class="modal-message pt-4">
+      {{ modal-message }}
+    </p>
+  </div>
+  <div class="modal-backdrop backdrop-blur-xs"></div>
+  <div class="modal-lock fixed h-full w-full top-0 left-0 z-10 bg-transparent hidden">
+    <span class="mdi mdi-lock-outline absolute top-4 right-4 text-accent"></span>
+  </div>
+</dialog>

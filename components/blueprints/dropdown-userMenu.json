@@ -1,0 +1,23 @@
+{
+  "template" : "dropdown-userMenu",
+  "css" : "",
+  "js" : "dropdown-userMenu.js",
+  "data" : [
+    {
+      "data-slot": "user-picture",
+      "data-type": "session-var",
+      "data-source": "user-picture"
+    },
+    {
+      "data-slot": "user-name",
+      "data-type": "session-var",
+      "data-source": "user-name"
+    },
+    {
+      "data-slot": "user-email",
+      "data-type": "session-var",
+      "data-source": "user-email"
+    }
+    
+  ]
+}

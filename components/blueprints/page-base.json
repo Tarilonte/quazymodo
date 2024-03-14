@@ -1,0 +1,21 @@
+{
+  "type" : "page",
+  "template" : "page-base",
+  "css" : [
+    "https://unpkg.com/tippy.js@6.3.7/dist/svg-arrow.css",
+    "base.css"
+    ],
+  "js" : [
+    "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js",
+    "https://unpkg.com/@popperjs/core@2",
+    "https://unpkg.com/tippy.js@6",
+    "base.js"
+    ],
+  "data" : [
+    {
+      "data-slot": "css-theme",
+      "data-type": "cookie",
+      "data-source": "css-theme"
+    }
+    ]
+}

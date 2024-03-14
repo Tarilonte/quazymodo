@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmação de Cadastro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cutive&family=Sacramento&family=Roboto&display=swap" rel="stylesheet">
+  <style>  
+    body {
+      padding: 0;
+      line-height: 1.7;
+      color: rgb(9 9 11);
+    }
+    .wrapper {
+      font-family: 'Roboto';
+      margin: auto;
+      border-radius: 12px;
+      padding: 40px;
+      background-color: rgb(255, 246, 234);
+      max-width: 70ch;
+    }
+    .header {
+      font-family: 'Cutive', serif;
+      margin-bottom: 24px;
+      color: tomato;
+    }
+    .logo{
+      font-size: 24px;
+    }
+    a {
+      display: block;
+      margin: 2rem 0 0 0;
+      color: tomato;
+      text-decoration: none;
+      padding: 8px 16px;
+      background-color: white;
+      width: fit-content;
+      border-radius: 8px;
+      border-width: 0 2px 2px 0;
+      border-color: rgb(229, 214, 191);
+      border-style: solid;
+      transition-duration: 500ms;
+    }
+    a:hover{
+      background-color: tomato;
+      color: white;
+    }
+    .assinatura{
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: rgb(63 63 70);
+      line-height: 1.2;
+    }
+    .sacramento{
+      display: inline-block;
+      font-family: 'Sacramento';
+      font-size: 2.2rem;
+      rotate: -1.8deg;
+      color: darkblue;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <span class="header logo">mundofii</span>
+    <br><span class="header">Confirmação de cadastro</span>
+    <p>
+      Olá <span class="nome">{{ user-name }}</span>!
+      <br>Obrigado por se cadastrar no mundofii.com! Estamos felizes em tê-lo conosco.
+      <br>Para completar o seu cadastro e ativar sua conta, por favor, clique no link abaixo:
+      <br><a href="{{ register-confirm }}" target="_blank">Confirmar meu cadastro</a>
+      <br>Se você não criou uma conta conosco, por favor, desconsidere este e-mail.
+    </p>
+    <p class="assinatura">
+      Atenciosamente,
+      <br>
+      <span class="sacramento">Augusto</span>
+    </p>
+    
+  </div>
+</body>
+</html>

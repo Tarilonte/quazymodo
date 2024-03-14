@@ -1,0 +1,19 @@
+{
+  "type" : "component",
+  "template" : "carousel-Homepage",
+  "css" : [
+    "https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css",
+    "carousel-Homepage.css"
+  ],
+  "js" : [
+    "https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/glide.min.js",
+    "carousel-Homepage.js"
+  ],
+  "data" : [    
+    {
+      "data-slot": "",
+      "data-type": "",
+      "data-source": ""
+    }  
+    ]
+}

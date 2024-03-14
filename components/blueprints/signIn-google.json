@@ -1,0 +1,19 @@
+{
+  "template" : "signIn-google",
+  "css" : "",
+  "js" : [
+    "https://accounts.google.com/gsi/client [async defer]"
+  ],
+  "data" : [
+    {
+      "data-slot": "GOOGLE_OAUTH_CLIENT_ID",
+      "data-type": "env-var",
+      "data-source": "GOOGLE_OAUTH_CLIENT_ID"
+    },
+    {
+      "data-slot": "site-url",
+      "data-type": "env-var",
+      "data-source": "BASE_URL"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+/*
+|------------------------------------------------------------
+| 'tw_input.css' é o input do tailwindcss
+|------------------------------------------------------------
+|
+| O tailwind utiliza 'tw_input.css' arquivo como entrada e grava o css final no
+| arquivo 'base.css' que é utilizado pelo projeto.
+| (https://tailwindcss.com/docs/installation)
+|
+*/
+
+/* Material Design Icons */
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css');
+
+/* tabler icons */
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css');
+
+/* Google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cutive&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+
+/* Diretivas do Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-normal;
+  }
+  .btn-icon{
+    @apply relative flex cursor-pointer place-content-center place-items-center rounded-full py-1 px-2 hover:bg-primary/70 duration-500;
+  }
+  .bg-secondary > * {
+    @apply text-secondary-content;
+  }
+}
+
+.btn-secondary-content {
+  @apply bg-secondary-content text-secondary;
+}
+
+.btn-primary-content {
+  @apply bg-primary-content text-primary;
+}
+
+.tippy-box[data-theme~='primary']{
+  @apply p-0.5 bg-primary text-primary-content;
+}
+.tippy-box[data-theme~='primary']> .tippy-svg-arrow {
+  @apply fill-primary;
+}
+
+.tippy-box[data-theme~='primary-content'] {
+  @apply bg-primary-content text-primary;
+}
+
+.tippy-box[data-theme~='primary-content']> .tippy-svg-arrow {
+  @apply fill-primary-content;
+}

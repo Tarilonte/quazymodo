@@ -1,0 +1,11 @@
+{
+  "template" : "btn-loading",
+  "js" : "btn-loading.js",
+  "data": [
+    {
+      "data-slot": "",
+      "data-type": "",
+      "data-source": ""
+    }
+  ]
+}

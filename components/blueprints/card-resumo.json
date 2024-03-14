@@ -1,0 +1,13 @@
+{
+  "type" : "component",
+  "template" : "card-resumo",
+  "css" : ["card-resumo.css","scrollbar-custom.css"],
+  "js" : ["card-resumo.js"],
+  "data" : [    
+    {
+      "data-slot": "",
+      "data-type": "",
+      "data-source": ""
+    }  
+    ]
+}

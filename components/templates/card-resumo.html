@@ -1,0 +1,29 @@
+<div class="card-resumo flex flex-col glide__slide bg-{{ card-css }} p-8 pb-4 rounded-3xl shadow-2xl">
+  <h2 class="text-xl font-extrabold text-{{ card-css }}-content">{{ sigla4 }}</h2>
+  <h1 class="md:text-lg font-cutive py-4 text-{{ card-css }}-content">
+    {{ titulo }}
+  </h1>
+  <p class="resumo-texto grow scrollbar-custom text-sm text-{{ card-css }}-content leading-relaxed pr-4 overflow-y-scroll">
+    {{ resumo }}
+  </p>
+  <span class="divider hidden"></span>  
+  <div class="flex flex-wrap items-center gap-4 mt-8">
+    <span class="text-sm font-bold text-base-content text-nowrap text-{{ card-css }}-content">
+      {{ doc_data_entrega }}
+    </span>
+    <span class="badge border-0 bg-base-100/50 p-4 text-sm text-base-content text-nowrap">
+      {{ doc_categoria }}
+    </span>
+    <a 
+    tooltip-primary-content="Abrir o documento original"
+    href="https://fnet.bmfbovespa.com.br/fnet/publico/exibirDocumento?id={{ doc_id }}" class="badge border-0 bg-base-100/50 p-4 aspect-square text-sm text-base-content"
+    >
+      <span class="mdi mdi-open-in-new"></span>
+    </a>
+  </div>
+  <span class="mt-4 text-xl space-x-4">
+    <span class="mdi mdi-heart-outline"></span>
+    <span class="mdi mdi-comment-text-outline"></span>
+    <span class="mdi mdi-share-variant-outline"></span>
+  </span>
+</div>
