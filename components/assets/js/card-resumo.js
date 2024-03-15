@@ -1,1 +1,0 @@
-//$('.card-resumo').addClass('animate__animated animate__zoomIn');

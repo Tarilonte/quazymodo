@@ -34,14 +34,3 @@
 
 // Home
 $router->map( 'GET', '/', 'home');
-// About
-$router->map( 'GET', '/about/termos-de-uso', 'about/Termos-de-uso',  );
-// User
-$router->map( 'GET|POST', '/user/[:action]', 'User/UserController');
-// Api
-$router->map( '[GET|POST]', '/API/[:resource]/', 'APIController' );
-//SYS
-$router->map( 'GET', '/sys/[:action]?', 'SYS/SysController' );
-
-// TESTES
-$router->map( 'GET', '/mailing/[:template]', 'mailing' );

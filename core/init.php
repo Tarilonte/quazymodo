@@ -27,8 +27,5 @@ require '../core/routes.php';
 |--------------------------------------
 */
 require '../core/pangaFunctions.php';
-require '../core/database.php';
 require '../core/session.php';
 require '../core/pangaTemplater.php';
-require '../core/pangaMailer.php';
-
