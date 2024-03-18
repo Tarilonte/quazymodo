@@ -2,6 +2,7 @@
 
 namespace pangaTemplater;
 use function pangaFunctions\recursiveArraySearch;
+use function pangaFunctions\show;
 
 class Component
 {
@@ -53,6 +54,8 @@ class Component
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
+    is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
+    is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
     $this->fill_slots();
   }
 
@@ -88,6 +91,7 @@ class Component
     $insertion = ' component-name="'. $componentName . '" ';
     $pattern = '/(<\w+\s*)(.*?)(>)/im';
     $replacement = '${1}' . $insertion . '${2}${3}';
+    $this->componentName = $componentName;
     $this->html = preg_replace($pattern, $replacement, $this->html, 1);
   }
 

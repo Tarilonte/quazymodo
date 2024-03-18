@@ -1,3 +1,4 @@
+DirectoryIndex index.php
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . /public/index.php [L]
+RewriteRule . index.php [L]

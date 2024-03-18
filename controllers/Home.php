@@ -1,13 +1,19 @@
 <?php
 
+$cards = [];
+for ($i=1; $i <= 5; $i++) { 
+  $card = new pangaTemplater\Component("card",["slot" => $i]);
+  $cards[] = $card;
+}
+
+$div = new pangaTemplater\Component("div", ["slot" => $cards], "simpleTemplate");
+
 $page = new pangaTemplater\Component(
   "page-base",
   [
     "page-title" => "Less is More",
-    "body" => new pangaTemplater\Component(
-      componentName:"page/welcome",
-      componentType:"simpleTemplate"      
-    )
+    "body-class" => "flex flex-col gap-6 p-10",
+    "body" => [$div]
   ]
   );
 die($page->render()->html);

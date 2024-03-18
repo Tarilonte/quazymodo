@@ -1,0 +1,8 @@
+{
+  "template" : "card",
+  "css" : [],
+  "js" : [
+    "card.js"
+    ],
+  "data" : []
+}
