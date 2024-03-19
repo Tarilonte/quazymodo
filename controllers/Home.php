@@ -6,7 +6,7 @@ for ($i=1; $i <= 5; $i++) {
   $cards[] = $card;
 }
 
-$div = new pangaTemplater\Component("div", ["slot" => $cards], "simpleTemplate");
+$div = new pangaTemplater\Component("div", ["slot" => $cards], "htmlOnly");
 
 $page = new pangaTemplater\Component(
   "page-base",

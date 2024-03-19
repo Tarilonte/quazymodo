@@ -21,8 +21,8 @@ class Component
   {
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
-    if ($componentType === "simpleTemplate") {
-      $this->construct_simpleTemplate($componentName, $controllerData);
+    if ($componentType === "htmlOnly") {
+      $this->construct_htmlOnly($componentName, $controllerData);
     } else {
       $this->blueprint = new \pangaTemplater\Blueprint($componentName);
       if (null !== $this->blueprint->type) {
@@ -45,11 +45,11 @@ class Component
     return $this;
   }
 
-  private function construct_simpleTemplate($templateName, $controllerData = [])
+  private function construct_htmlOnly($templateName, $controllerData = [])
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
-    $this->insert_componentName($templateName . '_simpleTemplate');
+    $this->insert_componentName($templateName . '_htmlOnly');
     $this->data = new \pangaTemplater\Data([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
