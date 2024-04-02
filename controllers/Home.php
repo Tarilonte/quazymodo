@@ -1,19 +1,11 @@
 <?php
 
-$cards = [];
-for ($i=1; $i <= 5; $i++) { 
-  $card = new pangaTemplater\Component("card",["slot" => $i]);
-  $cards[] = $card;
-}
+$content = [
+  "page-title" => $_ENV["SITE_NAME"],
+  "body" => new pangaTemplater\Component("page/home",[],"htmlOnly"),
+  "logo" => new pangaTemplater\Component("quasi-logo", [],"htmlOnly"),
+  "quasi-logo-classes" => "w-32 fill-primary m-auto",
+];
 
-$div = new pangaTemplater\Component("div", ["slot" => $cards], "htmlOnly");
-
-$page = new pangaTemplater\Component(
-  "page-base",
-  [
-    "page-title" => "Less is More",
-    "body-class" => "flex flex-col gap-6 p-10",
-    "body" => [$div]
-  ]
-  );
+$page = new pangaTemplater\Component("page-base", $content);
 die($page->render()->html);

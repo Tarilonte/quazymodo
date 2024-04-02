@@ -13,7 +13,8 @@ function set_csrf(): void {
 	if (!isset($_SESSION["csrf-token"])){
 		$_SESSION["csrf-token"] = bin2hex(random_bytes(16));
 	}
-}// Função para validar o token CSRF
+}
+// Função para validar o token CSRF
 function is_csrf_valid(): bool {
 	if (!isset($_SESSION['csrf-token']) || !isset($_POST['csrf-token'])) {
 		return false;

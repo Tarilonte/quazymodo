@@ -108,8 +108,7 @@ class Component
     
     // Se o componente for do tipo 'page', decarrega os assets no html
     if ($this->componentType == 'page') {
-      $this->flush_css();
-      $this->flush_js();
+      $this->flush_assets();
     }
   }
 
@@ -126,7 +125,14 @@ class Component
     return $this;
   }
 
-  private function flush_css()
+  public function flush_assets() : Component
+  {
+    $this->flush_css();
+    $this->flush_js();
+    return $this;
+  }
+
+  public function flush_css()
   {
     $cssLinks = '';
     foreach ($this->css as $file) {
@@ -139,11 +145,14 @@ class Component
         }
         $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
     }
-
-    $this->html = preg_replace('/{{ ?CSS ?}}/i', $cssLinks, $this->html);
+    if (preg_match('/{{ ?CSS ?}}/i', $this->html)) {
+      $this->html = preg_replace('/{{ ?CSS ?}}/i', $cssLinks, $this->html);
+    } else {
+        $this->html .= $cssLinks;
+    }
   }
 
-  private function flush_js() {
+  public function flush_js() {
     $jsLinks = '';
     foreach ($this->js as $file) {
         // Verifica se o arquivo é um link externo (começa com 'http://' ou 'https://')
@@ -165,7 +174,11 @@ class Component
         $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
     }
     // Descarrega os scripts no html
-    $this->html = preg_replace('/{{ ?JS ?}}/i', $jsLinks, $this->html);
+    if (preg_match('/{{ ?JS ?}}/i', $this->html)) {
+        $this->html = preg_replace('/{{ ?JS ?}}/i', $jsLinks, $this->html);
+    } else {
+        $this->html .= PHP_EOL . $jsLinks;
+    }
   }
 
   private function get_jsAttributes(string $string): array {
@@ -289,12 +302,7 @@ class Data
   {
     switch ($data_piece['data-type']) {
       case 'template':
-        if (file_exists("../components/templates/".$data_piece['data-source'].".html")) {
-          $template = file_get_contents("../components/templates/".$data_piece['data-source'].".html");
-          $this->merged_data[$data_piece['data-slot']][] = $template;
-        }else{
-          //echo "Template: ". $data_piece['data-source']. " não encontrado";
-        }
+        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],[],"htmlOnly");
         break;
       case 'string':
         $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-source'];

@@ -1,10 +1,10 @@
 {
   "type" : "page",
   "template" : "page-base",
-  "css" : ["https://cdn.jsdelivr.net/npm/daisyui@4.7.3/dist/full.min.css"],
+  "css" : ["base.css"],
   "js" : [
-    "base.js",
-    "https://cdn.tailwindcss.com"
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
+    "base.js"
     ],
   "data" : [
     {

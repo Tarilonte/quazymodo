@@ -15,7 +15,7 @@ if (is_array($match)) {
 
     $controller = "../controllers/" . $match['target'] . ".php";
     if (!file_exists($controller)) {
-        die("Controller [$controller] not found.");
+        die("Controller [".$match['target']."] not found.");
     }
     require $controller;
 } else {
