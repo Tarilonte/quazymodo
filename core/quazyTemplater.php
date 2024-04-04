@@ -1,8 +1,7 @@
 <?php
 
-namespace pangaTemplater;
+namespace quazyTemplater;
 use function pangaFunctions\recursiveArraySearch;
-use function pangaFunctions\show;
 
 class Component
 {
@@ -24,14 +23,14 @@ class Component
     if ($componentType === "htmlOnly") {
       $this->construct_htmlOnly($componentName, $controllerData);
     } else {
-      $this->blueprint = new \pangaTemplater\Blueprint($componentName);
+      $this->blueprint = new \quazyTemplater\Blueprint($componentName);
       if (null !== $this->blueprint->type) {
         $this->componentType = $this->blueprint->type;
       }        
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->insert_componentName($componentName);
-      $this->data = new \pangaTemplater\Data($this->blueprint->data, $controllerData);
+      $this->data = new \quazyTemplater\Data($this->blueprint->data, $controllerData);
       foreach($this->data->final_data as $key => $value) {
         self::$allData[$key] = $value;
       }
@@ -50,7 +49,7 @@ class Component
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
     $this->insert_componentName($templateName . '_htmlOnly');
-    $this->data = new \pangaTemplater\Data([], $controllerData);
+    $this->data = new \quazyTemplater\Data([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
@@ -204,38 +203,20 @@ class Component
 class Blueprint
 {
   private array $array;
-  private string $raw;
 
   public function __construct($componentName)
   {
-    $this->raw = $this->load_rawBlueprint($componentName);
-    $this->array = $this->parse_blueprint($this->raw);
+    $this->array = $this->parse_blueprint($componentName);
+    $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
   }
 
-  private function load_rawBlueprint($componentName) : string
+  private function parse_blueprint($componentName) : array
   {
-    if (file_exists("../components/blueprints/$componentName.json")) {
-      $raw = file_get_contents("../components/blueprints/$componentName.json");
-      $raw = $this->insert_componentName($componentName, $raw);  // Insere no nome do componente no blueprint
-      return $raw;
+    if (file_exists("../components/blueprints/$componentName.php")) {
+      require "../components/blueprints/$componentName.php";
     }else{
       die("Blueprint [$componentName] não encontrado.");
     }
-    
-  }
-
-  // Essa função insere no nome do componente no blueprint
-  private function insert_componentName($componentName, $raw) : string
-  {
-    $insertion = "\n  \"COMPONENT-NAME\": \"$componentName\",";
-    $pattern = '/(\{)/';
-    $replacement = '${1}' . $insertion;
-    return preg_replace($pattern, $replacement, $raw, 1);
-  }
-
-  private function parse_blueprint($raw) : array
-  {
-    $blueprint = json_decode($raw, true);
     foreach ($blueprint as $item => $value) {
       // Caso a chave seja css ou js e o valor seja uma string, converte para array
       if (in_array($item, ['css', 'js']) && is_string($value)) {

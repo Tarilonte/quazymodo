@@ -1,7 +1,7 @@
 # Blueprint
 
 Um `blueprint` é um arquivo JSON que contém instruções para montar um componente.
-Ele é interpretado pela classe 'Component' do pangaTemplater.
+Ele é interpretado pela classe 'Component' do quazyTemplater.
 
 Um `blueprint` contém informações sobre o template a ser utilizado, os arquivos JavaScript e CSS associados, e os dados a serem utilizados.
 

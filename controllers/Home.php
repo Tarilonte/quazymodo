@@ -2,10 +2,9 @@
 
 $content = [
   "page-title" => $_ENV["SITE_NAME"],
-  "body" => new pangaTemplater\Component("page/home",[],"htmlOnly"),
-  "logo" => new pangaTemplater\Component("quasi-logo", [],"htmlOnly"),
-  "quasi-logo-classes" => "w-32 fill-primary m-auto",
+  "body" => new quazyTemplater\Component("page-home",[])
 ];
 
-$page = new pangaTemplater\Component("page-base", $content);
+$page = new quazyTemplater\Component("page-base", $content);
+
 die($page->render()->html);

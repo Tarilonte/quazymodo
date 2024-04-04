@@ -34,6 +34,3 @@
 
 // Home
 $router->map( 'GET', '/', 'home');
-
-// Home
-$router->map( 'GET', '/teste', 'teste');
