@@ -40,7 +40,7 @@ class Component
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
       if ($_ENV['CSP_ENABLED']) {
-        die($_ENV['CSP_ENABLED']);
+        //die($_ENV['CSP_ENABLED']);
         CSPManager::sendCSPHeader();
       }
     }
@@ -286,10 +286,14 @@ class Data
   {
     switch ($data_piece['data-type']) {
       case 'template':
-        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],[],"htmlOnly");
+        $content = [];
+        if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
+          $content = $data_piece['data-content'];
+        }
+        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content,"htmlOnly");
         break;
       case 'string':
-        $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-source'];
+        $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
         break;
       case 'env-var':
         $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_ENV, $data_piece['data-source']);
@@ -307,7 +311,16 @@ class Data
         break;
       case 'component':
         // TODO: Implementar verificação para impedir que um componente não seja incluído dentro dele mesmo
-        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source']);
+        $content = [];
+        if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
+          $content = $data_piece['data-content'];
+        }
+        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content);
+        break;
+      case 'array':
+        foreach ($data_piece['data-content'] as $array_item) {
+          $this->merge_blueprintData($array_item);
+        }
         break;
     }
   }
