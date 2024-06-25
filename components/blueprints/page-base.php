@@ -10,9 +10,9 @@ $blueprint = [
   ],
   'data' => [
     [
-      'data-slot' => '',
-      'data-type' => '',
-      'data-source' => ''
+      'data-slot' => 'css-theme',
+      'data-type' => 'cookie',
+      'data-source' => 'css-theme'
     ]
   ]
 ];

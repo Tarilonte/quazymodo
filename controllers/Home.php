@@ -2,7 +2,10 @@
 
 $content = [
   "page-title" => $_ENV["SITE_NAME"],
-  "body" => new quazyTemplater\Component("page-home",[])
+  "body" => [
+    new quazyTemplater\Component("navbar-01",[]),
+    new quazyTemplater\Component("page-home",[])
+    ]
 ];
 
 $page = new quazyTemplater\Component("page-base", $content);

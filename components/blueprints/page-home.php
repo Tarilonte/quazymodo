@@ -14,7 +14,7 @@ $blueprint = [
     [
       'data-slot' => 'quasi-logo-class',
       'data-type' => 'string',
-      'data-source' => 'w-32 fill-primary m-auto'
+      'data-content' => 'w-32 fill-primary m-auto'
     ]
   ]
 ];
