@@ -1,6 +1,6 @@
 <?php
 
-namespace pangaFunctions;
+namespace quazyFunctions;
 
 function show(mixed $stuff, string $nome = "Não informado")
 {

@@ -14,7 +14,7 @@ session_start();
 require '../vendor/autoload.php';
 
 // Inicia o phpDotenv
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/core/..");
 $dotenv->load();
 
 // Inicia o AltoRouter e inclui as rotas
@@ -26,6 +26,6 @@ require '../core/routes.php';
 | Carrega os arquivos do Core da aplicação
 |--------------------------------------
 */
-require '../core/pangaFunctions.php';
+require '../core/quazyFunctions.php';
 require '../core/session.php';
 require '../core/quazyTemplater.php';

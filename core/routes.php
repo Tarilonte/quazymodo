@@ -34,3 +34,6 @@
 
 // Home
 $router->map( 'GET', '/', 'home');
+
+// Testes
+$router->map( 'GET', '/modal', 'test/modal');

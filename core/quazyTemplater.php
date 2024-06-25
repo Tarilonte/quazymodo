@@ -1,7 +1,7 @@
 <?php
 
 namespace quazyTemplater;
-use function pangaFunctions\recursiveArraySearch;
+use function quazyFunctions\recursiveArraySearch;
 
 class Component
 {
@@ -39,7 +39,10 @@ class Component
       is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
-      CSPManager::sendCSPHeader();
+      if ($_ENV['CSP_ENABLED']) {
+        die($_ENV['CSP_ENABLED']);
+        CSPManager::sendCSPHeader();
+      }
     }
     return $this;
   }
@@ -166,7 +169,7 @@ class Component
         // Extrai os atributos do script - Exemplo: [defer]
         list($src, $attributes) = $this->get_jsAttributes($string);
         // Adiciona o script de fonte externa à lista de fontes de script autorizados pela CSP
-        if ($externo) {
+        if ($externo && $_ENV['CSP_ENABLED']) {
           CSPManager::addSource('script-src', $src);
         }
         // Adiciona o script à variável $jsLinks
