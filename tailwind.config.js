@@ -1,8 +1,6 @@
 module.exports = {
   content: [
-    "./templates/**/*",
-    "./components/**/*",
-    "./controllers/**/*",
+    "./app/**/*",
     "./data/**/*",
     "./core/**/*",
   ],

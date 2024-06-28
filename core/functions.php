@@ -1,6 +1,6 @@
 <?php
 
-namespace quazyFunctions;
+namespace quazymodo\functions;
 
 function show(mixed $stuff, string $nome = "Não informado")
 {
@@ -84,6 +84,5 @@ function dateFormat($dateInput, $pattern) {
 	$date = new \DateTime($dateInput);
 	return $formatter->format($date);
 }
-
 
 $getDigits = fn($string) => preg_replace('/\D/', '', $string);

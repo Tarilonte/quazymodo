@@ -13,11 +13,11 @@ if (is_array($match)) {
     $_GET = $antiXSS->xss_clean($_GET);
     $_POST = $antiXSS->xss_clean($_POST);
 
-    $controller = "../controllers/" . $match['target'] . ".php";
+    $controller = "../app/controllers/" . $match['target'] . ".php";
     if (!file_exists($controller)) {
         die("Controller [".$match['target']."] not found.");
     }
     require $controller;
 } else {
-    require "../controllers/_404.php";
+    require "../app/controllers/_404.php";
 }

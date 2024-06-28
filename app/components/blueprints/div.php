@@ -1,6 +1,6 @@
 <?php
 
-$blueprint = [
+return [
   'type' => 'component',
   'template' => 'div',
   'css' => [],
@@ -9,7 +9,7 @@ $blueprint = [
     [
       'data-slot' => 'slot',
       'data-type' => 'template',
-      'data-source' => 'quasi-logo'
+      'data-source' => 'logo'
     ]
   ]
 ];

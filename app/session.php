@@ -2,6 +2,17 @@
 
 /*
 |------------------------
+| Disable error reporting in production environment
+|------------------------
+*/
+
+if ($_ENV['APP_ENVIRONMENT'] === 'production') {
+		ini_set('display_errors', 0);
+		error_reporting(0);
+}
+
+/*
+|------------------------
 | Proteção CSRF
 |------------------------
 */
@@ -33,14 +44,6 @@ function is_csrf_valid(): bool {
 | Controle da sessão do usuário
 |------------------------
 */
-
-if (isset($_COOKIE['login_cookie']) &&!isset($_SESSION['USER'])) {
-	require_once '../data/Model/User.php';
-	$usuario = Model\User::getUserBy('login_cookie', $_COOKIE['login_cookie']);
-	if ($usuario) {
-		Model\User::login(usuario:$usuario);
-	}
-}
 
 // Defina o limite de requisições por período (ex.: 5 requisições por minuto)
 $limit = $_ENV['RATE_LIMIT_REQUESTS'];

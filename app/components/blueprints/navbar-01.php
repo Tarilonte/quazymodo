@@ -1,6 +1,6 @@
 <?php
 
-$blueprint = [
+return [
   'template' => 'navbar-01',
   'data' => [
     [

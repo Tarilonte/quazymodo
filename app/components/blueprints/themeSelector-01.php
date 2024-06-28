@@ -1,5 +1,5 @@
 <?php
-$blueprint = [
+return [
   'template' => 'btn-themeSelector-01',
   'js' => ['themeSelector-01.js'],
   'data' => [

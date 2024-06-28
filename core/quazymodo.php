@@ -1,7 +1,8 @@
 <?php
 
-namespace quazyTemplater;
-use function quazyFunctions\recursiveArraySearch;
+namespace quazymodo;
+use function quazymodo\functions\recursiveArraySearch;
+use function quazymodo\functions\show;
 
 class Component
 {
@@ -23,14 +24,15 @@ class Component
     if ($componentType === "htmlOnly") {
       $this->construct_htmlOnly($componentName, $controllerData);
     } else {
-      $this->blueprint = new \quazyTemplater\Blueprint($componentName);
+      $this->blueprint = new \quazymodo\Blueprint($componentName);
       if (null !== $this->blueprint->type) {
         $this->componentType = $this->blueprint->type;
       }        
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->insert_componentName($componentName);
-      $this->data = new \quazyTemplater\Data($this->blueprint->data, $controllerData);
+      $this->data = new \quazymodo\Data($this->blueprint->data, $controllerData);
+
       foreach($this->data->final_data as $key => $value) {
         self::$allData[$key] = $value;
       }
@@ -40,7 +42,6 @@ class Component
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
       if ($_ENV['CSP_ENABLED']) {
-        //die($_ENV['CSP_ENABLED']);
         CSPManager::sendCSPHeader();
       }
     }
@@ -52,7 +53,7 @@ class Component
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
     $this->insert_componentName($templateName . '_htmlOnly');
-    $this->data = new \quazyTemplater\Data([], $controllerData);
+    $this->data = new \quazymodo\Data([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
@@ -76,7 +77,7 @@ class Component
 
   private function load_template($templateName)
   {
-    $template = file_get_contents("../components/templates/$templateName.html");
+    $template = file_get_contents("../app/components/templates/$templateName.html");
     $template = str_replace('[{', '{{', $template);
       $template = str_replace('}]', '}}', $template);
     return $template;
@@ -103,7 +104,7 @@ class Component
     foreach ($this->slots as $slot) {
       if(isset(self::$allData[$slot])) {
         $content = implode(PHP_EOL, self::$allData[$slot]);
-        $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . "{{ $slot }}", $this->html);
+        $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . " {{ $slot }} ", $this->html);
         unset(self::$allData[$slot]);
       }
     }
@@ -125,6 +126,12 @@ class Component
       $this->render();
     }
     return $this;
+  }
+
+  public function serve() : string
+  {
+    echo $this->html;
+    die();
   }
 
   public function flush_assets() : Component
@@ -215,11 +222,14 @@ class Blueprint
 
   private function parse_blueprint($componentName) : array
   {
-    if (file_exists("../components/blueprints/$componentName.php")) {
-      require "../components/blueprints/$componentName.php";
-    }else{
-      die("Blueprint [$componentName] não encontrado.");
+    // Load blueprint file
+    $blueprint = $this->load_blueprint($componentName);
+
+    // Verify if blueprint is extending another blueprint
+    if (isset($blueprint['extends'])) {
+      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint);
     }
+
     foreach ($blueprint as $item => $value) {
       // Caso a chave seja css ou js e o valor seja uma string, converte para array
       if (in_array($item, ['css', 'js']) && is_string($value)) {
@@ -229,6 +239,42 @@ class Blueprint
       }
     }
     return $blueprint;
+  }
+
+  private function load_blueprint($componentName) : array
+  {
+    // Require blueprint file
+    if (file_exists("../app/components/blueprints/$componentName.php")) {
+      return include "../app/components/blueprints/$componentName.php";
+    }else{
+      die("Blueprint [$componentName] não encontrado.");
+    }
+  }
+
+  private function extend_blueprint($parent_blueprint, $child_blueprint) : array
+  {
+    // Load parent blueprint file
+    $parent_blueprint = $this->load_blueprint($parent_blueprint);
+    
+    // Extend parent blueprint with child blueprint
+    foreach ($child_blueprint as $key => $value) {
+      if (isset($parent_blueprint[$key])) {
+          if (is_array($parent_blueprint[$key]) && is_array($value)) {
+              // Se ambos são arrays, mesclar os arrays
+              $parent_blueprint[$key] = array_merge($parent_blueprint[$key], $value);
+          } elseif (is_array($parent_blueprint[$key])) {
+              // Se blueprint é um array e insert não, adicionar o valor ao array do blueprint
+              $parent_blueprint[$key][] = $value;
+          } else {
+              // Se ambos não são arrays, sobrescrever o valor do blueprint com o valor do insert
+              $parent_blueprint[$key] = $value;
+          }
+      } else {
+          // Se a chave não existe no blueprint, adicionar a chave e o valor do insert
+          $parent_blueprint[$key] = $value;
+      }
+    }
+    return $parent_blueprint;
   }
 
   // Getters e setters
@@ -284,44 +330,48 @@ class Data
   */
   private function merge_blueprintData(array $data_piece) : void
   {
-    switch ($data_piece['data-type']) {
-      case 'template':
-        $content = [];
-        if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
-          $content = $data_piece['data-content'];
-        }
-        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content,"htmlOnly");
-        break;
-      case 'string':
-        $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
-        break;
-      case 'env-var':
-        $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_ENV, $data_piece['data-source']);
-        break;
-      case 'session-var':
-        $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_SESSION, $data_piece['data-source']);
-        break;
-      case 'cookie':
-        if (!isset($_COOKIE[$data_piece['data-source']])) {
-          $data_source = "";
-        }else {
-          $data_source = $_COOKIE[$data_piece['data-source']];
-        }
-        $this->merged_data[$data_piece['data-slot']][] = $data_source;
-        break;
-      case 'component':
-        // TODO: Implementar verificação para impedir que um componente não seja incluído dentro dele mesmo
-        $content = [];
-        if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
-          $content = $data_piece['data-content'];
-        }
-        $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content);
-        break;
-      case 'array':
-        foreach ($data_piece['data-content'] as $array_item) {
-          $this->merge_blueprintData($array_item);
-        }
-        break;
+    if (!isset($data_piece['data-type'])) {
+      $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
+    } else {
+      switch ($data_piece['data-type']) {
+        case 'template':
+          $content = [];
+          if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
+            $content = $data_piece['data-content'];
+          }
+          $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content,"htmlOnly");
+          break;
+        case 'string':
+          $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
+          break;
+        case 'env-var':
+          $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_ENV, $data_piece['data-source']);
+          break;
+        case 'session-var':
+          $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_SESSION, $data_piece['data-source']);
+          break;
+        case 'cookie':
+          if (!isset($_COOKIE[$data_piece['data-source']])) {
+            $data_source = "";
+          }else {
+            $data_source = $_COOKIE[$data_piece['data-source']];
+          }
+          $this->merged_data[$data_piece['data-slot']][] = $data_source;
+          break;
+        case 'component':
+          // TODO: Implementar verificação para impedir que um componente não seja incluído dentro dele mesmo
+          $content = [];
+          if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
+            $content = $data_piece['data-content'];
+          }
+          $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content);
+          break;
+        case 'array':
+          foreach ($data_piece['data-content'] as $array_item) {
+            $this->merge_blueprintData($array_item);
+          }
+          break;
+      }
     }
   }
 
@@ -382,7 +432,6 @@ class CSPManager
 {
     private static $directives = [
         'script-src' => ["'self'"],
-        //'style-src' => ["'self'"],
     ];
 
     public static function addSource($directive, $source)

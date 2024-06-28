@@ -14,18 +14,18 @@ session_start();
 require '../vendor/autoload.php';
 
 // Inicia o phpDotenv
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/core/..");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../app");
 $dotenv->load();
 
 // Inicia o AltoRouter e inclui as rotas
 $router = new AltoRouter();
-require '../core/routes.php';
+require '../app/routes.php';
 
 /*
 |--------------------------------------
 | Carrega os arquivos do Core da aplicação
 |--------------------------------------
 */
-require '../core/quazyFunctions.php';
-require '../core/session.php';
-require '../core/quazyTemplater.php';
+require '../core/functions.php';
+require '../app/session.php';
+require '../core/quazymodo.php';

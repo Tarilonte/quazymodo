@@ -1,6 +1,6 @@
 <?php
 
-$blueprint = [
+return [
   'type' => 'page',
   'template' => 'page-base',
   'css' => ['base.css'],
