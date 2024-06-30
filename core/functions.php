@@ -63,15 +63,6 @@ trait EnumFromName {
   }
 }
 
-$shortDate = new \IntlDateFormatter(
-	'pt_BR',
-	\IntlDateFormatter::SHORT,
-	\IntlDateFormatter::NONE,
-	'America/Sao_Paulo',
-	\IntlDateFormatter::GREGORIAN,
-	$pattern = 'dd MMM yy'
-);
-
 function dateFormat($dateInput, $pattern) {
 	$formatter = new \IntlDateFormatter(
 		'pt_BR', 

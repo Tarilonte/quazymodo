@@ -1,11 +1,22 @@
 <?php
 
 return [
-  'type' => 'component',
-  'template' => 'page/home',
-  'css' => [],
-  'js' => [],
+  'extends' => 'page-base',
   'data' => [
+    [
+      'data-slot' => 'page-title',
+      'data-content' => $_ENV["SITE_NAME"]
+    ],
+    [
+      'data-slot' => 'body',
+      'data-type' => 'component',
+      'data-source' => 'navbar-01'
+    ],
+    [
+      'data-slot' => 'body',
+      'data-type' => 'template',
+      'data-source' => 'page/home'
+    ],
     [
       'data-slot' => 'logo',
       'data-type' => 'template',
@@ -14,4 +25,3 @@ return [
     ]
   ]
 ];
-

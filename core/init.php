@@ -1,31 +1,17 @@
 <?php
-date_default_timezone_set('America/Sao_Paulo');
-setlocale(LC_ALL, 'pt_BR.utf8');
-setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-session_start();
 
-/*
-|--------------------------------------
-| Carrega as classes do composer
-|--------------------------------------
-*/
-
-// Carrega o autoload do composer
+// Composer autoload
 require '../vendor/autoload.php';
 
-// Inicia o phpDotenv
+// initialize Dotenv
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../app");
 $dotenv->load();
 
-// Inicia o AltoRouter e inclui as rotas
-$router = new AltoRouter();
-require '../app/routes.php';
-
-/*
-|--------------------------------------
-| Carrega os arquivos do Core da aplicação
-|--------------------------------------
-*/
+// Load quazymodo and session
 require '../core/functions.php';
 require '../app/session.php';
 require '../core/quazymodo.php';
+
+// Load the routes
+$router = new AltoRouter();
+require '../app/routes.php';

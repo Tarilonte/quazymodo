@@ -8,7 +8,7 @@ if(!getCookie("css-theme")){
 }else{
   $("html").attr("data-theme", getCookie("css-theme"));
   swap_btn(themeSelector01);
-  //console.log("Cookie existente");
+  //console.log("Cookie existente: " + getCookie("css-theme"));
 }
 
 // Captura o clique no seletor de temas

@@ -1,13 +1,22 @@
 <?php
 
-// Inicia o sistema
+// Set the timezone and locale
+date_default_timezone_set('America/Sao_Paulo');
+setlocale(LC_ALL, 'pt_BR.utf8');
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+
+// Start the session
+session_start();
+
+// Initialize quazymodo
 require '../core/init.php';
 
-// Instancia a classe AntiXSS
+// Initialize anti-xss
 $antiXSS = new \voku\helper\AntiXSS();
 
-// Processa a requisição
+// Match the request
 $match = $router->match(strtolower($_SERVER['REQUEST_URI']));
+
 if (is_array($match)) {
     // Limpa os parâmetros GET e POST usando voku/anti-xss
     $_GET = $antiXSS->xss_clean($_GET);

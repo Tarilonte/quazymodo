@@ -30,7 +30,7 @@ class Component
       }        
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
-      $this->insert_componentName($componentName);
+      $this->write_componentName($componentName);
       $this->data = new \quazymodo\Data($this->blueprint->data, $controllerData);
 
       foreach($this->data->final_data as $key => $value) {
@@ -52,7 +52,7 @@ class Component
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
-    $this->insert_componentName($templateName . '_htmlOnly');
+    $this->write_componentName($templateName . '_htmlOnly');
     $this->data = new \quazymodo\Data([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
@@ -89,7 +89,7 @@ class Component
     return $matches[1];
   }
 
-  private function insert_componentName($componentName) : void
+  private function write_componentName($componentName) : void
   {
     $insertion = ' component-name="'. $componentName . '" ';
     $pattern = '/(<\w+\s*)(.*?)(>)/im';
