@@ -38,3 +38,4 @@ $router->map( 'GET', '/', 'home');
 // Testes
 $router->map( 'GET', '/modal', 'test/modal');
 $router->map( 'GET', '/new', 'test/new');
+$router->map( 'GET', '/raw', 'test/request-raw');
