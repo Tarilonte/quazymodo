@@ -1,6 +1,6 @@
 <?php
 
-namespace quazymodo\functions;
+namespace Quazymodo\Functions;
 
 function show(mixed $stuff, string $nome = "Não informado")
 {

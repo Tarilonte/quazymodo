@@ -1,5 +1,8 @@
 <?php
 
+// Start the session
+session_start();
+
 // Composer autoload
 require '../vendor/autoload.php';
 
@@ -8,10 +11,11 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../app");
 $dotenv->load();
 
 // Load quazymodo and session
-require '../core/functions.php';
 require '../app/session.php';
-require '../core/quazymodo.php';
 
-// Load the routes
+// Initialize AltoRouter and load routes
 $router = new AltoRouter();
 require '../app/routes.php';
+
+// Initialize anti-xss
+$antiXSS = new \voku\helper\AntiXSS();

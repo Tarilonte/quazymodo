@@ -20,4 +20,4 @@ $body = file_get_contents('php://input');
 $request_raw = "$request_line\r\n$headers_string\r\n$body";
 
 // Imprime a requisição completa
-echo $request_raw;
+die($request_raw);
