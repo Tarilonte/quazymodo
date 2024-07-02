@@ -5,7 +5,8 @@ return [
   'data' => [
     [
       'data-slot' => 'page-title',
-      'data-content' => $_ENV["SITE_NAME"]
+      'data-type' => 'env-var',
+      'data-source' => 'APP_NAME',
     ],
     [
       'data-slot' => 'body',

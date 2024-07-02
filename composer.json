@@ -8,6 +8,9 @@
         "psr-4": {
             "Quazymodo\\": "quazymodo/",
             "App\\": "app/"
-        }
+        },
+        "files": [
+            "quazymodo/functions.php"
+        ]
     }
 }

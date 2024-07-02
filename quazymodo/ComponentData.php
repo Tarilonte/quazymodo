@@ -3,7 +3,7 @@
 namespace quazymodo;
 
 use Quazymodo\Component;
-use function Quazymodo\functions\recursiveArraySearch;
+use function Quazymodo\Functions\recursiveArraySearch;
 
 class ComponentData
 {
