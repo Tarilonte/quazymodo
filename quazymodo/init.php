@@ -10,12 +10,12 @@ require '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../app");
 $dotenv->load();
 
-// Load quazymodo and session
-require '../app/session.php';
+// Load app configuration
+require '../app/Config.php';
 
 // Initialize AltoRouter and load routes
 $router = new AltoRouter();
-require '../app/routes.php';
+require '../app/Routes.php';
 
 // Initialize anti-xss
 $antiXSS = new \voku\helper\AntiXSS();

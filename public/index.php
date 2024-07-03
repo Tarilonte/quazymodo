@@ -1,10 +1,5 @@
 <?php
 
-// Set the timezone and locale
-date_default_timezone_set('America/Sao_Paulo');
-setlocale(LC_ALL, 'pt_BR.utf8');
-setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-
 // Initialize quazymodo
 require '../quazymodo/init.php';
 
