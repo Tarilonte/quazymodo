@@ -13,8 +13,13 @@ $dotenv->load();
 // Load app configuration
 require '../app/Config.php';
 
-// Initialize AltoRouter and load routes
-$router = new AltoRouter();
+// Initialize request object
+$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
+  $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+);
+
+// Initialize PHPLeague Route and load App Routes
+$router = new League\Route\Router;
 require '../app/Routes.php';
 
 // Initialize anti-xss

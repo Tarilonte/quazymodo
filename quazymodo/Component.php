@@ -117,7 +117,7 @@ class Component
     }
   }
 
-  public function render() : Component
+  public function render() : String
   {
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
@@ -127,13 +127,7 @@ class Component
     if ($this->map_slots($this->html)) {
       $this->render();
     }
-    return $this;
-  }
-
-  public function serve() : string
-  {
-    echo $this->html;
-    die();
+    return $this->html;
   }
 
   public function flush_assets() : Component
