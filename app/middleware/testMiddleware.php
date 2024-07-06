@@ -11,9 +11,7 @@ class testMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($_ENV['APP_ENVIRONMENT'] == 'development') {
-            $controller = new \Controller\_404Controller();
-            return $controller->index($request);
-        }
+        $request = $request->withQueryParams(['test' => 'test', ...$request->getQueryParams()]);
+        return $handler->handle($request);
     }
 }

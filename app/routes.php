@@ -1,6 +1,6 @@
 <?php
 
-//$router->middleware(new Middleware\testMiddleware());
+$router->middleware(new Middleware\testMiddleware());
 
 // map a route
 $router->map('GET', '/', 'Controller\HomeController::index');

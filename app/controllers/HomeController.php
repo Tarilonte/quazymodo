@@ -11,6 +11,8 @@ class HomeController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {    
+    var_dump($request->getQueryParams());
+    die();
     $page = new Component(
       "page-home"
     );

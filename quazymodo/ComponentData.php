@@ -46,7 +46,7 @@ class ComponentData
           if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
             $content = $data_piece['data-content'];
           }
-          $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content,"htmlOnly");
+          $this->merged_data[$data_piece['data-slot']][] = new Component($data_piece['data-source'],$content,"templateOnly");
           break;
         case 'string':
           $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];

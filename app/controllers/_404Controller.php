@@ -4,10 +4,9 @@ namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response;
 use Quazymodo\Component;
 
-class _404Controller
+class _404Controller extends AbstractController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {
@@ -18,9 +17,6 @@ class _404Controller
       ["requested-uri" => $REQUEST_URI]
       );
 
-    $response = new Response;
-    $response->getBody()->write($page->render());
-    $response = $response->withStatus(404);
-    return $response;
+    return $this->render($page);
   }
 }

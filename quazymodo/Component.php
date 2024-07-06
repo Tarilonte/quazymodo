@@ -19,12 +19,19 @@ class Component
   public string $assetsURL = "/assets";
   public static array $allData = [];
 
+  /**
+   * @param mixed $componentName 
+   * @param array $controllerData 
+   * @param string $componentType
+   * default "component", use "templateOnly" for components without blueprint
+   * @return $this 
+   */
   public function __construct($componentName, $controllerData = [], $componentType = "component")
   {
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
-    if ($componentType === "htmlOnly") {
-      $this->construct_htmlOnly($componentName, $controllerData);
+    if ($componentType === "templateOnly") {
+      $this->construct_templateOnly($componentName, $controllerData);
     } else {
       $this->blueprint = new Blueprint($componentName);
       if (null !== $this->blueprint->type) {
@@ -50,11 +57,11 @@ class Component
     return $this;
   }
 
-  private function construct_htmlOnly($templateName, $controllerData = [])
+  private function construct_templateOnly($templateName, $controllerData = [])
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
-    $this->write_componentName($templateName . '_htmlOnly');
+    $this->write_componentName($templateName . '_templateOnly');
     $this->data = new ComponentData([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
