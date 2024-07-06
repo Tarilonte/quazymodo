@@ -17,6 +17,6 @@ class _404Controller extends AbstractController
       ["requested-uri" => $REQUEST_URI]
       );
 
-    return $this->render($page);
+    return $this->render($page, 404);
   }
 }

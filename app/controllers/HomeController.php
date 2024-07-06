@@ -7,17 +7,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response;
 use Quazymodo\Component;
 
-class HomeController
+use function Quazymodo\Functions\show;
+
+class HomeController extends AbstractController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {    
-    var_dump($request->getQueryParams());
-    die();
+    $query = $request->getQueryParams();
     $page = new Component(
       "page-home"
     );
-    $response = new Response;
-    $response->getBody()->write($page->render());
-    return $response;
+
+    //show($page->html);
+    //die();
+
+    return $this->render($page);
   }
 }
