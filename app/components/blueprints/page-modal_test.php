@@ -11,7 +11,8 @@ return [
     [
       'data-slot' => 'body',
       'data-type' => 'component',
-      'data-source' => 'navbar-01'
+      'data-source' => 'navbar-01',
+      'data-content' => ["navbar-container-class" => "bg-base-100"]
     ],
     [
       'data-slot' => 'body',
@@ -30,8 +31,8 @@ return [
       'data-content' => ["logo-class" => "h-8 fill-primary"]
     ],
     [
-      'data-slot' => 'navbar-center',
-      'data-content' => '<h1 class="text-2xl font-bold text-primary">Teste Modal</h1>'
+      'data-slot' => 'navbar-start',
+      'data-content' => 'Teste Modal'
     ]
   ]
 ];

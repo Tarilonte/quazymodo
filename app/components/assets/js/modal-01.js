@@ -11,6 +11,13 @@ function modal_setMessage(message) {
   Modal.find(".modal-message").html(message);
 }
 
+/**
+ * Shows a modal with the specified header and message.
+ * @param {string} header - The header text for the modal.
+ * @param {string} message - The message text for the modal.
+ * @param {boolean} addClass - Whether to add a custom CSS class to the modal.
+ * @param {boolean} locked - Whether the modal should be locked (not closable).
+ */
 function modal_show(header='', message='', addClass=false, locked=false) {
   locked ? modal_lock() : modal_unlock();
   addClass ? modal_addClass(addClass) : modal_addClass('bg-primary');
