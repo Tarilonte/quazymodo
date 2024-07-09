@@ -4394,6 +4394,22 @@ details.collapse summary::-webkit-details-marker{
   fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
+.fill-secondary{
+  fill: var(--fallback-s,oklch(var(--s)/1));
+}
+
+.fill-accent{
+  fill: var(--fallback-a,oklch(var(--a)/1));
+}
+
+.fill-yellow-500{
+  fill: #eab308;
+}
+
+.fill-yellow-200{
+  fill: #fef08a;
+}
+
 .p-0{
   padding: 0px;
 }
@@ -4416,6 +4432,10 @@ details.collapse summary::-webkit-details-marker{
 
 .p-8{
   padding: 2rem;
+}
+
+.p-4{
+  padding: 1rem;
 }
 
 .px-2{
@@ -4442,8 +4462,16 @@ details.collapse summary::-webkit-details-marker{
   padding-top: 1rem;
 }
 
+.text-left{
+  text-align: left;
+}
+
 .text-center{
   text-align: center;
+}
+
+.text-right{
+  text-align: right;
 }
 
 .font-heading{

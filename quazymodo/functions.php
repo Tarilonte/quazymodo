@@ -11,44 +11,83 @@ namespace Quazymodo\Functions;
 |
 |*/
 
-function setCsrf(): void {
+function setCsrf(): void 
+{
   if (!isset($_SESSION["csrf-token"])){
-    $_SESSION["csrf-token"] = bin2hex(random_bytes(16));
+  $_SESSION["csrf-token"] = bin2hex(random_bytes(16));
   }
 }
 
-function isCsrfValid(): bool {
+function isCsrfValid(): bool 
+{
   if (!isset($_SESSION['csrf-token']) || !isset($_POST['csrf-token'])) {
-    return false;
+  return false;
   }
   if ($_SESSION['csrf-token'] != $_POST['csrf-token']) {
-    return false;
+  return false;
   }
   if ($_SESSION['csrf-token'] === $_POST['csrf-token']) {
-    return true;
+  return true;
   }
   return false;  
 }
 
-function rateLimit(): void {
+function rateLimit(): void 
+{
   $limit = $_ENV['RATE_LIMIT_REQUESTS'];
   $period = $_ENV['RATE_LIMIT_PERIOD'];
 
   if (!isset($_SESSION['requests'])) {
-    $_SESSION['requests'] = [];
+  $_SESSION['requests'] = [];
   }
 
   $time = time();
   $_SESSION['requests'] = array_filter($_SESSION['requests'], function ($timestamp) use ($time, $period) {
-    return ($time - $timestamp) < $period;
+  return ($time - $timestamp) < $period;
   });
 
   if (count($_SESSION['requests']) >= $limit) {
-    header('HTTP/1.1 429 Too Many Requests');
-    echo "Você fez requisições demais. Tente novamente mais tarde.";
-    exit;
+  header('HTTP/1.1 429 Too Many Requests');
+  echo "Você fez requisições demais. Tente novamente mais tarde.";
+  exit;
   }
   $_SESSION['requests'][] = $time;
+}
+
+function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
+{
+  $serverParams = $request->getServerParams();
+
+  $ipHeaders = [
+    'HTTP_CLIENT_IP',
+    'HTTP_X_FORWARDED_FOR',
+    'REMOTE_ADDR'
+  ];
+
+  foreach ($ipHeaders as $header) {
+    if (isset($serverParams[$header])) {
+      return $serverParams[$header];
+    }
+  }
+
+  return 'UNKNOWN';
+}
+
+function recursiveArraySearch($array, $keyToFind) {
+  foreach ($array as $key => $value) {
+    if ($key === $keyToFind) {
+      if (is_array($value)) {
+        return print_r($value,true);
+      }
+      return $value;
+    } elseif (is_array($value)) {
+      $result = recursiveArraySearch($value, $keyToFind);
+      if ($result !== null) {
+        return $result;
+      }
+    }
+  }
+  return null;
 }
 
 /*
@@ -62,9 +101,9 @@ function rateLimit(): void {
 
 function show(mixed $stuff, string $nome = "Não informado"): void {
   if (is_array($stuff)) {
-    $stuff = escapeArrayValues($stuff);
+  $stuff = escapeArrayValues($stuff);
   } else {
-    $stuff = decorateStuff($stuff);
+  $stuff = decorateStuff($stuff);
   }
 
   echo "<div class='mockup-code'><pre class='p-6'><code>";
@@ -75,13 +114,13 @@ function show(mixed $stuff, string $nome = "Não informado"): void {
 
 function escapeArrayValues($array): array {
   foreach ($array as $key => $value) {
-      // Se o valor for um array, chama a função recursivamente
-      if (is_array($value)) {
-          $array[$key] = escapeArrayValues($value);
-      } else {
-          // Aplica htmlspecialchars ao valor
-          $array[$key] = decorateStuff($value);
-      }
+    // Se o valor for um array, chama a função recursivamente
+    if (is_array($value)) {
+      $array[$key] = escapeArrayValues($value);
+    } else {
+      // Aplica htmlspecialchars ao valor
+      $array[$key] = decorateStuff($value);
+    }
   }
   return $array;
 }
@@ -91,18 +130,4 @@ function decorateStuff(mixed $stuff): string {
   $stuff = htmlspecialchars($stuff);
   $stuff = "$stuff ( $stuffType:".strlen($stuff)." )";
   return $stuff;
-}
-
-function recursiveArraySearch($array, $keyToFind) {
-  foreach ($array as $key => $value) {
-      if ($key === $keyToFind) {
-          return $value;
-      } elseif (is_array($value)) {
-          $result = recursiveArraySearch($value, $keyToFind);
-          if ($result !== null) {
-              return $result;
-          }
-      }
-  }
-  return null;
 }
