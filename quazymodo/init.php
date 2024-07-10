@@ -1,7 +1,17 @@
 <?php
 
 // Start the session
-session_start();
+session_start( [ 
+  'cookie_lifetime' => 0,
+  'cookie_path' => '/',
+  'cookie_secure' => false,
+  'cookie_httponly' => true,
+  'cookie_samesite' => 'Strict',
+  'sid_length' => 96,
+  'sid_bits_per_character' => 5,
+  'use_strict_mode' => true,
+  'referer_check' => $_SERVER['HTTP_HOST'],
+] );
 
 // Composer autoload
 require '../vendor/autoload.php';

@@ -6,6 +6,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response;
+use Psr\Http\Message\RequestInterface;
 use Quazymodo\Component;
 
 use function Quazymodo\Functions\recursiveArraySearch;
@@ -15,16 +16,16 @@ class TestController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {    
-    // Captura o argumento 'method' da URL
-    $method = $request->getAttribute('method');
-
+    // Captura o argumento 'test' da URL
+    $test = $request->getAttribute('test');
+    //die($test);
     // Verifica se o método existe na classe
-    if (method_exists($this, $method)) {
+    if (method_exists($this, $test)) {
       // Chama o método dinamicamente
-      return $this->$method($request);
+      return $this->$test($request);
     } else {
       // Retorna uma resposta de erro se o método não existir
-      die("Método $method não encontrado");
+      die("Teste $test não encontrado");
     }
   }
 
@@ -103,6 +104,26 @@ class TestController
     );
 
     // Retornar a página renderizada
+    $response = new Response;
+    $response->getBody()->write($page->render());
+    return $response;
+  }
+
+  public function htmx(RequestInterface $request): ResponseInterface
+  {    
+    $query = $request->getQueryParams();
+    if (isset($query['teste'])) {
+      die("<h1 class='font-black text-6xl text-primary'>ÇA C'EST FOU FOU!</h1>");
+    }
+    $page = new Component(
+      "page-base",
+      [
+        "js" => "https://unpkg.com/htmx.org@2.0.0 [integrity='sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw' crossorigin='anonymous']",
+        "body" => [
+          new Component("navbar-01"),
+          new Component("page/htmx_test-page", componentType: "templateOnly")]
+      ]
+    );
     $response = new Response;
     $response->getBody()->write($page->render());
     return $response;

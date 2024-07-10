@@ -34,7 +34,7 @@ class ComponentData
   |
   | Processa um elemento de dados do blueprint e o armazena em $merged_data
   |
-  */
+  |*/
   private function merge_blueprintData(array $data_piece) : void
   {
     if (!isset($data_piece['data-type'])) {

@@ -30,7 +30,6 @@ class CSPManager
                 $policies[] = $directive . " " . implode(" ", $sources);
             }
         }
-        
         // Constrói e envia o header CSP
         header("Content-Security-Policy: " . implode("; ", $policies));
     }
