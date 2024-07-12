@@ -16,11 +16,12 @@ session_start( [
 // Composer autoload
 require '../vendor/autoload.php';
 
-// initialize Dotenv
+// Load App Environment Variables
+// (They are set in the .env file in the app directory)
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../app");
 $dotenv->load();
 
-// Load app configuration
+// Require App configuration
 require '../app/Config.php';
 
 // Initialize request object
@@ -33,4 +34,4 @@ $router = new League\Route\Router;
 require '../app/Routes.php';
 
 // Initialize anti-xss
-$antiXSS = new \voku\helper\AntiXSS();
+// $antiXSS = new \voku\helper\AntiXSS();

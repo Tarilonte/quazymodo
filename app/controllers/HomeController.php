@@ -8,8 +8,7 @@ use Quazymodo\Component;
 class HomeController extends AbstractController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
-  {    
-    $query = $request->getQueryParams();
+  {
     $page = new Component(
       "page-home"
     );

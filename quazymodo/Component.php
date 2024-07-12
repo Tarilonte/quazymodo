@@ -50,9 +50,6 @@ class Component
       is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
-      if ($_ENV['CSP_ENABLED']) {
-        CSPManager::sendCSPHeader();
-      }
     }
     return $this;
   }
@@ -121,6 +118,9 @@ class Component
     // Se o componente for do tipo 'page', decarrega os assets no html
     if ($this->componentType == 'page') {
       $this->flush_assets();
+      if ($_ENV['CSP_ENABLED']) {
+        CSPManager::sendCSPHeader();
+      }
     }
   }
 

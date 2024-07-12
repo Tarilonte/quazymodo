@@ -22,7 +22,7 @@ return [
     [
       'data-slot' => 'body',
       'data-type' => 'component',
-      'data-source' => 'modal-01'
+      'data-source' => 'modalComponent'
     ],
     [
       'data-slot' => 'navbar-logo',

@@ -113,7 +113,10 @@ class TestController
   {    
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      die("<h1 class='font-black text-6xl text-primary'>ÇA C'EST FOU FOU!</h1>");
+      die(
+        "<h1 class='font-black text-6xl text-accent'>ÇA C'EST FOU FOU!</h1>
+        <script nonce='".\Quazymodo\CSPManager::getNonce()."'>alert('Teste')</script>"
+        );
     }
     $page = new Component(
       "page-base",
