@@ -1,5 +1,4 @@
 app/writable/
-app/writable
 node_modules/
 vendor/
 tests/
