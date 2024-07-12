@@ -1,8 +1,6 @@
 module.exports = {
   content: [
-    "./app/**/*",
-    "./data/**/*",
-    "./core/**/*",
+    "./app/**/*.{html,js,php}",
   ],
   theme: {
     extend: {
@@ -15,8 +13,6 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Noto Sans", "sans-serif"],
-        rubik: ["Rubik", "sans-serif"],
-        cutive: ["Cutive", "sans-serif"],
         zilla: ["Zilla Slab", "serif"],
         heading: ['Zilla Slab', 'serif'],
       },
