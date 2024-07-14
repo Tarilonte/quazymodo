@@ -38,7 +38,7 @@ class CSPManager
         }
     }
 
-    public static function sendCSPHeader()
+    public static function getDirectives()
     {
         CSPManager::generateNonce();
         CSPManager::addSource('script-src', "'nonce-" . CSPManager::getNonce() . "'");
@@ -49,7 +49,6 @@ class CSPManager
                 $policies[] = $directive . " " . implode(" ", $sources);
             }
         }
-        // Constrói e envia o header CSP
-        header("Content-Security-Policy: " . implode("; ", $policies));
+        return implode("; ", $policies);
     }
 }

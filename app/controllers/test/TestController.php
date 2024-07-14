@@ -2,23 +2,24 @@
 
 namespace Controller\Test;
 
+use Controller\AbstractController;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\RequestInterface;
 use Quazymodo\Component;
+use Controller\AbstractTestController; // Add this line
 
 use function Quazymodo\Functions\recursiveArraySearch;
-use function Quazymodo\Functions\show;
 
-class TestController
+class TestController extends AbstractController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {    
     // Captura o argumento 'test' da URL
     $test = $request->getAttribute('test');
-    //die($test);
+
     // Verifica se o método existe na classe
     if (method_exists($this, $test)) {
       // Chama o método dinamicamente
@@ -32,9 +33,7 @@ class TestController
   public function modal(): ResponseInterface
   {    
     $page = new Component("page-modal_test");
-    $response = new Response;
-    $response->getBody()->write($page->render());
-    return $response;
+    return $this->render($page);
   }
 
   public function table(): ResponseInterface
@@ -102,11 +101,7 @@ class TestController
         "navbar-start" =>  "Table Test",
       ]
     );
-
-    // Retornar a página renderizada
-    $response = new Response;
-    $response->getBody()->write($page->render());
-    return $response;
+    return $this->render($page);
   }
 
   public function htmx(RequestInterface $request): ResponseInterface
@@ -124,11 +119,9 @@ class TestController
         "js" => "https://unpkg.com/htmx.org@2.0.0 [integrity='sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw' crossorigin='anonymous']",
         "body" => [
           new Component("navbar-01"),
-          new Component("page/htmx_test-page", componentType: "templateOnly")]
+          new Component("pages/htmx_test-page", componentType: "templateOnly")]
       ]
     );
-    $response = new Response;
-    $response->getBody()->write($page->render());
-    return $response;
+    return $this->render($page);
   }
 }

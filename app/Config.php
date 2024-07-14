@@ -18,8 +18,8 @@ $debuggerEnv = $_ENV["APP_ENV"] === 'production' ? true : false;
 $tracyLogDir = __DIR__ . '/writable/tracy/';
 // Enable the debugger
 Debugger::enable($debuggerEnv, $tracyLogDir);
-// Set the error template
-Debugger::$errorTemplate = __DIR__ . '/components/templates/page/500.html';
+// Set the error 500 page
+Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
 // Set the strict mode
 Debugger::$strictMode = false;
 // Set the show bar

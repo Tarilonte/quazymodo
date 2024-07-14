@@ -17,7 +17,7 @@ return [
     [
       'data-slot' => 'body',
       'data-type' => 'template',
-      'data-source' => 'page/modal_test-page'
+      'data-source' => 'pages/modal_test-page'
     ],
     [
       'data-slot' => 'body',

@@ -12,6 +12,7 @@ class Component
   public ComponentData $data;
   public string $componentType;
   public string $componentName;
+  private string $CspHeader = "";
   public string $html = "";
   public array $js = [];
   public array $css = [];
@@ -115,13 +116,18 @@ class Component
       }
     }
     
-    // Se o componente for do tipo 'page', decarrega os assets no html
+    // Se o componente for do tipo 'page', decarrega os assets no html e adiciona o header CSP
     if ($this->componentType == 'page') {
       $this->flush_assets();
       if ($_ENV['CSP_ENABLED']) {
-        CSPManager::sendCSPHeader();
+        $this->CspHeader =  CSPManager::getDirectives();
       }
     }
+  }
+
+  public function getCspHeader() : string
+  {
+    return $this->CspHeader;
   }
 
   public function render() : String
@@ -167,23 +173,23 @@ class Component
   public function flush_js() {
     $jsLinks = '';
     foreach ($this->js as $file) {
-        // Verifica se o arquivo é um link externo (começa com 'http://' ou 'https://')
-        if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
-            $string = $file;
-            $externo = true;
-        } else {
-            // Caso contrário, é um arquivo interno e adiciona o caminho 'assets/js/'
-            $string = $this->assetsURL . "/js/$file";
-            $externo = false;
-        }
-        // Extrai os atributos do script - Exemplo: [defer]
-        list($src, $attributes) = $this->get_jsAttributes($string);
-        // Adiciona o script de fonte externa à lista de fontes de script autorizados pela CSP
-        if ($externo && $_ENV['CSP_ENABLED']) {
-          CSPManager::addSource('script-src', $src);
-        }
-        // Adiciona o script à variável $jsLinks
-        $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
+      // Check if the file is an external link (starts with 'http://' or 'https://')
+      if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
+        $source = $file;
+        $isExternal = true;
+      } else {
+        // Otherwise, it is an internal file and add the 'assets/js/' path
+        $source = $this->assetsURL . "/js/$file";
+        $isExternal = false;
+      }
+      // Extract the attributes of the script - Example: [defer]
+      list($src, $attributes) = $this->get_jsAttributes($source);
+      // Add the external source script to the list of script sources allowed by CSP
+      if ($isExternal && $_ENV['CSP_ENABLED']) {
+        CSPManager::addSource('script-src', $src);
+      }
+      // Add the script to the $jsLinks variable
+      $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
     }
     // Descarrega os scripts no html
     if (preg_match('/{{ ?JS ?}}/i', $this->html)) {

@@ -16,7 +16,7 @@ return [
     [
       'data-slot' => 'body',
       'data-type' => 'template',
-      'data-source' => 'page/home'
+      'data-source' => 'pages/home'
     ],
     [
       'data-slot' => 'logo',

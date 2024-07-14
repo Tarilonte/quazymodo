@@ -3089,6 +3089,18 @@ details.collapse summary::-webkit-details-marker{
   margin-top: 1.5rem;
 }
 
+.mb-1{
+  margin-bottom: 0.25rem;
+}
+
+.mb-4{
+  margin-bottom: 1rem;
+}
+
+.mb-8{
+  margin-bottom: 2rem;
+}
+
 .block{
   display: block;
 }
@@ -3182,6 +3194,14 @@ details.collapse summary::-webkit-details-marker{
   max-width: 1536px;
 }
 
+.max-w-lg{
+  max-width: 32rem;
+}
+
+.max-w-md{
+  max-width: 28rem;
+}
+
 .grow{
   flex-grow: 1;
 }
@@ -3258,6 +3278,11 @@ details.collapse summary::-webkit-details-marker{
 .bg-warning{
   --tw-bg-opacity: 1;
   background-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-bg-opacity)));
+}
+
+.bg-base-300{
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)));
 }
 
 .bg-gradient-to-b{
@@ -3360,6 +3385,14 @@ details.collapse summary::-webkit-details-marker{
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-\[50vw\]{
+  font-size: 50vw;
+}
+
+.text-\[10vw\]{
+  font-size: 10vw;
 }
 
 .font-black{
@@ -3530,5 +3563,40 @@ details.collapse summary::-webkit-details-marker{
   .md\:py-4{
     padding-top: 1rem;
     padding-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1024px){
+  .lg\:w-\[430px\]{
+    width: 430px;
+  }
+
+  .lg\:w-\[400px\]{
+    width: 400px;
+  }
+
+  .lg\:w-\[380px\]{
+    width: 380px;
+  }
+
+  .lg\:w-\[360px\]{
+    width: 360px;
+  }
+
+  .lg\:min-w-\[6--px\]{
+    min-width: 6--px;
+  }
+
+  .lg\:min-w-\[600px\]{
+    min-width: 600px;
+  }
+
+  .lg\:min-w-\[400px\]{
+    min-width: 400px;
+  }
+
+  .lg\:text-6xl{
+    font-size: 3.75rem;
+    line-height: 1;
   }
 }

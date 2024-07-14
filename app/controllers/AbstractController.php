@@ -13,6 +13,11 @@ abstract class AbstractController
     $response = new Response;
     $response->getBody()->write($component->render());
     $response = $response->withStatus($status);
+
+    if ($component->getCspHeader()) {
+      $response = $response->withAddedHeader('Content-Security-Policy', $component->getCspHeader());
+    }
+
     return $response;
   }
 }

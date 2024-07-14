@@ -6,8 +6,7 @@ return [
   'data' => [
     [
       'data-slot' => 'page-title',
-      'data-type' => 'env_var',
-      'data-source' => 'APP_NAME'
+      'data-content' => '404 - Page Not Found'
     ],
     [
       'data-slot' => 'body-class',
@@ -16,7 +15,7 @@ return [
     [
       'data-slot' => 'body',
       'data-type' => 'template',
-      'data-source' => 'page/404'
+      'data-source' => 'pages/404'
     ]
   ]
 ];
