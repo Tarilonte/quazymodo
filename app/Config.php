@@ -21,7 +21,7 @@ Debugger::enable($debuggerEnv, $tracyLogDir);
 // Set the error 500 page
 Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
 // Set the strict mode
-Debugger::$strictMode = false;
+Debugger::$strictMode = true;
 // Set the show bar
 Debugger::$showBar = true;
 

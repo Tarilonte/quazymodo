@@ -6,10 +6,9 @@ use Controller\AbstractController;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response;
 use Psr\Http\Message\RequestInterface;
 use Quazymodo\Component;
-use Controller\AbstractTestController; // Add this line
+use Entity\UserEntity;
 
 use function Quazymodo\Functions\recursiveArraySearch;
 
@@ -123,5 +122,17 @@ class TestController extends AbstractController
       ]
     );
     return $this->render($page);
+  }
+
+  public function user(RequestInterface $request): void
+  {    
+    if (isset($request->getQueryParams()['reset'])) {
+      dump('Reseting session user info');
+      unset($_SESSION['user']);
+    }
+    isset($_SESSION['user']) ? dump($_SESSION['user']) : dump('No user info in session variables');
+    $user = new UserEntity($request);
+    dump($user);
+    exit;
   }
 }

@@ -13,7 +13,8 @@
             "Quazymodo\\": "quazymodo/",
             "App\\": "app/",
             "Controller\\": "app/controllers/",
-            "Middleware\\": "app/middleware/"
+            "Middleware\\": "app/middleware/",
+            "Entity\\": "app/entities/"
         },
         "files": [
             "quazymodo/functions.php"
