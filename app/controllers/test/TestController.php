@@ -130,7 +130,7 @@ class TestController extends AbstractController
       dump('Reseting session user info');
       unset($_SESSION['user']);
     }
-    isset($_SESSION['user']) ? dump($_SESSION['user']) : dump('No user info in session variables');
+    //isset($_SESSION['user']) ? dump($_SESSION['user']) : dump('No user info in session variables');
     $user = new UserEntity($request);
     dump($user);
     exit;

@@ -52,6 +52,7 @@ class Component
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
     }
+    //bdump($this->componentName);
     return $this;
   }
 
@@ -115,14 +116,6 @@ class Component
         unset(self::$allData[$slot]);
       }
     }
-    
-    // Se o componente for do tipo 'page', decarrega os assets no html e adiciona o header CSP
-    if ($this->componentType == 'page') {
-      $this->flush_assets();
-      if ($_ENV['CSP_ENABLED']) {
-        $this->CspHeader =  CSPManager::getDirectives();
-      }
-    }
   }
 
   public function getCspHeader() : string
@@ -132,6 +125,10 @@ class Component
 
   public function render() : String
   {
+    $this->flush_assets();
+    if ($_ENV['CSP_ENABLED']) {
+      $this->CspHeader = CSPManager::getDirectives();
+    }
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
       $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
@@ -153,7 +150,7 @@ class Component
   public function flush_css()
   {
     $cssLinks = '';
-    foreach ($this->css as $file) {
+    foreach ($this->css as $index => $file) {
         // Verifica se o arquivo é um link externo (começa com 'http://' ou 'https://')
         if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
             $href = $file;
@@ -162,17 +159,18 @@ class Component
             $href = $this->assetsURL . "/css/$file";
         }
         $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
+        unset($this->css[$index]);
     }
     if (preg_match('/{{ ?CSS ?}}/i', $this->html)) {
       $this->html = preg_replace('/{{ ?CSS ?}}/i', $cssLinks, $this->html);
     } else {
-        $this->html .= $cssLinks;
+      $this->html .= $cssLinks;
     }
   }
 
   public function flush_js() {
     $jsLinks = '';
-    foreach ($this->js as $file) {
+    foreach ($this->js as $index => $file) {
       // Check if the file is an external link (starts with 'http://' or 'https://')
       if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
         $source = $file;
@@ -188,10 +186,11 @@ class Component
       if ($isExternal && $_ENV['CSP_ENABLED']) {
         CSPManager::addSource('script-src', $src);
       }
-      // Add the script to the $jsLinks variable
+      // Add the script to the $jsLinks variable then remove it from the $this->js array
       $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
+      unset($this->js[$index]);
     }
-    // Descarrega os scripts no html
+    // flush the scripts into the HTML
     if (preg_match('/{{ ?JS ?}}/i', $this->html)) {
         $this->html = preg_replace('/{{ ?JS ?}}/i', $jsLinks, $this->html);
     } else {
