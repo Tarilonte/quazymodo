@@ -90,6 +90,18 @@ function recursiveArraySearch($array, $keyToFind) {
   return null;
 }
 
+function emit($response): void
+{
+  http_response_code($response->getStatusCode());
+  foreach ($response->getHeaders() as $name => $values) {
+    foreach ($values as $value) {
+      header(sprintf('%s: %s', $name, $value), false);
+    }
+  }
+  echo $response->getBody();
+  exit;
+}
+
 /*
 |------------------------------------
 | DEVELOPMENT FUNCTIONS
@@ -98,6 +110,8 @@ function recursiveArraySearch($array, $keyToFind) {
 | This section contains the functions used for development purposes.
 |
 |*/
+
+// TODO: Estudar a possibilidade de excluir essas funções
 
 function show(mixed $stuff, string $nome = "Não informado"): void {
   if (is_array($stuff)) {

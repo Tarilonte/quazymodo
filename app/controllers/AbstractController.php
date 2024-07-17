@@ -17,7 +17,6 @@ abstract class AbstractController
     if ($component->getCspHeader()) {
       $response = $response->withAddedHeader('Content-Security-Policy', $component->getCspHeader());
     }
-
     return $response;
   }
 }

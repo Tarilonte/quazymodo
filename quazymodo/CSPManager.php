@@ -1,6 +1,6 @@
 <?php
 
-namespace quazymodo;
+namespace Quazymodo;
 
 class CSPManager
 {
@@ -38,10 +38,13 @@ class CSPManager
         }
     }
 
-    public static function getDirectives()
+    public static function getDirectives($generateNonce)
     {
-        CSPManager::generateNonce();
-        CSPManager::addSource('script-src', "'nonce-" . CSPManager::getNonce() . "'");
+        if ($generateNonce) {
+            self::generateNonce();
+        }
+        //self::generateNonce();
+        self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
         
         $policies = [];
         foreach (self::$directives as $directive => $sources) {

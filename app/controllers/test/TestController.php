@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use Quazymodo\Component;
 use Entity\UserEntity;
+use Quazymodo\CSPManager;
 
 use function Quazymodo\Functions\recursiveArraySearch;
 
@@ -107,10 +108,17 @@ class TestController extends AbstractController
   {    
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      die(
-        "<h1 class='font-black text-6xl text-accent'>ÇA C'EST FOU FOU!</h1>
-        <script nonce='".\Quazymodo\CSPManager::getNonce()."'>alert('Teste')</script>"
-        );
+      $nonce = CSPManager::getNonce();
+      $ajax = new Component(
+        "salsifufu", 
+        [
+          "js" => "https://confettijs.org/confetti.min.js [nonce='$nonce']",
+          "css" => "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        ],
+        componentType: "templateOnly",
+        generateNonce: false
+      );
+      return $this->render($ajax);
     }
     $page = new Component(
       "page-base",
@@ -134,5 +142,11 @@ class TestController extends AbstractController
     $user = new UserEntity($request);
     dump($user);
     exit;
+  }
+
+  public function component(): ResponseInterface
+  {    
+    $page = new Component("themeSelector-01");
+    return $this->render($page);
   }
 }

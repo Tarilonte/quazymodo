@@ -1,11 +1,12 @@
-<section class="flex flex-col justify-center items-center grow w-full p-20 bg-base-100">
+<section class="flex flex-col justify-center items-center grow w-full p-20 bg-base-100 min-h-[calc(100%_-_72px)] transition-all duration-200">
   <button 
     class='btn btn-primary btn-lg m-20 mx-auto' 
     hx-get='/test/htmx?teste' 
     hx-trigger='click'
-    hx-swap='outerHTML'
+    hx-target='#target'
+    hx-swap='innerHTML'
     >
     Click me
   </button>
-  <span id="retorno"></span>
+  <div id="target" class="grow max-h-20"></div>
 </section>

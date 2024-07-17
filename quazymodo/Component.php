@@ -13,6 +13,7 @@ class Component
   public string $componentType;
   public string $componentName;
   private string $CspHeader = "";
+  private bool $generateNonce = true; // Default is true
   public string $html = "";
   public array $js = [];
   public array $css = [];
@@ -27,10 +28,11 @@ class Component
    * default "component", use "templateOnly" for components without blueprint
    * @return $this 
    */
-  public function __construct($componentName, $controllerData = [], $componentType = "component")
+  public function __construct($componentName, $controllerData = [], $componentType = "component", $generateNonce = true)
   {
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
+    $this->generateNonce = $generateNonce;
     if ($componentType === "templateOnly") {
       $this->construct_templateOnly($componentName, $controllerData);
     } else {
@@ -127,7 +129,7 @@ class Component
   {
     $this->flush_assets();
     if ($_ENV['CSP_ENABLED']) {
-      $this->CspHeader = CSPManager::getDirectives();
+      $this->CspHeader = CSPManager::getDirectives($this->generateNonce);
     }
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
@@ -164,7 +166,7 @@ class Component
     if (preg_match('/{{ ?CSS ?}}/i', $this->html)) {
       $this->html = preg_replace('/{{ ?CSS ?}}/i', $cssLinks, $this->html);
     } else {
-      $this->html .= $cssLinks;
+      $this->html = $cssLinks . $this->html;
     }
   }
 

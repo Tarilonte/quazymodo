@@ -1,5 +1,4 @@
 <?php
-use Tracy\Debugger;
 
 /*
 | App Configuration
@@ -8,22 +7,40 @@ use Tracy\Debugger;
 |*/ 
 
 /*
+| Session Configuration
+|------------------
+|*/
+if ($_ENV['APP_SESSION_ENABLE'] == 1) {
+  session_start([ 
+    'cookie_lifetime' => 0,
+    'cookie_path' => '/',
+    'cookie_secure' => false,
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Strict',
+    'sid_length' => 22,
+    'use_strict_mode' => true,
+    'referer_check' => $_SERVER['HTTP_HOST'],
+  ]);
+}
+
+/*
 | Tracy Debugger
 |------------------
 |*/
-
-// Set the environment for the debugger according to the APP_ENV variable
-$debuggerEnv = $_ENV["APP_ENV"] === 'production' ? true : false;
-// Set the directory for the debugger logs
-$tracyLogDir = __DIR__ . '/writable/tracy/';
-// Enable the debugger
-Debugger::enable($debuggerEnv, $tracyLogDir);
-// Set the error 500 page
-Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
-// Set the strict mode
-Debugger::$strictMode = true;
-// Set the show bar
-Debugger::$showBar = true;
+if ($_ENV['APP_TRACY_ENABLE'] == 1) {
+  // Set the environment for the debugger according to the APP_ENV variable
+  $debuggerEnv = $_ENV["APP_ENV"] === 'production' ? true : false;
+  // Set the directory for the debugger logs
+  $tracyLogDir = __DIR__ . '/writable/tracy/';
+  // Enable the debugger
+  Tracy\Debugger::enable($debuggerEnv, $tracyLogDir);
+  // Set the error 500 page
+  Tracy\Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
+  // Set the strict mode
+  Tracy\Debugger::$strictMode = true;
+  // Set the show bar
+  Tracy\Debugger::$showBar = true;
+}
 
 /*
 | timezone and locale

@@ -10,7 +10,7 @@ return [
     ],
     [
       'data-slot' => 'body-class',
-      'data-content' => 'flex justify-center items-center p-10 bg-accent'
+      'data-content' => 'flex justify-center items-center p-10'
     ],
     [
       'data-slot' => 'body',
