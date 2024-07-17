@@ -29,11 +29,11 @@ if ($_ENV['APP_SESSION_ENABLE'] == 1) {
 |*/
 if ($_ENV['APP_TRACY_ENABLE'] == 1) {
   // Set the environment for the debugger according to the APP_ENV variable
-  $debuggerEnv = $_ENV["APP_ENV"] === 'production' ? true : false;
+  $tracyMode = $_ENV["APP_ENV"] === 'production' ? true : false;
   // Set the directory for the debugger logs
   $tracyLogDir = __DIR__ . '/writable/tracy/';
   // Enable the debugger
-  Tracy\Debugger::enable($debuggerEnv, $tracyLogDir);
+  Tracy\Debugger::enable($tracyMode, $tracyLogDir);
   // Set the error 500 page
   Tracy\Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
   // Set the strict mode
@@ -59,4 +59,5 @@ setlocale(LC_ALL, $_ENV['APP_LOCALE']);
 Quazymodo\Functions\setCsrf();
 
 // Apply rate limit
-Quazymodo\Functions\rateLimit();
+$userIp = \Quazymodo\Functions\getClientIp($request);
+Quazymodo\Functions\rateLimit($userIp);

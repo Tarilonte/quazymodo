@@ -3,7 +3,7 @@
 namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use Laminas\Diactoros\Response;
+use Nyholm\Psr7\Response;
 use Quazymodo\Component;
 
 abstract class AbstractController

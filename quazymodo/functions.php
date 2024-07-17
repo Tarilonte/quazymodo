@@ -32,27 +32,33 @@ function isCsrfValid(): bool
   return false;  
 }
 
-function rateLimit(): void 
+function rateLimit(string $clientIp): void
 {
-  $limit = $_ENV['RATE_LIMIT_REQUESTS'];
-  $period = $_ENV['RATE_LIMIT_PERIOD'];
+    $limit = $_ENV['RATE_LIMIT_REQUESTS'];
+    $period = $_ENV['RATE_LIMIT_PERIOD'];
 
-  if (!isset($_SESSION['requests'])) {
-  $_SESSION['requests'] = [];
-  }
+    if (!isset($_SESSION['rate_limit'])) {
+        $_SESSION['rate_limit'] = [];
+    }
 
-  $time = time();
-  $_SESSION['requests'] = array_filter($_SESSION['requests'], function ($timestamp) use ($time, $period) {
-  return ($time - $timestamp) < $period;
-  });
+    if (!isset($_SESSION['rate_limit'][$clientIp])) {
+        $_SESSION['rate_limit'][$clientIp] = [];
+    }
 
-  if (count($_SESSION['requests']) >= $limit) {
-  header('HTTP/1.1 429 Too Many Requests');
-  echo "Você fez requisições demais. Tente novamente mais tarde.";
-  exit;
-  }
-  $_SESSION['requests'][] = $time;
+    $time = time();
+    $_SESSION['rate_limit'][$clientIp] = array_filter($_SESSION['rate_limit'][$clientIp], function ($timestamp) use ($time, $period) {
+        return ($time - $timestamp) < $period;
+    });
+
+    if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
+        header('HTTP/1.1 429 Too Many Requests');
+        echo "Rate limit exceeded. Please wait a few seconds and try again.";
+        exit;
+    }
+
+    $_SESSION['rate_limit'][$clientIp][] = $time;
 }
+
 
 function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
 {
