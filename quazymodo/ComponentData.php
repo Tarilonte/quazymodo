@@ -89,19 +89,19 @@ class ComponentData
   |
   | Processa o array de dados recebidos do controller e o armazena em $merged_data
   |
-  */
+  |*/
   private function merge_controllerData($controllerData) : void
   {
     foreach ($controllerData as $slot => $content) {
-      if (is_array($content)) {
+      if (is_array($content) && array_is_list($content)) {
         for ($i = 0; $i < count($content); $i++) {
           $this->merge_controllerData([$slot => $content[$i]]);         
-          }
+        }
       }elseif(in_array($slot, ['css', 'js'])){
           $this->$slot[] = $content;
       }else{
         $this->merged_data[$slot][] = $content;
-      }
+      } 
     }
   }
 
@@ -110,7 +110,7 @@ class ComponentData
     foreach ($merged_data as $slot => $content) {
       if ( $content instanceof Component) {
         $this->parse_childComponent($slot, $content);
-      } elseif (is_array($content)) {
+      } elseif (is_array($content) && array_is_list($content)) {
         for ($i = 0; $i < count($content); $i++) {
           $this->parse_mergedData([$slot => $content[$i]]);         
           }

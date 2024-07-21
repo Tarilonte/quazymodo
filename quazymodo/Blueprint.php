@@ -6,20 +6,20 @@ class Blueprint
 {
   private array $array;
 
-  public function __construct($componentName)
+  public function __construct($componentName, $controllerData)
   {
-    $this->array = $this->parse_blueprint($componentName);
+    $this->array = $this->parse_blueprint($componentName, $controllerData);
     $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
   }
 
-  private function parse_blueprint($componentName) : array
+  private function parse_blueprint($componentName, $controllerData) : array
   {
     // Load blueprint file
-    $blueprint = $this->load_blueprint($componentName);
+    $blueprint = $this->load_blueprint($componentName, $controllerData);
 
     // Verify if blueprint is extending another blueprint
     if (isset($blueprint['extends'])) {
-      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint);
+      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $controllerData);
     }
 
     foreach ($blueprint as $item => $value) {
@@ -33,7 +33,7 @@ class Blueprint
     return $blueprint;
   }
 
-  private function load_blueprint($componentName) : array
+  private function load_blueprint($componentName, $controllerData) : array
   {
     // Require blueprint file
     if (file_exists("../app/components/blueprints/$componentName.php")) {
@@ -43,10 +43,10 @@ class Blueprint
     }
   }
 
-  private function extend_blueprint($parent_blueprint, $child_blueprint) : array
+  private function extend_blueprint($parent_blueprint, $child_blueprint, $controllerData) : array
   {
     // Load parent blueprint file
-    $parent_blueprint = $this->load_blueprint($parent_blueprint);
+    $parent_blueprint = $this->load_blueprint($parent_blueprint, $controllerData);
     
     // Extend parent blueprint with child blueprint
     foreach ($child_blueprint as $key => $value) {

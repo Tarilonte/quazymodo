@@ -12,9 +12,9 @@ class Component
   public ComponentData $data;
   public string $componentType;
   public string $componentName;
-  private string $CspHeader = "";
-  private bool $generateNonce = true; // Default is true
-  public string $html = "";
+  private string $CspHeader = '';
+  private bool $shouldSetNonce = true;
+  public string $html = '';
   public array $js = [];
   public array $css = [];
   public array $slots = [];
@@ -28,18 +28,15 @@ class Component
    * default "component", use "templateOnly" for components without blueprint
    * @return $this 
    */
-  public function __construct($componentName, $controllerData = [], $componentType = "component", $generateNonce = true)
+  public function __construct($componentName, $controllerData = [], $componentType = "component", $shouldSetNonce = true)
   {
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
-    $this->generateNonce = $generateNonce;
+    $this->shouldSetNonce = $shouldSetNonce;
     if ($componentType === "templateOnly") {
       $this->construct_templateOnly($componentName, $controllerData);
     } else {
-      $this->blueprint = new Blueprint($componentName);
-      if (null !== $this->blueprint->type) {
-        $this->componentType = $this->blueprint->type;
-      }        
+      $this->blueprint = new Blueprint($componentName, $controllerData);       
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);
@@ -129,7 +126,7 @@ class Component
   {
     $this->flush_assets();
     if ($_ENV['CSP_ENABLED']) {
-      $this->CspHeader = CSPManager::getDirectives($this->generateNonce);
+      $this->CspHeader = CSPManager::getDirectives($this->shouldSetNonce);
     }
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {

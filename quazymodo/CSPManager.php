@@ -10,7 +10,7 @@ class CSPManager
         'script-src' => ["'self'"]
     ];
 
-    private static function generateNonce()
+    private static function setNonce()
     {
         self::$nonce = base64_encode(random_bytes(20));
         $_SESSION['csp-nonce'] = self::$nonce;
@@ -24,7 +24,7 @@ class CSPManager
         return self::$nonce;
     }
 
-    public static function addSource($directive, $source)
+    public static function addSource($directive, $source): void
     {
         // Verifica se a diretiva é suportada; caso contrário, ignora a adição
         if (!array_key_exists($directive, self::$directives)) {
@@ -38,14 +38,12 @@ class CSPManager
         }
     }
 
-    public static function getDirectives($generateNonce)
+    public static function getDirectives(bool $shouldSetNonce): string
     {
-        if ($generateNonce) {
-            self::generateNonce();
+        if ($shouldSetNonce) {
+            self::setNonce();
         }
-        //self::generateNonce();
         self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
-        
         $policies = [];
         foreach (self::$directives as $directive => $sources) {
             if (!empty($sources)) { // Verifica se há fontes definidas

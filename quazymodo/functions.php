@@ -32,7 +32,7 @@ function isCsrfValid(): bool
   return false;  
 }
 
-function rateLimit(string $clientIp): void
+function rateLimit(): void
 {
     $limit = $_ENV['RATE_LIMIT_REQUESTS'];
     $period = $_ENV['RATE_LIMIT_PERIOD'];
@@ -41,24 +41,19 @@ function rateLimit(string $clientIp): void
         $_SESSION['rate_limit'] = [];
     }
 
-    if (!isset($_SESSION['rate_limit'][$clientIp])) {
-        $_SESSION['rate_limit'][$clientIp] = [];
-    }
-
     $time = time();
-    $_SESSION['rate_limit'][$clientIp] = array_filter($_SESSION['rate_limit'][$clientIp], function ($timestamp) use ($time, $period) {
+    $_SESSION['rate_limit'] = array_filter($_SESSION['rate_limit'], function ($timestamp) use ($time, $period) {
         return ($time - $timestamp) < $period;
     });
 
-    if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
+    if (count($_SESSION['rate_limit']) >= $limit) {
         header('HTTP/1.1 429 Too Many Requests');
         echo "Rate limit exceeded. Please wait a few seconds and try again.";
         exit;
     }
 
-    $_SESSION['rate_limit'][$clientIp][] = $time;
+    $_SESSION['rate_limit'][] = $time;
 }
-
 
 function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
 {
@@ -79,7 +74,8 @@ function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
   return 'UNKNOWN';
 }
 
-function recursiveArraySearch($array, $keyToFind) {
+function recursiveArraySearch($array, $keyToFind): ?string
+{
   foreach ($array as $key => $value) {
     if ($key === $keyToFind) {
       if (is_array($value)) {
