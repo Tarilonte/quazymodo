@@ -6,7 +6,8 @@
         "analog/analog": "^1.0",
         "tracy/tracy": "^2.10",
         "nyholm/psr7": "^1.8",
-        "nyholm/psr7-server": "^1.1"
+        "nyholm/psr7-server": "^1.1",
+        "catfan/medoo": "^2.1"
     },
     "autoload": {
         "psr-4": {

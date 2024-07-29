@@ -2,14 +2,13 @@
 
 namespace Controller\Test;
 
-use Controller\AbstractController;
+use Quazymodo\AbstractController;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
-use Quazymodo\Component;
-use Entity\UserEntity;
-use Quazymodo\CSPManager;
+use App\Entities\UserEntity;
+use Quazymodo\ComponentFactory;
 
 use function Quazymodo\Functions\recursiveArraySearch;
 
@@ -32,7 +31,7 @@ class TestController extends AbstractController
 
   public function modal(): ResponseInterface
   {    
-    $page = new Component("page-modal_test");
+    $page = ComponentFactory::create("page-modal_test");
     return $this->render($page);
   }
 
@@ -90,14 +89,14 @@ class TestController extends AbstractController
     }
   
     // Montar a página
-    $page = new Component(
+    $page = ComponentFactory::create(
       "page-base",
       [
         "body" => [
-          new Component("navbar-01"),
-          new Component("table-test", $tableData,  "templateOnly")
+          ComponentFactory::create("navbar-01"),
+          ComponentFactory::create("table-test", $tableData,  "templateOnly")
         ],
-        "navbar-logo" =>  new Component("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
+        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
         "navbar-start" =>  "Table Test",
       ]
     );
@@ -108,45 +107,61 @@ class TestController extends AbstractController
   {    
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $nonce = CSPManager::getNonce();
-      $ajax = new Component(
-        "salsifufu", 
-        [
-          "js" => "https://confettijs.org/confetti.min.js [nonce='$nonce']",
-          "css" => "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-        ],
-        componentType: "templateOnly",
-        generateNonce: false
-      );
-      return $this->render($ajax);
+      $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
+      $effect = $effects[array_rand($effects)];
+      exit("<h1 class='font-black text-8xl text-primary animate__animated animate__$effect'>
+                ÇA C'EST FOU FOU!!
+              </h1>");
     }
-    $page = new Component(
+    $page = ComponentFactory::create(
       "page-base",
       [
+        "css" => "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
         "js" => "https://unpkg.com/htmx.org@2.0.0 [integrity='sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw' crossorigin='anonymous']",
         "body" => [
-          new Component("navbar-01"),
-          new Component("pages/htmx_test-page", componentType: "templateOnly")]
+          ComponentFactory::create("navbar-01"),
+          ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")]
       ]
     );
     return $this->render($page);
   }
 
-  public function user(RequestInterface $request): void
+  public function user(RequestInterface $request): ResponseInterface
   {    
+    $user = new UserEntity();
+
+    // Verifica se o argumento 'reset' está presente na URL
     if (isset($request->getQueryParams()['reset'])) {
-      dump('Reseting session user info');
-      unset($_SESSION['user']);
+      $user->resetSessionInfo();
     }
-    //isset($_SESSION['user']) ? dump($_SESSION['user']) : dump('No user info in session variables');
-    $user = new UserEntity($request);
-    dump($user);
+
+    // Obtém as informações do usuário
+    $userInfo = $user->get(83);
+    //dumpe($userInfo);
+
+    // Monta a tabela com as informações do usuário
+    $table = ComponentFactory::create("tables/vertical-table",["rows" => $userInfo]);
+
+    // Monta a página
+    $page = ComponentFactory::create(
+      "page-base",
+      [
+        "body" => [
+          ComponentFactory::create("navbar-01"),
+          $table
+        ],
+        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
+        "navbar-start" =>  "User Info",
+      ]
+    );
+    return $this->render($page);
     exit;
+    
   }
 
   public function component(): ResponseInterface
   {    
-    $page = new Component("themeSelector-01");
+    $page = ComponentFactory::create("themeSelector-01");
     return $this->render($page);
   }
 }

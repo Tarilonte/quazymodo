@@ -1,37 +1,53 @@
 <?php
 
-namespace Entity;
+namespace App\Entities;
 
-use Psr\Http\Message\ServerRequestInterface;
-use function Quazymodo\Functions\getClientIp;
+use Quazymodo\BaseRepository;
 
 class UserEntity
 {
-    public int $id;
-    public string $name;
-    public string $email;
-    public string $ip;
-    public array $roles;
+  protected ?string $dbHost = 'default';
+  protected ?string $dbName = 'user';
+  protected ?string $dbTable = 'user';
+  protected BaseRepository $Repository;
 
-    public function __construct(ServerRequestInterface $request)
-    {      
-      $this->ip = getClientIp($request);
-      if (isset($_SESSION['user']['id'])) {
-        $this->id = $_SESSION['user']['id'];
-        $this->name = $_SESSION['user']['name'];
-        $this->email = $_SESSION['user']['email'];
-        $this->roles = $_SESSION['user']['roles'];        
-      } else {
-        $this->id = 0;
-        $this->name = 'Visitante';
-        $this->email = 'guest@example.com';
-        $this->roles = ['guest'];
+  public function __construct()
+  {
+    $this->Repository = new BaseRepository($this->dbHost, $this->dbName, $this->dbTable);
+  }
 
-        $_SESSION['user']['id'] = $this->id;
-        $_SESSION['user']['name'] = $this->name;
-        $_SESSION['user']['email'] = $this->email;
-        $_SESSION['user']['ip'] = $this->ip;
-        $_SESSION['user']['roles'] = $this->roles;
-      }
+  public function getSessionInfo()
+  {    
+    if (!isset($_SESSION['user'])) {
+    self::setSessionInfo();
     }
+    return $_SESSION['user'];
+  }
+
+  public function setSessionInfo(?array $userInfo=null): void
+  {  
+    if (empty($userInfo)) {
+    $_SESSION['user']['roles'] = 'GUEST';
+    } else {
+    $_SESSION['user'] = [...$userInfo];
+    }
+  }
+
+  public function resetSessionInfo(): void
+  {
+    unset($_SESSION['user']);
+  }
+
+  public function get($id)
+  {
+    return $this->Repository->useTable('view_user')->findById($id);
+  }
+
+  public function getRoles($id)
+  {
+    $roles = $this->Repository->findAll(['user_id' => $id]);
+    return array_column($roles, 'role');
+  }
+
+
 }
