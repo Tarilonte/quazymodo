@@ -152,4 +152,9 @@ class BaseRepository
     {
         return $this->connect()->select($this->table, '*', $criteria);
     }
+
+    public function getSchema(): array
+    {
+        return DB::getSchema($this->hostAlias, $this->database);
+    }
 }
