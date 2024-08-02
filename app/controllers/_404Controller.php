@@ -4,7 +4,8 @@ namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Quazymodo\Component;
+use Quazymodo\AbstractController;
+use Quazymodo\ComponentFactory;
 
 class _404Controller extends AbstractController
 {
@@ -12,7 +13,7 @@ class _404Controller extends AbstractController
   {
     $REQUEST_URI = $request->getServerParams()['REQUEST_URI'];
 
-    $page = new Component(
+    $page = ComponentFactory::create(
       "page-404",
       ["requested-uri" => $REQUEST_URI]
       );

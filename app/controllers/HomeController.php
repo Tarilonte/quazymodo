@@ -4,12 +4,14 @@ namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Quazymodo\Component;
+use Quazymodo\AbstractController;
+use Quazymodo\ComponentFactory;
+
 class HomeController extends AbstractController
 {
   public function index(ServerRequestInterface $request): ResponseInterface
   {
-    $page = new Component(
+    $page = ComponentFactory::create(
       "page-home"
     );
     return $this->render($page);

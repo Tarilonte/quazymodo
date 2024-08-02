@@ -5,7 +5,7 @@ namespace Quazymodo;
 use Tracy\Debugger;
 use Tracy\IBarPanel;
 
-class ComponentDebug extends Component
+class ComponentDebug extends BaseComponent
 {
     private static $components = [];
     private static $panelAdded = false;

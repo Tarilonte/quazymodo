@@ -108,7 +108,7 @@ class ComponentData
   private function parse_mergedData(array $merged_data) : void
   {
     foreach ($merged_data as $slot => $content) {
-      if ( $content instanceof Component) {
+      if ( $content instanceof BaseComponent) {
         $this->parse_childComponent($slot, $content);
       } elseif (is_array($content) && array_is_list($content)) {
         for ($i = 0; $i < count($content); $i++) {
@@ -120,7 +120,7 @@ class ComponentData
     }
   }
 
-  private function parse_childComponent(string $key, Component $component) : void
+  private function parse_childComponent(string $key, BaseComponent $component) : void
   {
     isset($component->js)? $this->push_asset("js", $component->js) : '';
     isset($component->css)? $this->push_asset("css", $component->css) : '';
