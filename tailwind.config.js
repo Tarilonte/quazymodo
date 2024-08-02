@@ -36,7 +36,7 @@ module.exports = {
     themes: [
       {
         light: {
-          ...require("daisyui/src/theming/themes")["cupcake"],
+          ...require("daisyui/src/theming/themes")["nord"],
         },
       },
       {

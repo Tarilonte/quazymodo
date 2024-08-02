@@ -2,6 +2,7 @@
 
 return [
   'extends' => 'page-base',
+  'css' => 'animatedBackground.css',
   'data' => [
     [
       'data-slot' => 'page-title',
@@ -18,15 +19,20 @@ return [
       'data-type' => 'template',
       'data-source' => 'pages/home'
     ],
-    [
+    /* [
       'data-slot' => 'body-class',
-      'data-content' => "bg-gradient-to-b from-base-100 to-base-300"
+      'data-content' => 'bg-gradient-to-b from-base-100 to-base-300'
+    ], */
+    [
+      'data-slot' => 'logo',
+      'data-type' => 'component',
+      'data-source' => 'animatedBackground',
     ],
     [
       'data-slot' => 'logo',
       'data-type' => 'template',
       'data-source' => 'logo',
-      'data-content' => ["logo-class" => "w-32 fill-primary m-auto"]
+      'data-content' => ["logo-class" => "w-24 sm:w-32 fill-primary m-auto"]
     ]
   ] 
 ];
