@@ -45,9 +45,7 @@ class UserEntity
 
   public function getRoles($id)
   {
-    $roles = $this->Repository->findAll(['user_id' => $id]);
+    $roles = $this->Repository->useTable('role')->findAll(['user_id' => $id]);
     return array_column($roles, 'role');
   }
-
-
 }
