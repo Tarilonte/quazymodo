@@ -7,11 +7,11 @@ return [
     'base.js',
     'themeSelector-01.js'
   ],
-  'data' => [
+  'inserts' => [
     [
-      'data-slot' => '',
-      'data-type' => '',
-      'data-source' => ''
+      'slot' => '',
+      'type' => '',
+      'source' => ''
     ]
   ]
 ];

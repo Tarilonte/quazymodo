@@ -3,36 +3,36 @@
 return [
   'extends' => 'page-base',
   'js' => 'teste-modal.js',
-  'data' => [
+  'inserts' => [
     [
-      'data-slot' => 'page-title',
-      'data-content' => 'Teste Modal'
+      'slot' => 'page-title',
+      'content' => 'Teste Modal'
     ],
     [
-      'data-slot' => 'body',
-      'data-type' => 'component',
-      'data-source' => 'navbar-01',
-      'data-content' => ["navbar-container-class" => "bg-base-100"]
+      'slot' => 'body',
+      'type' => 'component',
+      'source' => 'navbar-01',
+      'content' => ["navbar-container-class" => "bg-base-100"]
     ],
     [
-      'data-slot' => 'body',
-      'data-type' => 'template',
-      'data-source' => 'pages/modal_test-page'
+      'slot' => 'body',
+      'type' => 'template',
+      'source' => 'pages/modal_test-page'
     ],
     [
-      'data-slot' => 'body',
-      'data-type' => 'component',
-      'data-source' => 'modalComponent'
+      'slot' => 'body',
+      'type' => 'component',
+      'source' => 'modalComponent'
     ],
     [
-      'data-slot' => 'navbar-logo',
-      'data-type' => 'template',
-      'data-source' => 'logo',
-      'data-content' => ["logo-class" => "h-8 fill-primary"]
+      'slot' => 'navbar-logo',
+      'type' => 'template',
+      'source' => 'logo',
+      'content' => ["logo-class" => "h-8 fill-primary"]
     ],
     [
-      'data-slot' => 'navbar-start',
-      'data-content' => 'Teste Modal'
+      'slot' => 'navbar-start',
+      'content' => 'Teste Modal'
     ]
   ]
 ];

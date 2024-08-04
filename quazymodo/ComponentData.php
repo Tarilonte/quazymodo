@@ -7,19 +7,19 @@ use function Quazymodo\Functions\recursiveArraySearch;
 
 class ComponentData
 {
-  private $blueprintData = [];
+  private $blueprintInserts = [];
   private $controllerData = [];
   private $merged_data = [];
   public  $final_data = [];
   public  $js = [];
   public  $css = [];
 
-  public function __construct(array $blueprintData = [], array $controllerData = [])
+  public function __construct(array $blueprintInserts = [], array $controllerData = [])
   {
-    $this->blueprintData = $blueprintData;
+    $this->blueprintInserts = $blueprintInserts;
     $this->controllerData = $controllerData;
-    foreach ($this->blueprintData as $data_piece) {
-      $this->merge_blueprintData($data_piece);
+    foreach ($this->blueprintInserts as $data_piece) {
+      $this->merge_blueprintInserts($data_piece);
     }
     $this->merge_controllerData($this->controllerData);
     $this->parse_mergedData($this->merged_data);
@@ -29,53 +29,53 @@ class ComponentData
 
   /*
   |--------------------------------------------------------------------------
-  | merge_blueprintData
+  | merge_blueprintInserts
   |--------------------------------------------------------------------------
   |
   | Processa um elemento de dados do blueprint e o armazena em $merged_data
   |
   |*/
-  private function merge_blueprintData(array $data_piece) : void
+  private function merge_blueprintInserts(array $data_piece) : void
   {
-    if (!isset($data_piece['data-type'])) {
-      $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
+    if (!isset($data_piece['type'])) {
+      $this->merged_data[$data_piece['slot']][] = $data_piece['content'];
     } else {
-      switch ($data_piece['data-type']) {
+      switch ($data_piece['type']) {
         case 'template':
           $content = [];
-          if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
-            $content = $data_piece['data-content'];
+          if (isset($data_piece['content']) && is_array($data_piece['content'])) {
+            $content = $data_piece['content'];
           }
-          $this->merged_data[$data_piece['data-slot']][] = ComponentFactory::create($data_piece['data-source'],$content,"templateOnly");
+          $this->merged_data[$data_piece['slot']][] = ComponentFactory::create($data_piece['source'],$content,"templateOnly");
           break;
         case 'string':
-          $this->merged_data[$data_piece['data-slot']][] = $data_piece['data-content'];
+          $this->merged_data[$data_piece['slot']][] = $data_piece['content'];
           break;
         case 'env-var':
-          $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_ENV, $data_piece['data-source']);
+          $this->merged_data[$data_piece['slot']][] = recursiveArraySearch($_ENV, $data_piece['source']);
           break;
         case 'session-var':
-          $this->merged_data[$data_piece['data-slot']][] = recursiveArraySearch($_SESSION, $data_piece['data-source']);
+          $this->merged_data[$data_piece['slot']][] = recursiveArraySearch($_SESSION, $data_piece['source']);
           break;
         case 'cookie':
-          if (!isset($_COOKIE[$data_piece['data-source']])) {
+          if (!isset($_COOKIE[$data_piece['source']])) {
             $data_source = "";
           }else {
-            $data_source = $_COOKIE[$data_piece['data-source']];
+            $data_source = $_COOKIE[$data_piece['source']];
           }
-          $this->merged_data[$data_piece['data-slot']][] = $data_source;
+          $this->merged_data[$data_piece['slot']][] = $data_source;
           break;
         case 'component':
           // TODO: Implementar verificação para impedir que um componente não seja incluído dentro dele mesmo
           $content = [];
-          if (isset($data_piece['data-content']) && is_array($data_piece['data-content'])) {
-            $content = $data_piece['data-content'];
+          if (isset($data_piece['content']) && is_array($data_piece['content'])) {
+            $content = $data_piece['content'];
           }
-          $this->merged_data[$data_piece['data-slot']][] = ComponentFactory::create($data_piece['data-source'],$content);
+          $this->merged_data[$data_piece['slot']][] = ComponentFactory::create($data_piece['source'],$content);
           break;
         case 'array':
-          foreach ($data_piece['data-content'] as $array_item) {
-            $this->merge_blueprintData($array_item);
+          foreach ($data_piece['content'] as $array_item) {
+            $this->merge_blueprintInserts($array_item);
           }
           break;
       }

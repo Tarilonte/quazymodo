@@ -2,11 +2,11 @@
 
 return [
   'template' => 'navbar-01',
-  'data' => [
+  'inserts' => [
     [
-      'data-slot' => 'navbar-end',
-      'data-type' => 'component',
-      'data-source' => 'themeSelector-01'
+      'slot' => 'navbar-end',
+      'type' => 'component',
+      'source' => 'themeSelector-01'
     ]
   ]
 ];

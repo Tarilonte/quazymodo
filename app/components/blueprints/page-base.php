@@ -8,11 +8,11 @@ return [
     'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js',
     'base.js'
   ],
-  'data' => [
+  'inserts' => [
     [
-      'data-slot' => 'css-theme',
-      'data-type' => 'cookie',
-      'data-source' => 'css-theme'
+      'slot' => 'css-theme',
+      'type' => 'cookie',
+      'source' => 'css-theme'
     ]
   ]
 ];

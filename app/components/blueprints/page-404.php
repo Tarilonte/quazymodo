@@ -3,19 +3,19 @@
 return [
   'extends' => 'page-base',
   'css' => "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css",
-  'data' => [
+  'inserts' => [
     [
-      'data-slot' => 'page-title',
-      'data-content' => '404 - Page Not Found'
+      'slot' => 'page-title',
+      'content' => '404 - Page Not Found'
     ],
     [
-      'data-slot' => 'body-class',
-      'data-content' => 'flex justify-center items-center p-10'
+      'slot' => 'body-class',
+      'content' => 'flex justify-center items-center p-10'
     ],
     [
-      'data-slot' => 'body',
-      'data-type' => 'template',
-      'data-source' => 'pages/404'
+      'slot' => 'body',
+      'type' => 'template',
+      'source' => 'pages/404'
     ]
   ]
 ];

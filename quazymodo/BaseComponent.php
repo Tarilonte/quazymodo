@@ -36,11 +36,11 @@ class BaseComponent
     if ($componentType === "templateOnly") {
       $this->construct_templateOnly($componentName, $controllerData);
     } else {
-      $this->blueprint = new Blueprint($componentName, $controllerData);       
+      $this->blueprint = new Blueprint($componentName, $controllerData);  
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);
-      $this->data = new ComponentData($this->blueprint->data, $controllerData);
+      $this->data = new ComponentData($this->blueprint->inserts, $controllerData);
 
       foreach($this->data->final_data as $key => $value) {
         self::$allData[$key] = $value;
@@ -51,7 +51,6 @@ class BaseComponent
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();
     }
-    //bdump($this->componentName);
     return $this;
   }
 
