@@ -32,7 +32,7 @@ class TestController extends AbstractController
   public function modal(): ResponseInterface
   {    
     $page = ComponentFactory::create("page-modal_test");
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
   }
 
   public function table(): ResponseInterface
@@ -100,7 +100,7 @@ class TestController extends AbstractController
         "navbar-start" =>  "Table Test",
       ]
     );
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
   }
 
   public function htmx(RequestInterface $request): ResponseInterface
@@ -123,7 +123,7 @@ class TestController extends AbstractController
           ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")]
       ]
     );
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
   }
 
   public function user(RequestInterface $request): ResponseInterface
@@ -154,7 +154,7 @@ class TestController extends AbstractController
         "navbar-start" =>  "User Info",
       ]
     );
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
     exit;
     
   }
@@ -162,6 +162,6 @@ class TestController extends AbstractController
   public function component(): ResponseInterface
   {    
     $page = ComponentFactory::create("themeSelector-01");
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
   }
 }

@@ -14,6 +14,6 @@ class HomeController extends AbstractController
     $page = ComponentFactory::create(
       "ApPorcelanas/homepage",
     );
-    return $this->render($page);
+    return $this->makeHttpResponse($page);
   }
 }

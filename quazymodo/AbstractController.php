@@ -8,7 +8,7 @@ use Quazymodo\BaseComponent;
 
 abstract class AbstractController
 {
-  public function render(BaseComponent $component, int $status = 200): ResponseInterface
+  public function makeHttpResponse(BaseComponent $component, int $status = 200): ResponseInterface
   {
     $response = new Response;
     $response->getBody()->write($component->render());
