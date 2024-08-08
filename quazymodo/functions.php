@@ -92,7 +92,7 @@ function recursiveArraySearch($array, $keyToFind): ?string
   return null;
 }
 
-function emit($response): void
+function emit(\Psr\Http\Message\ResponseInterface $response): void
 {
   http_response_code($response->getStatusCode());
   foreach ($response->getHeaders() as $name => $values) {
