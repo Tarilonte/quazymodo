@@ -3468,6 +3468,10 @@ details.collapse summary::-webkit-details-marker{
   font-weight: 500;
 }
 
+.font-semibold{
+  font-weight: 600;
+}
+
 .uppercase{
   text-transform: uppercase;
 }
@@ -3514,6 +3518,10 @@ details.collapse summary::-webkit-details-marker{
 
 .line-through{
   text-decoration-line: line-through;
+}
+
+.decoration-primary{
+  text-decoration-color: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .opacity-0{
