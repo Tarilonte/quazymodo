@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
 use Quazymodo\ComponentFactory;
+use Throwable;
 
 use function Quazymodo\Functions\recursiveArraySearch;
 
@@ -103,13 +104,18 @@ class TestController extends AbstractController
     return $this->makeHttpResponse($page);
   }
 
+  public function error(): ResponseInterface|Throwable
+  {  
+    throw new \Exception('Tarilonte', 503);
+  }
+
   public function htmx(RequestInterface $request): ResponseInterface
   {    
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
       $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
       $effect = $effects[array_rand($effects)];
-      exit("<h1 class='font-black text-8xl text-primary animate__animated animate__$effect'>
+      exit("<h1 class='font-black text-8xl text-accent animate__animated animate__$effect'>
                 ÇA C'EST FOU FOU!!
               </h1>");
     }
@@ -120,7 +126,8 @@ class TestController extends AbstractController
         "js" => "https://unpkg.com/htmx.org@2.0.0 [integrity='sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw' crossorigin='anonymous']",
         "body" => [
           ComponentFactory::create("navbar-01"),
-          ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")]
+          ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")
+          ]
       ]
     );
     return $this->makeHttpResponse($page);
@@ -162,6 +169,21 @@ class TestController extends AbstractController
   public function component(): ResponseInterface
   {    
     $page = ComponentFactory::create("themeSelector-01");
+    return $this->makeHttpResponse($page);
+  }
+
+  public function daisy(): ResponseInterface
+  {     
+    $page = ComponentFactory::create(
+      "page-base",
+      [
+        "body" => [
+          ComponentFactory::create("navbar-01",["navbar-start" => "Daisy Test"]),
+          ComponentFactory::create("daisy-test", [],  "templateOnly"),
+        ],        
+        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
+      ]
+    );
     return $this->makeHttpResponse($page);
   }
 }
