@@ -1,12 +1,10 @@
 <span class="overflow-hidden w-full h-dvh select-none flex justify-center items-center absolute -top-5 left-0 text-[56vw] text-base-200/50 font-black z-0">
-  404
+  {{error-code}}
 </span>
 <div class="flex flex-col z-10 items-center">
-  <h1 class="ti ti-directions text-8xl text-center mb-8"></h1>
-  <h1 class="text-4xl lg:text-6xl font-bold text-center">Conteúdo não encontrado</h1>
-  <p class="m-4 text-center text-2xl mb-8">Não localizamos 
-    <span class="font-bold">{{requested-uri}}</span>
-  </p>
+  <h1 class="{{error-icon}} text-8xl text-center mb-8"></h1>
+  <h1 class="text-4xl lg:text-6xl font-bold text-center">{{error-message}}</h1>
+  <p class="m-4 text-center text-2xl mb-8">{{error-description}}</p>
   <a href="/" class="btn btn-lg btn-outline btn-secondary mt-6 lg:w-[360px]">
     <span class="ti ti-arrow-back-up"></span>
     Leve-me de volta

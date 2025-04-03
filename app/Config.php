@@ -35,7 +35,7 @@ if ($_ENV['APP_TRACY_ENABLE'] == 1) {
   // Enable the debugger
   Tracy\Debugger::enable($tracyMode, $tracyLogDir);
   // Set the error 500 page
-  Tracy\Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
+  //Tracy\Debugger::$errorTemplate = __DIR__ . '/components/templates/pages/500.html';
   // Set the strict mode
   Tracy\Debugger::$strictMode = true;
   // Set the show bar
