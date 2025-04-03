@@ -42,8 +42,8 @@ function modal_open(header='', message='') {
 }
 
 function modal_close() {
-  modal_setHeader('');
-  modal_setMessage('');
+  //modal_setHeader('');
+  //modal_setMessage('');
   Modal
   // .fadeOut()
   //.addClass('animate__animated animate__hinge')

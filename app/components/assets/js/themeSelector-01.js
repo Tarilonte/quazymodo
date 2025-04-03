@@ -1,9 +1,13 @@
 // Instancia o seletor de temas
 themeSelector01 = $("label.swap[component-name='themeSelector-01']");
 
+// Define as cores do seletor de temas
+var lightTheme = "lofi";
+var darkTheme = "coffee";
+
 // Captura o tema ativo
 if(!getCookie("css-theme")){
-  toggle_cssTheme("light", themeSelector01);
+  toggle_cssTheme(lightTheme, themeSelector01);
   //console.log("Cookie inexistente");
 }else{
   $("html").attr("data-theme", getCookie("css-theme"));
@@ -14,7 +18,7 @@ if(!getCookie("css-theme")){
 // Captura o clique no seletor de temas
 $(themeSelector01).click(function() {  
   activeTheme = $("html").attr("data-theme");
-  newTheme = (activeTheme === "light")? "dark" : "light";  
+  newTheme = (activeTheme === lightTheme)? darkTheme : lightTheme;  
   toggle_cssTheme(newTheme, themeSelector01);  
 });
 
@@ -26,7 +30,7 @@ function toggle_cssTheme(newTheme, element) {
 
 
 function swap_btn(element) {
-  if ($("html").attr("data-theme") === "dark") {
+  if ($("html").attr("data-theme") === darkTheme) {
     element.toggleClass("swap-active");
   }
 }
