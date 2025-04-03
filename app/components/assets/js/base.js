@@ -1,6 +1,6 @@
 $('document').ready(function() {
   $("html").attr("data-theme", getCookie("css-theme"));
-  $("body").fadeTo(1000, 1);
+  $("body").fadeTo(500, 1);
 });
 
 function getCookie(name) {

@@ -187,14 +187,7 @@ class TestController extends AbstractController
   public function daisy(): ResponseInterface
   {     
     $page = ComponentFactory::create(
-      "page-base",
-      [
-        "body" => [
-          ComponentFactory::create("navbar-01",["navbar-start" => "Daisy Test"]),
-          ComponentFactory::create("daisy-test", [],  "templateOnly"),
-        ],        
-        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
-      ]
+      "test/daisy"
     );
     return $this->html($page);
   }
