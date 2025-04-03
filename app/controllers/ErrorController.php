@@ -32,7 +32,7 @@ class ErrorController extends AbstractController
       );
   
 
-        return $this->makeHttpResponse($component, $statusCode);
+        return $this->html($component, $statusCode);
     }
 
     private function getErrorMessage(int $statusCode, string|null $REQUEST_URI = null): array

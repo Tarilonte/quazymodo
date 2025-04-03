@@ -33,7 +33,7 @@ class TestController extends AbstractController
   public function modal(): ResponseInterface
   {    
     $page = ComponentFactory::create("page-modal_test");
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
   }
 
   public function table(): ResponseInterface
@@ -101,7 +101,7 @@ class TestController extends AbstractController
         "navbar-start" =>  "Table Test",
       ]
     );
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
   }
 
   public function error(): ResponseInterface|Throwable
@@ -130,7 +130,7 @@ class TestController extends AbstractController
           ]
       ]
     );
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
   }
 
   public function user(RequestInterface $request): ResponseInterface
@@ -161,7 +161,7 @@ class TestController extends AbstractController
         "navbar-start" =>  "User Info",
       ]
     );
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
     exit;
     
   }
@@ -169,7 +169,19 @@ class TestController extends AbstractController
   public function component(): ResponseInterface
   {    
     $page = ComponentFactory::create("themeSelector-01");
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
+  }
+
+  public function array_response(): ResponseInterface
+  {    
+    $array = [
+      "name" => "Quazymodo",
+      "version" => "1.0.0",
+      "description" => "A php quasiframework.",
+      "author" => "Your Name",
+      "license" => "MIT"
+    ];
+    return $this->json($array);
   }
 
   public function daisy(): ResponseInterface
@@ -184,6 +196,6 @@ class TestController extends AbstractController
         "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
       ]
     );
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
   }
 }

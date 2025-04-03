@@ -14,6 +14,6 @@ class HomeController extends AbstractController
     $page = ComponentFactory::create(
       "page-home"
     );
-    return $this->makeHttpResponse($page);
+    return $this->html($page);
   }
 }
