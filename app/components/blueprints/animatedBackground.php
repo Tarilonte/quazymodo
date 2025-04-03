@@ -6,7 +6,7 @@ return [
   'inserts' => [
     [
       'slot' => 'animatedBackground-class',
-      'content' => 'bg-gradient-to-b from-secondary/30 to-accent/30',
+      'content' => 'bg-gradient-to-b from-secondary/40 to-accent/30',
     ],
     [
       'slot' => 'body',

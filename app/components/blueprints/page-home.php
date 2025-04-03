@@ -2,7 +2,7 @@
 
 return [
   'extends' => 'page-base',
-  'css' => 'animatedBackground.css',
+  'css' => '',
   'inserts' => [
     [
       'slot' => 'page-title',
