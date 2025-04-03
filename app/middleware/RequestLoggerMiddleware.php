@@ -56,8 +56,8 @@ class RequestLoggerMiddleware implements MiddlewareInterface
                 "query" => $request->getUri()->getQuery(),
                 "ip" => $clientIp,
                 "headers" => $request->getHeaders(),
-                "body" => (string) $request->getBody(),
-                "session" => $sessionData
+                "body" => (string) $request->getBody()
+                //"session" => $sessionData
             ],
             "response" => [
                 "status_code" => $response->getStatusCode(),

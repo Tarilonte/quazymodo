@@ -32,7 +32,7 @@ function isCsrfValid(): bool
   return false;  
 }
 
-function rateLimit(): void
+function rateLimit(string $clientIp): void
 {
     $limit = $_ENV['RATE_LIMIT_REQUESTS'];
     $period = $_ENV['RATE_LIMIT_PERIOD'];
@@ -41,18 +41,22 @@ function rateLimit(): void
         $_SESSION['rate_limit'] = [];
     }
 
+    if (!isset($_SESSION['rate_limit'][$clientIp])) {
+        $_SESSION['rate_limit'][$clientIp] = [];
+    }
+
     $time = time();
-    $_SESSION['rate_limit'] = array_filter($_SESSION['rate_limit'], function ($timestamp) use ($time, $period) {
+    $_SESSION['rate_limit'][$clientIp] = array_filter($_SESSION['rate_limit'][$clientIp], function ($timestamp) use ($time, $period) {
         return ($time - $timestamp) < $period;
     });
 
-    if (count($_SESSION['rate_limit']) >= $limit) {
+    if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
         header('HTTP/1.1 429 Too Many Requests');
         echo "Rate limit exceeded. Please wait a few seconds and try again.";
         exit;
     }
 
-    $_SESSION['rate_limit'][] = $time;
+    $_SESSION['rate_limit'][$clientIp][] = $time;
 }
 
 function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
@@ -94,14 +98,37 @@ function recursiveArraySearch($array, $keyToFind): ?string
 
 function emit(\Psr\Http\Message\ResponseInterface $response): void
 {
-  http_response_code($response->getStatusCode());
-  foreach ($response->getHeaders() as $name => $values) {
-    foreach ($values as $value) {
-      header(sprintf('%s: %s', $name, $value), false);
+    // 1. Define status code
+    http_response_code($response->getStatusCode());
+
+    // 2. Envia headers (incluindo HSTS se HTTPS)
+    $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+    foreach ($response->getHeaders() as $name => $values) {
+        $replace = ($name === 'Set-Cookie') ? false : true;
+        foreach ($values as $value) {
+            header("$name: $value", $replace);
+        }
     }
-  }
-  echo $response->getBody();
-  exit;
+    
+    // 3. Adiciona headers de segurança condicionais (exceto para arquivos binários)
+    if (!str_contains($response->getHeaderLine('Content-Type'), 'application/octet-stream')) {
+        if ($isHttps && $_ENV['APP_ENV'] === 'production') {
+            header("Strict-Transport-Security: max-age=63072000; includeSubDomains");
+        }
+        header("X-Content-Type-Options: nosniff");
+        header("Referrer-Policy: strict-origin-when-cross-origin");
+        header_remove('X-Powered-By');
+    }
+
+    // 4. Stream do corpo da resposta (eficiente para grandes conteúdos)
+    $stream = $response->getBody();
+    $stream->rewind();
+    while (!$stream->eof()) {
+        echo $stream->read(8192); // Buffer de 8KB
+    }
+
+    // 5. Encerra a execução (opcional, mas recomendado para evitar saída acidental)
+    exit;
 }
 
 /*
