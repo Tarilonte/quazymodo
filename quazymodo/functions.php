@@ -32,31 +32,6 @@ function isCsrfValid(): bool
   return false;  
 }
 
-function rateLimit(string $clientIp): void
-{
-    $limit = $_ENV['RATE_LIMIT_REQUESTS'];
-    $period = $_ENV['RATE_LIMIT_PERIOD'];
-
-    if (!isset($_SESSION['rate_limit'])) {
-        $_SESSION['rate_limit'] = [];
-    }
-
-    if (!isset($_SESSION['rate_limit'][$clientIp])) {
-        $_SESSION['rate_limit'][$clientIp] = [];
-    }
-
-    $time = time();
-    $_SESSION['rate_limit'][$clientIp] = array_filter($_SESSION['rate_limit'][$clientIp], function ($timestamp) use ($time, $period) {
-        return ($time - $timestamp) < $period;
-    });
-
-    if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
-        throw new \Exception("", 429);
-    }
-
-    $_SESSION['rate_limit'][$clientIp][] = $time;
-}
-
 function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
 {
   $serverParams = $request->getServerParams();
