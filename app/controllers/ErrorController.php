@@ -23,6 +23,7 @@ class ErrorController extends AbstractController
             'error-icon' => $this->getErrorMessage($statusCode)[0],
             'error-message' => $this->getErrorMessage($statusCode)[1],
             'error-description' => $this->getErrorMessage($statusCode, $REQUEST_URI)[2],
+            'take-me-back' => $this->getErrorMessage($statusCode)[3],
             'body' => ComponentFactory::create(
                 'pages/error',
                 [],
@@ -38,13 +39,13 @@ class ErrorController extends AbstractController
     private function getErrorMessage(int $statusCode, string|null $REQUEST_URI = null): array
     {
         return match($statusCode) {
-            400 => ['mdi mdi-robot-confused', 'Requisição inválida',''],
-            401 => ['ti ti-barrier-block', 'Acesso não autorizado',''],
-            403 => ['ti ti-barrier-block', 'Acesso proibido',''],
-            404 => ['ti ti-directions', 'Conteúdo não encontrado',"Não localizamos $REQUEST_URI"],
-            429 => ['ti ti-alarm', 'Calma, veloz...','Você está fazendo muitas requisições.'],
-            500 => ['mdi mdi-robot-confused', 'Desculpe, algo deu errado','Não conseguimos processar sua solicitação.'],
-            default => ['mdi mdi-robot-confused', 'Ocorreu um erro inesperado','']
+            400 => ['mdi mdi-robot-confused', 'Requisição inválida','',''],
+            401 => ['ti ti-barrier-block', 'Acesso não autorizado','',''],
+            403 => ['ti ti-barrier-block', 'Acesso proibido','',''],
+            404 => ['ti ti-directions', 'Conteúdo não encontrado',"Não localizamos $REQUEST_URI",''],
+            429 => ['ti ti-alarm', 'Calma, veloz...','Você está fazendo muitas requisições.','hidden'],
+            500 => ['mdi mdi-robot-confused', 'Desculpe, algo deu errado','Não conseguimos processar sua solicitação.',''],
+            default => ['mdi mdi-robot-confused', 'Ocorreu um erro inesperado','','']
         };
     }
 
