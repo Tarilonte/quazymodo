@@ -58,6 +58,3 @@ setlocale(LC_ALL, $_ENV['APP_LOCALE']);
 // Set CSRF token
 Quazymodo\Functions\setCsrf();
 
-// Apply rate limit
-$userIp = \Quazymodo\Functions\getClientIp($request);
-Quazymodo\Functions\rateLimit($userIp);

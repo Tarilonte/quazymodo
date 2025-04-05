@@ -42,7 +42,8 @@ class ErrorController extends AbstractController
             401 => ['ti ti-barrier-block', 'Acesso não autorizado',''],
             403 => ['ti ti-barrier-block', 'Acesso proibido',''],
             404 => ['ti ti-directions', 'Conteúdo não encontrado',"Não localizamos $REQUEST_URI"],
-            500 => ['mdi mdi-robot-confused', 'Desculpe, algo deu errado','Não conseguimos processar sua solicitação'],
+            429 => ['ti ti-alarm', 'Calma, veloz...','Você está fazendo muitas requisições.'],
+            500 => ['mdi mdi-robot-confused', 'Desculpe, algo deu errado','Não conseguimos processar sua solicitação.'],
             default => ['mdi mdi-robot-confused', 'Ocorreu um erro inesperado','']
         };
     }

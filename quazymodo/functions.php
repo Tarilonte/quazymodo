@@ -51,9 +51,7 @@ function rateLimit(string $clientIp): void
     });
 
     if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
-        header('HTTP/1.1 429 Too Many Requests');
-        echo "Rate limit exceeded. Please wait a few seconds and try again.";
-        exit;
+        throw new \Exception("", 429);
     }
 
     $_SESSION['rate_limit'][$clientIp][] = $time;
