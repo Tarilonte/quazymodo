@@ -70,12 +70,14 @@ function modal_lock() {
   Modal.addClass("modal-locked");
   $(".modal-lock").removeClass("hidden");
   $(".modal-close").css({opacity: "0"});
+  $("#modal-close-btn").hide();
 }
 
 function modal_unlock() {
   Modal.removeClass("modal-locked");
   $(".modal-lock").addClass("hidden");
   $(".modal-close").fadeTo(1000,1);
+  $("#modal-close-btn").show();
 }
 
 $("div.modal-backdrop, button.modal-close").click(function() {

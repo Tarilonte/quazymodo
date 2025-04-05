@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
 use Quazymodo\ComponentFactory;
+use Quazymodo\CSPManager;
 use Throwable;
 
 use function Quazymodo\Functions\recursiveArraySearch;
@@ -104,21 +105,27 @@ class TestController extends AbstractController
     return $this->html($page);
   }
 
-  public function error(): ResponseInterface|Throwable
+  public function error(RequestInterface $request): ResponseInterface|Throwable
   {  
-    throw new \Exception('Tarilonte', 503);
+    $errorCode = $request->getQueryParams()['code'] ?? 500;
+    throw new \Exception('', $errorCode);
+    exit();
   }
 
   public function htmx(RequestInterface $request): ResponseInterface
   {    
+    // Captura o argumento 'test' da URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
       $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
       $effect = $effects[array_rand($effects)];
+      $nonce = CSPManager::getNonce();
       exit("<h1 class='font-black text-8xl text-accent animate__animated animate__$effect'>
                 ÇA C'EST FOU FOU!!
-              </h1>");
+              </h1><script nonce='$nonce'>console.log('$nonce');</script>");
     }
+
+    // Monta a página
     $page = ComponentFactory::create(
       "page-base",
       [
@@ -128,8 +135,8 @@ class TestController extends AbstractController
           ComponentFactory::create("navbar-01"),
           ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")
           ]
-      ]
-    );
+          ]
+        );
     return $this->html($page);
   }
 
@@ -172,7 +179,7 @@ class TestController extends AbstractController
     return $this->html($page);
   }
 
-  public function array_response(): ResponseInterface
+  public function json_response(): ResponseInterface
   {    
     $array = [
       "name" => "Quazymodo",

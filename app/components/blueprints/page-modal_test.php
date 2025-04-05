@@ -20,6 +20,10 @@ return [
       'source' => 'pages/modal_test-page'
     ],
     [
+      'slot' => 'body-class',
+      'content' => 'flex flex-col'
+    ],
+    [
       'slot' => 'body',
       'type' => 'component',
       'source' => 'modalComponent'

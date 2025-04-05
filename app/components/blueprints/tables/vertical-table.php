@@ -10,7 +10,7 @@
 |
 | The controller MUST pass the data (rows) as an associative array with the following structure:
 | "rows" => ['field1' => 'value1', 'field2' => 'value2', ...]
-| where every pair 'field' => 'value' will be rendered as a row within the table.
+| where every pair 'field' => 'value' will be rendered as a table row.
 |
 |*/
 

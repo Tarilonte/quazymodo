@@ -2,7 +2,7 @@
 themeSelector01 = $("label.swap[component-name='themeSelector-01']");
 
 // Define as cores do seletor de temas
-var lightTheme = "lofi";
+var lightTheme = "silk";
 var darkTheme = "coffee";
 
 // Captura o tema ativo
