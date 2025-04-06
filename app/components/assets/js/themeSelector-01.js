@@ -3,7 +3,7 @@ themeSelector01 = $("label.swap[component-name='themeSelector-01']");
 
 // Define as cores do seletor de temas
 var lightTheme = "silk";
-var darkTheme = "coffee";
+var darkTheme = "abyss";
 
 // Captura o tema ativo
 if(!getCookie("css-theme")){
