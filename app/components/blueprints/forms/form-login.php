@@ -1,4 +1,7 @@
 <?php
+
+use Quazymodo\ComponentFactory;
+
 return [
   'extends' => 'page-base',
   'css' => [],
@@ -10,14 +13,10 @@ return [
     ],
     [
       'slot' => 'body',
-      'type' => 'component',
-      'source' => 'navbar-01'
-    ],
-    [
-      'slot' => 'body',
-      'type' => 'template',
-      'source' => 'forms/form-login',
-      'content' => [ 'body-class' => 'flex flex-col md:bg-base-200' ]
+      'content' => [
+        ComponentFactory::create('navbar-01'),
+        ComponentFactory::create('forms/form-login', ['body-class' => 'flex flex-col md:bg-base-200'],'templateOnly'),
+        ]
     ],
     [
       'slot' => 'csrf-token',

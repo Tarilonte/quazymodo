@@ -73,10 +73,8 @@ class TestController extends AbstractController
     // Chamar a função e obter o array de logs
     try {
         $logsArray = readLogFileToArray($filePath);
-        //show($logsArray);
-        //die();
     } catch (Exception $e) {
-        echo 'Erro: ' . $e->getMessage();
+        throw new Exception("Erro ao ler o arquivo de log: " . $e->getMessage());
     }
 
     // Definir as chaves que você deseja no array

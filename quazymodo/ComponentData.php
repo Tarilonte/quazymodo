@@ -23,8 +23,6 @@ class ComponentData
     }
     $this->merge_controllerData($this->controllerData);
     $this->parse_mergedData($this->merged_data);
-    //print_r($this->css);
-    //die("xxxxxxxx [ interrupção ] xxxxxxxxxxx");
   }
 
   /*
