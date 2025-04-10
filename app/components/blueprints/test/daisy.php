@@ -1,30 +1,20 @@
 <?php
 
+use Quazymodo\ComponentFactory;
+
 return [
   'extends' => 'page-base',
   'js' => [
-    'https://unpkg.com/cally [type="module"]',
+    "https://unpkg.com/cally [type='module']",
     'teste-cally.js',
     ],
-  'inserts' => [
-    [
-      'slot' => 'body',
-      'type' => 'component',
-      'source' => 'navbar-01',
-    ],    
-    [
-      'slot' => 'body',
-      'type' => 'template',
-      'source' => 'daisy-test',
-      'content' => [
-        "navbar-start" => "Daisy Test"
-        ]
-      ],    
-      [
-        'slot' => 'navbar-logo',
-        'type' => 'template',
-        'source' => 'logo',
-        'content' => ["logo-class" => "h-8 fill-primary"]
-      ]    
+  'inserts' => [  
+    'body' => [
+      ComponentFactory::create(componentName:'navbar-01'),
+      ComponentFactory::create(componentName:'daisy-test', componentType:'templateOnly'),
+    ],
+    'navbar-start' => 'Daisy Test',
+    'navbar-logo' => ComponentFactory::create(componentName:'logo', componentType:'templateOnly'),
+    'logo-class' => 'h-8 fill-primary'   
   ] 
 ];

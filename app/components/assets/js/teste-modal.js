@@ -3,10 +3,6 @@ const body_b = $(".body-b");
 
 $('body').on('click', '.callBodyA', function() {
   modal_show('Vamos mudar o modal', body_a, false, false);
-  modal_lock();
-  setTimeout(function() {
-    modal_unlock();
-  }, 2000);
 });
 
 $('body').on('click', '.callBodyB', function() {

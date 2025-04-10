@@ -46,9 +46,6 @@ $renderedRows = implode("\n", $renderedRow);
 return [
   'template' => 'tables/vertical-table',
   'inserts' => [
-    [
-      'slot' => 'tbody-content',
-      'content' => $renderedRows
-    ]
+    'tbody-content' => $renderedRows
   ]
 ];

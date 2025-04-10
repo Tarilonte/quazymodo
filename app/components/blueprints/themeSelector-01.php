@@ -7,11 +7,5 @@ return [
     'base.js',
     'themeSelector-01.js'
   ],
-  'inserts' => [
-    [
-      'slot' => '',
-      'type' => '',
-      'source' => ''
-    ]
-  ]
+  'inserts' => []
 ];

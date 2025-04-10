@@ -1,12 +1,10 @@
 <?php
 
+use Quazymodo\ComponentFactory;
+
 return [
   'template' => 'navbar-01',
   'inserts' => [
-    [
-      'slot' => 'navbar-end',
-      'type' => 'component',
-      'source' => 'themeSelector-01'
-    ]
+    'navbar-end' => ComponentFactory::create('themeSelector-01')
   ]
 ];

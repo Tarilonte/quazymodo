@@ -9,10 +9,6 @@ return [
     'base.js'
   ],
   'inserts' => [
-    [
-      'slot' => 'css-theme',
-      'type' => 'cookie',
-      'source' => 'css-theme'
-    ]
+    'css-theme' => $_COOKIE['css-theme']
   ]
 ];

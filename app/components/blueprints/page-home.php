@@ -1,38 +1,19 @@
 <?php
 
+use Quazymodo\ComponentFactory;
+
 return [
   'extends' => 'page-base',
-  'css' => '',
   'inserts' => [
-    [
-      'slot' => 'page-title',
-      'type' => 'env-var',
-      'source' => 'APP_NAME',
+    'page-title' => $_ENV['APP_NAME'],
+    'body' => [
+      ComponentFactory::create('navbar-01'),
+      ComponentFactory::create('pages/home',[],'templateOnly'),
     ],
-    [
-      'slot' => 'body',
-      'type' => 'component',
-      'source' => 'navbar-01'
+    'logo' => [
+      ComponentFactory::create('animatedBackground'),
+      ComponentFactory::create('logo', [],'templateOnly'),
     ],
-    [
-      'slot' => 'body',
-      'type' => 'template',
-      'source' => 'pages/home'
-    ],
-    /* [
-      'slot' => 'body-class',
-      'content' => 'bg-gradient-to-b from-base-100 to-base-300'
-    ], */
-    [
-      'slot' => 'logo',
-      'type' => 'component',
-      'source' => 'animatedBackground',
-    ],
-    [
-      'slot' => 'logo',
-      'type' => 'template',
-      'source' => 'logo',
-      'content' => ["logo-class" => "w-24 sm:w-32 fill-primary m-auto"]
-    ]
-  ] 
+    'logo-class' => 'w-24 sm:w-32 fill-primary m-auto'
+  ]
 ];
