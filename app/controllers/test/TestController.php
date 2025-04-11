@@ -115,19 +115,14 @@ class TestController extends AbstractController
     // Captura o argumento 'test' da URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
-      $effect = $effects[array_rand($effects)];
-      $nonce = CSPManager::getNonce();
-      exit("<h1 class='font-black text-8xl text-accent animate__animated animate__$effect'>
-                ÇA C'EST FOU FOU!!
-              </h1><script nonce='$nonce'>console.log('$nonce');</script>");
+      $response = ComponentFactory::create(componentName:'test/salsifufu', shouldSetNonce:false);
+      return $this->html($response);
     }
 
     // Monta a página
     $page = ComponentFactory::create(
       "page-base",
       [
-        "css" => "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
         "js" => "https://unpkg.com/htmx.org@2.0.0 [integrity='sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw' crossorigin='anonymous']",
         "body" => [
           ComponentFactory::create("navbar-01"),

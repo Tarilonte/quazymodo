@@ -9,7 +9,7 @@ try {
 } catch (\Throwable $e) {
   // throw the exception if in development mode
   if ($_ENV['APP_ENV'] === 'development') {
-    throw $e; // deixa o Tracy capturar
+    //throw $e; // deixa o Tracy capturar
   }
 
   $statusCode = method_exists($e, 'getStatusCode') 
