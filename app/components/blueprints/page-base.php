@@ -1,5 +1,7 @@
 <?php
 
+$daisyTheme = $_COOKIE['css-theme'] ?? '';
+
 return [
   'type' => 'page',
   'template' => 'page-base',
@@ -9,6 +11,6 @@ return [
     'base.js'
   ],
   'inserts' => [
-    'css-theme' => $_COOKIE['css-theme']
+    'css-theme' => $daisyTheme
   ]
 ];
