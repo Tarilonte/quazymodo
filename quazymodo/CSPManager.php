@@ -4,52 +4,55 @@ namespace Quazymodo;
 
 class CSPManager
 {
-    private static $nonce;
+  private static $nonce;
 
-    private static $directives = [
-        'script-src' => ["'self'"]
-    ];
+  private static $directives = [
+    'script-src' => ["'self'"]
+  ];
 
-    private static function setNonce()
-    {
-        self::$nonce = base64_encode(random_bytes(20));
-        $_SESSION['csp-nonce'] = self::$nonce;
+  private static function setNonce()
+  {
+    if (!isset(self::$nonce)) {
+      self::$nonce = base64_encode(random_bytes(20));
+      $_SESSION['csp-nonce'] = self::$nonce;
+    }
+  }
+
+
+  public static function getNonce()
+  {
+    if (!isset(self::$nonce)) {
+      return $_SESSION['csp-nonce'];
+    }
+    return self::$nonce;
+  }
+
+  public static function addSource($directive, $source): void
+  {
+    // Verifica se a diretiva é suportada; caso contrário, ignora a adição
+    if (!array_key_exists($directive, self::$directives)) {
+      echo "Diretiva {$directive} não suportada.";
+      return;
     }
 
-    public static function getNonce()
-    {
-        if (!isset(self::$nonce)) {
-            return $_SESSION['csp-nonce'];
-        }
-        return self::$nonce;
+    // Adiciona a origem à diretiva correspondente, evitando duplicatas
+    if (!in_array($source, self::$directives[$directive])) {
+      self::$directives[$directive][] = $source;
     }
+  }
 
-    public static function addSource($directive, $source): void
-    {
-        // Verifica se a diretiva é suportada; caso contrário, ignora a adição
-        if (!array_key_exists($directive, self::$directives)) {
-            echo "Diretiva {$directive} não suportada.";
-            return;
-        }
-
-        // Adiciona a origem à diretiva correspondente, evitando duplicatas
-        if (!in_array($source, self::$directives[$directive])) {
-            self::$directives[$directive][] = $source;
-        }
+  public static function getDirectives(bool $shouldSetNonce): string
+  {
+    if ($shouldSetNonce) {
+      self::setNonce();
     }
-
-    public static function getDirectives(bool $shouldSetNonce): string
-    {
-        if ($shouldSetNonce) {
-            self::setNonce();
-        }
-        self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
-        $policies = [];
-        foreach (self::$directives as $directive => $sources) {
-            if (!empty($sources)) { // Verifica se há fontes definidas
-                $policies[] = $directive . " " . implode(" ", $sources);
-            }
-        }
-        return implode("; ", $policies);
+    self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
+    $policies = [];
+    foreach (self::$directives as $directive => $sources) {
+      if (!empty($sources)) { // Verifica se há fontes definidas
+        $policies[] = $directive . " " . implode(" ", $sources);
+      }
     }
+    return implode("; ", $policies);
+  }
 }

@@ -11,6 +11,7 @@ return [
   ],
   'js' => 'salsifufu.js',
   'inserts' => [
-    'effect' => $effect
+    'effect' => $effect,
+    'nonce' => Quazymodo\CSPManager::getNonce(),
   ],
 ];

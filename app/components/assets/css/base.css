@@ -67,22 +67,15 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-red-300: oklch(80.8% 0.114 19.571);
-    --color-orange-500: oklch(70.5% 0.213 47.604);
+    --color-red-600: oklch(57.7% 0.245 27.325);
     --color-green-200: oklch(92.5% 0.084 155.995);
-    --color-green-300: oklch(87.1% 0.15 154.449);
-    --color-green-400: oklch(79.2% 0.209 151.711);
-    --color-green-800: oklch(44.8% 0.119 151.328);
-    --color-cyan-400: oklch(78.9% 0.154 211.53);
     --color-blue-200: oklch(88.2% 0.059 254.128);
-    --color-blue-700: oklch(48.8% 0.243 264.376);
-    --color-pink-200: oklch(89.9% 0.061 343.231);
     --color-rose-300: oklch(81% 0.117 11.638);
-    --color-rose-400: oklch(71.2% 0.194 13.428);
-    --color-rose-500: oklch(64.5% 0.246 16.439);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
     --breakpoint-2xl: 96rem;
+    --container-2xl: 42rem;
     --container-5xl: 64rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
@@ -1928,9 +1921,6 @@
       color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
     }
   }
-  .text-green-400 {
-    color: var(--color-green-400);
-  }
   .text-primary {
     color: var(--color-primary);
   }
@@ -3371,16 +3361,6 @@
   }
   .chat {
     --mask-chat: url("data:image/svg+xml,%3csvg width='13' height='13' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 11.5004C0 13.0004 2 13.0004 2 13.0004H12H13V0.00036329L12.5 0C12.5 0 11.977 2.09572 11.8581 2.50033C11.6075 3.35237 10.9149 4.22374 9 5.50036C6 7.50036 0 10.0004 0 11.5004Z'/%3e%3c/svg%3e");
-  }
-}
-@layer base {
-  :where( :root:has( .modal-open, .modal[open], .modal:target, .modal-toggle:checked, .drawer:not(.drawer-open) > .drawer-toggle:checked ) ) {
-    scrollbar-gutter: stable;
-    background-image: linear-gradient(var(--color-base-100), var(--color-base-100));
-    --root-bg: color-mix(in srgb, var(--color-base-100), oklch(0% 0 0) 40%);
-    @supports (color: color-mix(in lab, red, red)) {
-      --root-bg: color-mix(in srgb, var(--color-base-100), oklch(0% 0 0) 40%);
-    }
   }
 }
 @keyframes skeleton {

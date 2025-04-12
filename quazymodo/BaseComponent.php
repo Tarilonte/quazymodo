@@ -129,7 +129,7 @@ class BaseComponent
     }
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
-      $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
+      $this->html = preg_replace('/ *{{ ?' . $slot . ' ?}} */', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
       unset(self::$allData[$slot]);
     }
     if ($this->map_slots($this->html)) {

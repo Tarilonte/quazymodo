@@ -3,7 +3,6 @@
 $daisyTheme = $_COOKIE['css-theme'] ?? '';
 
 return [
-  'type' => 'page',
   'template' => 'page-base',
   'css' => ['base.css'],
   'js' => [
