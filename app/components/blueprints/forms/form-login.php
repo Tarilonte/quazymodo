@@ -9,7 +9,10 @@ return [
   'inserts' => [    
     'page-title' => 'Login',
     'body' => [
-      ComponentFactory::create('navbar-01'),
+      ComponentFactory::create(
+        'themeSelector-01',
+        ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],
+      ),
       ComponentFactory::create(
         'forms/form-login', 
         ['body-class' => 'flex flex-col md:bg-base-200'],

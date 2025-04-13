@@ -112,14 +112,14 @@ class TestController extends AbstractController
 
   public function htmx(RequestInterface $request): ResponseInterface
   {    
-    // Captura o argumento 'test' da URL
+    // Resposta caso haja o argumento 'teste' na URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $response = ComponentFactory::create(componentName:'test/salsifufu', shouldSetNonce:false);
+      $response = ComponentFactory::create(componentName:'test/salsifufu');
       return $this->html($response);
     }
 
-    // Monta a página
+    // Resposta padrão
     $page = ComponentFactory::create(
       "page-base",
       [
@@ -188,6 +188,14 @@ class TestController extends AbstractController
   {     
     $page = ComponentFactory::create(
       "test/daisy"
+    );
+    return $this->html($page);
+  }
+
+  public function alpine(): ResponseInterface
+  {     
+    $page = ComponentFactory::create(
+      "test/alpine"
     );
     return $this->html($page);
   }
