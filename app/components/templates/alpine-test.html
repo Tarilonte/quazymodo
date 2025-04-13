@@ -1,10 +1,23 @@
-<section class="grow">
-  <button class="btn m-8">Menu</button>
-  <aside 
-    nonce="{{nonce}}"
-    class="absolute top-0 right-0 z-100 h-full"
-    x-data="{ openedSideMenu: false }"
+<section 
+  class="grow"
+  x-data="{ openedSideMenu: true }"
+>
+  <button 
+    class="btn m-8"
+    @click="openedSideMenu = !openedSideMenu"
+  >
+    Menu
+  </button>
+  
+  <aside   
+    class="fixed top-0 right-0 z-100 h-full"
     x-show="openedSideMenu"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="translate-x-full"
   >
     <ul class="menu bg-base-200 rounded-box w-56 h-full rounded-none">
       <li>
@@ -60,5 +73,4 @@
       </li>
     </ul>
   </aside>
-  <div>{{teste}}</div>
 </section>

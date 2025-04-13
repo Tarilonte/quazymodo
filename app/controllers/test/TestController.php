@@ -130,8 +130,9 @@ class TestController extends AbstractController
         "body" => [
           ComponentFactory::create("navbar-01"),
           ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")
-          ]
-          ]
+        ],
+        'nonce' => CSPManager::getNonce(),
+      ]
         );
     return $this->html($page);
   }
