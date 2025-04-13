@@ -12,8 +12,6 @@ class BaseComponent
   public ComponentData $data;
   public string $componentType;
   public string $componentName;
-  private ?string $CspHeader = null;
-  private bool $shouldSetNonce = true;
   public string $html = '';
   public array $js = [];
   public array $css = [];
@@ -30,9 +28,11 @@ class BaseComponent
    */
   public function __construct($componentName, $controllerData = [], $componentType = "component", $shouldSetNonce = true)
   {
+    if($shouldSetNonce){
+      CSPManager::setNonce($componentName);
+    }
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
-    $this->shouldSetNonce = $shouldSetNonce;
     if ($componentType === "templateOnly") {
       $this->construct_templateOnly($componentName, $controllerData);
     } else {
@@ -116,17 +116,9 @@ class BaseComponent
     }
   }
 
-  public function getCspHeader() : ?string
-  {
-    return $this->CspHeader;
-  }
-
   public function render() : String
   {
     $this->flush_assets();
-    if ($_ENV['CSP_ENABLED']) {
-      $this->CspHeader = CSPManager::getDirectives($this->shouldSetNonce);
-    }
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
       $this->html = preg_replace('/ *{{ ?' . $slot . ' ?}} */', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);

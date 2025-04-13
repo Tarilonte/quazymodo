@@ -7,14 +7,15 @@ class CSPManager
   private static $nonce;
 
   private static $directives = [
-    'script-src' => ["'self'"]
+    'script-src' => ["'self'", "'unsafe-eval'"],
   ];
 
-  private static function setNonce()
+  public static function setNonce()
   {
     if (!isset(self::$nonce)) {
       self::$nonce = base64_encode(random_bytes(20));
       $_SESSION['csp-nonce'] = self::$nonce;
+      self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
     }
   }
 
@@ -41,18 +42,17 @@ class CSPManager
     }
   }
 
-  public static function getDirectives(bool $shouldSetNonce): string
+  public static function getDirectives(): null|string
   {
-    if ($shouldSetNonce) {
-      self::setNonce();
-    }
-    self::addSource('script-src', "'nonce-" . self::getNonce() . "'");
     $policies = [];
     foreach (self::$directives as $directive => $sources) {
       if (!empty($sources)) { // Verifica se há fontes definidas
         $policies[] = $directive . " " . implode(" ", $sources);
       }
     }
-    return implode("; ", $policies);
+    if($_ENV['CSP_ENABLED']){
+      return implode("; ", $policies);
+    }
+    return null;
   }
 }

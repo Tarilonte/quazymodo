@@ -12,7 +12,7 @@ abstract class AbstractController
     protected function html(BaseComponent $component, int $status = 200): ResponseInterface 
     {
         $html = $component->render();
-        $cspHeader = $component->getCspHeader(); // Obtém diretivas CSP do componente
+        $cspHeader = CSPManager::getDirectives();
         
         return $this->httpResponse(
             $html,
