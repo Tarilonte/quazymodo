@@ -115,7 +115,10 @@ class TestController extends AbstractController
     // Resposta caso haja o argumento 'teste' na URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $response = ComponentFactory::create(componentName:'test/salsifufu');
+      $response = ComponentFactory::create(
+        componentName:'test/salsifufu',
+        shouldSetNonce: false,
+      );
       return $this->html($response);
     }
 

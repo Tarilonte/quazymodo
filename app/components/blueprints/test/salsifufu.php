@@ -1,5 +1,7 @@
 <?php
 
+use Quazymodo\CSPManager;
+
 $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
 $effect = $effects[array_rand($effects)];
 
@@ -12,6 +14,6 @@ return [
   'js' => 'salsifufu.js',
   'inserts' => [
     'effect' => $effect,
-    'nonce' => Quazymodo\CSPManager::getNonce(),
+    'nonce' => CSPManager::getNonce(),
   ],
 ];
