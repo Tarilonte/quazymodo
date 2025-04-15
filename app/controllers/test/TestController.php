@@ -11,6 +11,7 @@ use App\Entities\UserEntity;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 use Throwable;
+use voku\helper\AntiXSS;
 
 use function Quazymodo\Functions\recursiveArraySearch;
 
@@ -148,7 +149,8 @@ class TestController extends AbstractController
 
     // Obtém as informações do usuário
     $userInfo = $user->get(83);
-    //dumpe($userInfo);
+    $antiXss = new AntiXSS();
+    $userInfo = $antiXss->xss_clean($userInfo);
 
     // Monta a tabela com as informações do usuário
     $table = ComponentFactory::create("tables/vertical-table",["rows" => $userInfo]);

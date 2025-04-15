@@ -1,6 +1,7 @@
 <?php
 
 use Quazymodo\ComponentFactory;
+use Quazymodo\Csrf;
 
 return [
   'extends' => 'page-base',
@@ -19,7 +20,7 @@ return [
         'templateOnly'
       ),
     ],
-    'csrf-token' => $_SESSION['csrf-token'],
+    'csrf-token' => Csrf::setToken(),
     'site-logo' => ComponentFactory::create(
       'logo', 
       ['logo-class' => 'h-16 fill-primary align-self-center'],

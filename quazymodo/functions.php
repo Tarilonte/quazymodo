@@ -11,27 +11,6 @@ namespace Quazymodo\Functions;
 |
 |*/
 
-function setCsrf(): void 
-{
-  if (!isset($_SESSION["csrf-token"])){
-  $_SESSION["csrf-token"] = bin2hex(random_bytes(16));
-  }
-}
-
-function isCsrfValid(): bool 
-{
-  if (!isset($_SESSION['csrf-token']) || !isset($_POST['csrf-token'])) {
-  return false;
-  }
-  if ($_SESSION['csrf-token'] != $_POST['csrf-token']) {
-  return false;
-  }
-  if ($_SESSION['csrf-token'] === $_POST['csrf-token']) {
-  return true;
-  }
-  return false;  
-}
-
 function getClientIp(\Psr\Http\Message\ServerRequestInterface $request): string
 {
   $serverParams = $request->getServerParams();
@@ -102,48 +81,4 @@ function emit(\Psr\Http\Message\ResponseInterface $response): void
 
     // 5. Encerra a execução (opcional, mas recomendado para evitar saída acidental)
     exit;
-}
-
-/*
-|------------------------------------
-| DEVELOPMENT FUNCTIONS
-|------------------------------------
-|
-| This section contains the functions used for development purposes.
-|
-|*/
-
-// TODO: Estudar a possibilidade de excluir essas funções
-
-function show(mixed $stuff, string $nome = "Não informado"): void {
-  if (is_array($stuff)) {
-  $stuff = escapeArrayValues($stuff);
-  } else {
-  $stuff = decorateStuff($stuff);
-  }
-
-  echo "<div class='mockup-code'><pre class='p-6'><code>";
-  echo "[Showing: $nome]" . PHP_EOL;
-	print_r($stuff);
-  echo "</code></pre></div>";
-}
-
-function escapeArrayValues($array): array {
-  foreach ($array as $key => $value) {
-    // Se o valor for um array, chama a função recursivamente
-    if (is_array($value)) {
-      $array[$key] = escapeArrayValues($value);
-    } else {
-      // Aplica htmlspecialchars ao valor
-      $array[$key] = decorateStuff($value);
-    }
-  }
-  return $array;
-}
-
-function decorateStuff(mixed $stuff): string {
-  $stuffType = gettype($stuff);
-  $stuff = htmlspecialchars($stuff);
-  $stuff = "$stuff ( $stuffType:".strlen($stuff)." )";
-  return $stuff;
 }

@@ -48,13 +48,3 @@ if ($_ENV['APP_TRACY_ENABLE'] == 1) {
 |*/ 
 date_default_timezone_set($_ENV['APP_TIMEZONE']);
 setlocale(LC_ALL, $_ENV['APP_LOCALE']);
-
-
-/*
-| Security
-|------------------
-|*/ 
-
-// Set CSRF token
-Quazymodo\Functions\setCsrf();
-

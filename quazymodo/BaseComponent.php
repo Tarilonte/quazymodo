@@ -73,7 +73,7 @@ class BaseComponent
       return "Atributo '{$name}' não existe.";
   }
 
-  public function add_asset(string $assetName, array $asset)
+  private function add_asset(string $assetName, array $asset)
   {
     foreach ($asset as $value) {
       $this->$assetName[] = $value;
@@ -130,14 +130,14 @@ class BaseComponent
     return $this->html;
   }
 
-  public function flush_assets() : BaseComponent
+  private function flush_assets() : BaseComponent
   {
     $this->flush_css();
     $this->flush_js();
     return $this;
   }
 
-  public function flush_css()
+  private function flush_css()
   {
     $cssLinks = '';
     foreach ($this->css as $index => $file) {
@@ -158,7 +158,7 @@ class BaseComponent
     }
   }
 
-  public function flush_js() {
+  private function flush_js() {
     $jsLinks = '';
     foreach ($this->js as $index => $file) {
       // Check if the file is an external link (starts with 'http://' or 'https://')

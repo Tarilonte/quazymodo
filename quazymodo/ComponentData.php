@@ -2,9 +2,6 @@
 
 namespace quazymodo;
 
-use Quazymodo\ComponentFactory;
-use function Quazymodo\Functions\recursiveArraySearch;
-
 class ComponentData
 {
   private $blueprintInserts = [];
