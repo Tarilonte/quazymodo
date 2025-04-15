@@ -34,7 +34,6 @@ function modal_open(header='', message='') {
   modal_setMessage(message);
   Modal
     .addClass("modal-open")
-    .show()
     .focus()
     .find(".modal-backdrop")
       .css('opacity', '0')

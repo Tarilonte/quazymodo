@@ -4,6 +4,7 @@ use Quazymodo\CSPManager;
 
 $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
 $effect = $effects[array_rand($effects)];
+$nonce = CSPManager::getNonce();
 
 return [
   'template' => 'salsifufu',
@@ -11,9 +12,12 @@ return [
     'salsifufu.css',
     'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
   ],
-  'js' => 'salsifufu.js',
+  'js' => [
+    'https://confettijs.org/confetti.min.js [nonce="'.$nonce.'"]',
+    'salsifufu.js',
+  ],
   'inserts' => [
     'effect' => $effect,
-    'nonce' => CSPManager::getNonce(),
+    'nonce' => $nonce ,
   ],
 ];

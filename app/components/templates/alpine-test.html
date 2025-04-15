@@ -1,23 +1,11 @@
-<section 
-  class="grow"
-  x-data="{ openedSideMenu: true }"
->
-  <button 
-    class="btn m-8"
-    @click="openedSideMenu = !openedSideMenu"
-  >
-    Menu
-  </button>
+<section class="grow">
+  <label class="btn-show-aside swap m-8 text-2xl swap-rotate">
+    <span class="swap-off mdi mdi-menu"></span>
+    <span class="swap-on mdi mdi-close"></span>
+  </label>
   
   <aside   
-    class="fixed top-0 right-0 z-100 h-full"
-    x-show="openedSideMenu"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="translate-x-full"
-    x-transition:enter-end="translate-x-0"
-    x-transition:leave="transition ease-in duration-300"
-    x-transition:leave-start="translate-x-0"
-    x-transition:leave-end="translate-x-full"
+    class="fixed top-0 right-0 z-100 h-full translate-x-full duration-300"
   >
     <ul class="menu bg-base-200 rounded-box w-56 h-full rounded-none">
       <li>

@@ -8,7 +8,8 @@ use Quazymodo\CSPManager;
 return [
   'extends' => 'page-base',
   'js' => [
-    "https://unpkg.com/alpinejs [defer]",
+    //"https://unpkg.com/alpinejs [defer]",
+    'alpine-test.js'
     ],
   'inserts' => [  
     'body' => [
