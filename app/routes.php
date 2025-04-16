@@ -1,5 +1,7 @@
 <?php
 
+$router = Quazymodo\App::getRouter();
+
 $router->middleware(new Middleware\RateLimitMiddleware());
 
 // map a route
