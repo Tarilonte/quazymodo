@@ -10,6 +10,7 @@ use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
+use Quazymodo\Helper;
 use Throwable;
 use voku\helper\AntiXSS;
 
@@ -86,7 +87,7 @@ class TestController extends AbstractController
 
     // Popular o array com os valores correspondentes
     foreach ($tableFields as $key => $value) {
-      $tableData[$key] = recursiveArraySearch($logsArray, $key);
+      $tableData[$key] = Helper::recursiveArraySearch($logsArray, $key);
     }
   
     // Montar a página

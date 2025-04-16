@@ -16,9 +16,6 @@
             "Controller\\": "app/controllers/",
             "Middleware\\": "app/middleware/",
             "Entity\\": "app/entities/"
-        },
-        "files": [
-            "quazymodo/functions.php"
-        ]
+        }
     }
 }

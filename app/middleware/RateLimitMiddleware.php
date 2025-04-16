@@ -6,12 +6,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Quazymodo\Helper;
 
 class RateLimitMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-      $clientIp = \Quazymodo\Functions\getClientIp($request);
+      $clientIp = Helper::getClientIp($request);
 
       $limit = $_ENV['RATE_LIMIT_REQUESTS'];
       $period = $_ENV['RATE_LIMIT_PERIOD'];
