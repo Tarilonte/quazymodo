@@ -1,13 +1,17 @@
-<section class="flex flex-col justify-center items-center grow w-full p-20 bg-base-100 min-h-[calc(100%_-_72px)] transition-all duration-200">
+<section class="flex flex-col justify-center items-center grow w-full p-20 bg-base-100 min-h-[calc(100%_-_72px)]">
   <button 
     id="htmx_test_button"
-    class='btn btn-primary btn-lg m-20 mx-auto' 
+    class='btn btn-primary btn-lg m-20 mx-auto relative' 
     hx-get='/test/htmx?teste' 
     hx-trigger='click'
     hx-target='#target'
     hx-swap='innerHTML'
-    >
-    Click me
+    hx-sync="this:drop"
+  >
+    Click me please, don't be afraid!<br>
+    <div class="htmx-indicator absolute bg-primary h-[90%] w-[90%] flex justify-center">
+      <span class="loading loading-dots loading-xl"></span>
+    </div>
   </button>
   
   <div 

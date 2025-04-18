@@ -1,5 +1,7 @@
 <?php
 
+sleep(3); // Simulate a delay for testing purposes
+
 use Quazymodo\CSPManager;
 
 $effects = ['rubberBand', 'backInDown', 'bounceInDown', 'heartBeat', 'flip', 'lightSpeedInLeft', 'zoomInUp','jackInTheBox'];
