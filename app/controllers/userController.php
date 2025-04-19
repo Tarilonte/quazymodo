@@ -16,4 +16,17 @@ class userController extends AbstractController
     );
     return $this->html($page);
   }
+
+  public function processLoginForm(ServerRequestInterface $request): ResponseInterface
+  {
+    sleep(1); // Simulate a delay for the login process
+    $page = ComponentFactory::create(
+      "js",
+      [
+        "js" => "login-fail.js",
+      ],
+      "templateOnly"
+    );
+    return $this->html($page);
+  }
 }

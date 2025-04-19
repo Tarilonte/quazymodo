@@ -78,6 +78,7 @@
       "Courier New", monospace;
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-green-200: oklch(92.5% 0.084 155.995);
+    --color-cyan-500: oklch(71.5% 0.143 215.221);
     --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-rose-300: oklch(81% 0.117 11.638);
     --color-black: #000;
@@ -2201,6 +2202,9 @@
   .gap-7 {
     gap: calc(var(--spacing) * 7);
   }
+  .gap-8 {
+    gap: calc(var(--spacing) * 8);
+  }
   .truncate {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2246,6 +2250,12 @@
   }
   .bg-blue-200 {
     background-color: var(--color-blue-200);
+  }
+  .bg-cyan-500 {
+    background-color: var(--color-cyan-500);
+  }
+  .bg-cyan-500\! {
+    background-color: var(--color-cyan-500) !important;
   }
   .bg-green-200 {
     background-color: var(--color-green-200);
@@ -2509,6 +2519,10 @@
     --btn-p: 0.75rem;
     --size: calc(var(--size-field, 0.25rem) * 8);
   }
+  .btn-accent {
+    --btn-color: var(--color-accent);
+    --btn-fg: var(--color-accent-content);
+  }
   .btn-primary {
     --btn-color: var(--color-primary);
     --btn-fg: var(--color-primary-content);
@@ -2516,6 +2530,10 @@
   .btn-secondary {
     --btn-color: var(--color-secondary);
     --btn-fg: var(--color-secondary-content);
+  }
+  .btn-success {
+    --btn-color: var(--color-success);
+    --btn-fg: var(--color-success-content);
   }
   .select-none {
     -webkit-user-select: none;

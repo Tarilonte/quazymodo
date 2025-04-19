@@ -8,7 +8,10 @@ $router->middleware(new Middleware\RateLimitMiddleware());
 $router->map('GET', '/', 'Controller\HomeController::index');
 $router->map('GET', '/test/{test:.*}', 'Controller\Test\TestController::index');
 $router->map('GET', '/coinchange2', 'Controller\coinchange2::index');
+
 $router->map('GET', '/login', 'Controller\userController::showLoginForm');
+$router->map('POST', '/User/processLoginForm', 'Controller\userController::processLoginForm');
+
 $router->map('GET', '/phpinfo', 'Controller\Test\PHPInfoController::index');
 
 

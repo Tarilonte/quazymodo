@@ -1,9 +1,12 @@
 <div class="flex grow justify-center items-center">
+  <span id="hack" class="hidden"></span>
   <form 
     id="login-form"
     class="grid columns-1 justify-items-center bg-base-100 gap-7 p-6 md:p-16 rounded-lg md:shadow-md" 
-    action="/User/processLoginForm"
-    method="POST">
+    hx-post="/User/processLoginForm"
+    hx-target="#hack"
+    hx-sync="this:drop"
+    >
 
     <input type="hidden" name="csrf-token" value="{{ csrf-token }}">
     {{ site-logo }}
@@ -21,7 +24,15 @@
 
     <label class="input"> 
       <span class="mdi mdi-key-variant text-xl opacity-55"></span>
-      <input type="password" required placeholder="Password" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />
+      <input 
+        required 
+        type="password" 
+        placeholder="Password" 
+        minlength="8" 
+        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+        title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+      
+      />
       <label class="swap">
         <input type="checkbox">
         <span class="ti ti-eye-closed mt-2 swap-on text-xl"></span>
@@ -29,8 +40,11 @@
       </label>
     </label>
 
-    <button id="submit-btn" class="btn btn-lg btn-loading btn-primary text-xl" value="">
+    <button id="submit-btn" class="btn btn-lg btn-loading btn-primary text-xl relative">
       Entrar
+      <div class="htmx-indicator absolute bg-primary h-[90%] w-[90%] flex justify-center">
+        <span class="loading loading-dots loading-xl"></span>
+      </div>
     </button>
 
     <span class="leading-loose text-sm">

@@ -2,7 +2,6 @@
 
 return [
   "template" => "modalComponent",
-  "css" =>  "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
   "js" => ["modalComponent.js"],
   "inserts" => []
 ];
