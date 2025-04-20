@@ -3,6 +3,7 @@
     id="htmx_test_button"
     class='btn btn-primary btn-lg m-20 mx-auto relative' 
     hx-get='/test/htmx?teste' 
+    hx-select="#main_swap"
     hx-trigger='click'
     hx-target='#target'
     hx-swap='innerHTML'
@@ -17,6 +18,28 @@
   <div 
     id="target" 
     class="grow max-h-20"
-  >
-  </div>
+  ></div>
+
+  <div 
+    id="toast_container"
+    class="toast mb-20"
+    hx-get="htmx?teste" 
+    hx-select=".alert"
+    hx-swap="beforeend"
+    hx-trigger="every 3s"
+  ></div>
+  
 </section>
+
+<script nonce="{{nonce}}">
+    document.addEventListener("htmx:afterSwap", (e) => {
+    if (e.detail.target.id === "toast_container") {
+      const toast = e.detail.target.lastElementChild;
+      setTimeout(() => {
+        $(toast).fadeOut(700, function() {
+          $(this).remove();
+        });
+      }, 7000);
+    }
+  });
+</script>
