@@ -28,7 +28,3 @@
   exclude: rootscrollgutter;
   themes: all;
 }
-
-progress::-webkit-progress-value {
-  transition: width 0.5s linear;
-}

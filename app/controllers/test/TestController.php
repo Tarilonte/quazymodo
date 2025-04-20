@@ -207,4 +207,12 @@ class TestController extends AbstractController
     );
     return $this->html($page);
   }
+
+  public function toast(): ResponseInterface
+  {     
+    $page = ComponentFactory::create(
+      "test/toast"
+    );
+    return $this->html($page);
+  }
 }
