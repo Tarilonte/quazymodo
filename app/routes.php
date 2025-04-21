@@ -24,3 +24,5 @@ $router->map('POST', '/adminer', function () {
   require __DIR__ . '/../quazymodo/adminer.php';
   die();
 });
+
+$router->map('GET', '/sse/hora', 'Controller\sse\HoracertaSseControler::index');

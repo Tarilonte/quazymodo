@@ -32,20 +32,6 @@ abstract class AbstractController
     );
   }
 
-  // Método para SSE (Server-Sent Events)
-  protected function sse(string $body, int $status = 200): ResponseInterface 
-  {
-    return $this->httpResponse(
-      $body,
-      $status,
-      'text/event-stream',
-      [
-        'Cache-Control' => 'no-cache', 
-        'Connection' => 'keep-alive'
-      ]
-    );
-  }
-
   // Método base (genérico)
   protected function httpResponse(
     string $body,

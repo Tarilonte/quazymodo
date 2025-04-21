@@ -60,8 +60,6 @@ class ToastComponent {
   }
 }
 
-// Exemplo de uso
-//const toastManager = new ToastComponent();
 
 setInterval(() => {
   const messages = [
