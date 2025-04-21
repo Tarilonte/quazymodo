@@ -1,10 +1,10 @@
 class ToastComponent {
-  constructor(containerSelector = '#toasts_container') {
-    this.container = $(containerSelector);
-    this.template = this.container.find('.toast_message.hidden');
-  }
 
-  newToast(message, duration = 5000, toastType = null) {
+  static container = $('#toasts_container');
+  static template = this.container.find('.toast_message.hidden');
+ 
+
+  static newToast(message, duration = 5000, toastType = null) {
     // Declara os toastTypes para refletir no tailwind
     const $stoastTypes = [
       'alert-info', 'alert-success', 'alert-warning', 'alert-error', 
@@ -61,7 +61,7 @@ class ToastComponent {
 }
 
 // Exemplo de uso
-const toastManager = new ToastComponent();
+//const toastManager = new ToastComponent();
 
 setInterval(() => {
   const messages = [
@@ -72,5 +72,5 @@ setInterval(() => {
     [ 'Default Message' , null],
   ]
   const rand = Math.floor(Math.random() * messages.length);
-  toastManager.newToast(messages[rand][0], 8000, messages[rand][1]);
+  ToastComponent.newToast(messages[rand][0], 8000, messages[rand][1]);
 }, 3000); 
