@@ -26,3 +26,7 @@ $router->map('POST', '/adminer', function () {
 });
 
 $router->map('GET', '/sse/hora', 'Controller\sse\HoracertaSseControler::index');
+
+//Chat
+$router->map('GET', '/chat', 'Controller\ChatController::index');
+$router->map('POST', '/chat/broadcast', 'Controller\ChatController::broadcast');
