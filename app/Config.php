@@ -17,9 +17,7 @@ if ($_ENV['APP_SESSION_ENABLE'] == 1) {
     'cookie_secure' => false,
     'cookie_httponly' => true,
     'cookie_samesite' => 'Strict',
-    'sid_length' => 22,
-    'use_strict_mode' => true,
-    'referer_check' => $_SERVER['HTTP_HOST'],
+    'use_strict_mode' => true
   ]);
 }
 
