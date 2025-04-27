@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0f8e11d6ddc042ab44cbb70f603e7eb",
+    "content-hash": "e979e47becf49d3f6d244e75eadb8a89",
     "packages": [
         {
             "name": "analog/analog",
