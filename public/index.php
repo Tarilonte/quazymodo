@@ -3,5 +3,5 @@
 // Composer autoload
 require '../vendor/autoload.php';
 
-// Initialize the application
-Quazymodo\App::Init();
+// Run the application
+Quazymodo\App::Run();

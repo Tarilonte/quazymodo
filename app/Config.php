@@ -4,7 +4,7 @@
 | App Configuration
 |------------------
 | This file contains the configuration settings for your application.
-|*/ 
+|*/
 
 /*
 | Session Configuration
@@ -14,12 +14,19 @@ if ($_ENV['APP_SESSION_ENABLE'] == 1) {
   session_start([ 
     'cookie_lifetime' => 0,
     'cookie_path' => '/',
-    'cookie_secure' => false,
+    'cookie_secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
     'cookie_httponly' => true,
     'cookie_samesite' => 'Strict',
     'use_strict_mode' => true
   ]);
 }
+
+/*
+| timezone and locale
+|------------------
+|*/ 
+date_default_timezone_set($_ENV['APP_TIMEZONE']);
+setlocale(LC_ALL, $_ENV['APP_LOCALE']);
 
 /*
 | Tracy Debugger
@@ -39,10 +46,3 @@ if ($_ENV['APP_TRACY_ENABLE'] == 1) {
   // Set the show bar
   Tracy\Debugger::$showBar = true;
 }
-
-/*
-| timezone and locale
-|------------------
-|*/ 
-date_default_timezone_set($_ENV['APP_TIMEZONE']);
-setlocale(LC_ALL, $_ENV['APP_LOCALE']);

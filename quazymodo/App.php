@@ -14,7 +14,7 @@ class App{
   private static ResponseInterface $response;
   private static Router $router;
 
-  static function Init(): void
+  static function Run(): void
   {
       self::loadEnv();
       self::initRequest();
@@ -79,7 +79,7 @@ class App{
     $statusCode = method_exists($e, 'getStatusCode')
       ? $e->getStatusCode()
       : (is_int($e->getCode()) && $e->getCode() !== 0 ? $e->getCode() : 500);
-    $controller = new \Controller\ErrorController();
+    $controller = new ErrorController();
     self::$response = $controller->handle(self::$request, $statusCode);
   }
 
