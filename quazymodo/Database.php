@@ -11,8 +11,7 @@ abstract class Database
 
   private static function getConfiguration(string $hostAlias): array
   {
-    $availableHosts = require __DIR__ . '/../app/dbHosts.php';
-    return $availableHosts[$hostAlias];
+    return DB[$hostAlias];
   }
 
   private static function connect($hostAlias, $database): Medoo
@@ -20,7 +19,7 @@ abstract class Database
     $config = self::getConfiguration($hostAlias);
     $config['database'] = $database;
 
-    if ($_ENV['APP_ENV'] === 'development') {
+    if (APP_ENV === 'development') {
       self::$connectedDatabases[$hostAlias][$database] = new MedooDebug($config, $hostAlias, $database);
       if (!Debugger::getBar()->getPanel('Quazymodo\MedooPanel')) {
         Debugger::getBar()->addPanel(new MedooPanel());
