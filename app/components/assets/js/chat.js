@@ -16,7 +16,7 @@ channel.bind("chat-message", (data) => {
 
 function send() {
   const msg = document.getElementById("msg").value;
-  fetch("/chat/broadcast", {
+  fetch("/test/soketiBroadcast", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message: msg }),
