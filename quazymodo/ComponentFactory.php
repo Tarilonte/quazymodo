@@ -11,7 +11,7 @@ class ComponentFactory
     $shouldSetNonce = true
     ) : BaseComponent
   {
-    if ($_ENV['APP_ENV'] === 'development') {
+    if (APP_ENV === 'development') {
       return new ComponentDebug($componentName, $controllerData, $componentType, $shouldSetNonce);
     }
     return new BaseComponent($componentName, $controllerData, $componentType, $shouldSetNonce);

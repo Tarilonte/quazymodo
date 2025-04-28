@@ -5,7 +5,7 @@ use Quazymodo\ComponentFactory;
 return [
   'extends' => 'page-base',
   'inserts' => [
-    'page-title' => $_ENV['APP_NAME'],
+    'page-title' => APP_NAME,
     'body' => [
       ComponentFactory::create('navbar-01'),
       ComponentFactory::create('pages/home',[],'templateOnly'),

@@ -50,7 +50,7 @@ class CSPManager
         $policies[] = $directive . " " . implode(" ", $sources);
       }
     }
-    if($_ENV['CSP_ENABLED']){
+    if(APP_CSP_ENABLED){
       return implode("; ", $policies);
     }
     return null;

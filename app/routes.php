@@ -2,7 +2,7 @@
 
 $router = Quazymodo\App::getRouter();
 
-if($_ENV['RATE_LIMIT_REQUESTS'] > 0){
+if(RATE_LIMIT_REQUESTS > 0){
   $router->middleware(new Middleware\RateLimitMiddleware());
 }
 

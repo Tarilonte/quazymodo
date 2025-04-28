@@ -16,17 +16,10 @@ class App{
 
   static function Run(): void
   {
-      self::loadEnv();
-      self::initRequest();
-      self::loadConfig();
-      self::initRoutes();
-      self::handleRequest();
-  }
-
-  private static function loadEnv(): void
-  {
-    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../app');
-    $dotenv->load();
+    self::loadConfig();
+    self::initRequest();
+    self::initRoutes();
+    self::handleRequest();
   }
 
   private static function initRequest(): void
@@ -72,8 +65,7 @@ class App{
 
   private static function handleException(\Throwable $e): void
   {
-    $env = $_ENV['APP_ENV'] ?? 'production';
-    if ($env === 'development') {
+    if (APP_ENV === 'development') {
       throw $e; // Deixa o Tracy ou outro handler capturar
     }
     $statusCode = method_exists($e, 'getStatusCode')
@@ -105,7 +97,7 @@ class App{
     }
 
     if (!str_contains(self::$response->getHeaderLine('Content-Type'), 'application/octet-stream')) {
-        if ($isHttps && ($_ENV['APP_ENV'] ?? 'production') === 'production') {
+        if ($isHttps && (APP_ENV ?? 'production') === 'production') {
             header("Strict-Transport-Security: max-age=63072000; includeSubDomains");
         }
         header("X-Content-Type-Options: nosniff");

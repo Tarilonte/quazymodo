@@ -14,8 +14,8 @@ class RateLimitMiddleware implements MiddlewareInterface
     {
       $clientIp = Helper::getClientIp($request);
 
-      $limit = $_ENV['RATE_LIMIT_REQUESTS'];
-      $period = $_ENV['RATE_LIMIT_PERIOD'];
+      $limit = RATE_LIMIT_REQUESTS;
+      $period = RATE_LIMIT_PERIOD;
 
       if (!isset($_SESSION['rate_limit'])) {
         $_SESSION['rate_limit'] = [];

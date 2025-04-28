@@ -173,7 +173,7 @@ class BaseComponent
       // Extract the attributes of the script - Example: [defer]
       list($src, $attributes) = $this->get_jsAttributes($source);
       // Add the external source script to the list of script sources allowed by CSP
-      if ($isExternal && $_ENV['CSP_ENABLED']) {
+      if ($isExternal && APP_CSP_ENABLED) {
         CSPManager::addSource('script-src', $src);
       }
       // Add the script to the $jsLinks variable then remove it from the $this->js array
