@@ -39,7 +39,7 @@ class LobbyController extends AbstractController
     $page = ComponentFactory::create(
       "js",
       [
-        "js" => "chat/login-fail.js?v=1.0",
+        "js" => "chat/login-fail.js [defer]",
       ],
       "templateOnly"
     );

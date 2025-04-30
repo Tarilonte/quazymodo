@@ -6,7 +6,7 @@ return [
   'extends' => 'page-base',
   'js' => [
     'https://unpkg.com/centrifuge@5.3.4/dist/centrifuge.js',
-    'centrifugo.js?v=1',
+    'centrifugo.js',
   ],
   'inserts' => [
     'page-title' => 'Centrifugo',
