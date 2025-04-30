@@ -30,3 +30,7 @@ $router->map('POST', '/adminer', function () {
 // testes
 $router->map('GET', '/test/{test:.*}', 'Controller\Test\TestController::index');
 $router->map('POST', '/test/{test:.*}', 'Controller\Test\TestController::index');
+
+// chat
+$router->map('GET', '/chat', 'Controller\Chat\LobbyController::index');
+$router->map('POST', '/chat/enterLobby', 'Controller\Chat\LobbyController::enterLobby');
