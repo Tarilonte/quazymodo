@@ -167,7 +167,8 @@ class BaseComponent
         $isExternal = true;
       } else {
         // Otherwise, it is an internal file and add the 'assets/js/' path
-        $source = $this->assetsURL . "/js/$file";
+        $versionedFile = $this->versionedFile($file);
+        $source = $this->assetsURL . "/js/$versionedFile";
         $isExternal = false;
       }
       // Extract the attributes of the script - Example: [defer]
@@ -206,4 +207,33 @@ class BaseComponent
     // Retorna um array com os valores de $src e $attributes
     return array($src, $attributes);
   }
+
+  private function versionedFile(string $file): string
+{
+    // Localiza o primeiro espaço na string
+    $spacePosition = strpos($file, ' ');
+
+    // Se houver espaço, separa o nome do arquivo e os atributos
+    if ($spacePosition !== false) {
+        $filename = substr($file, 0, $spacePosition); // Parte antes do espaço (ex.: 'base.js')
+        $attributes = substr($file, $spacePosition + 1); // Parte após o espaço (ex.: '[defer async]')
+    } else {
+        // Caso não haja espaço, considera a string inteira como o nome do arquivo
+        $filename = $file;
+        $attributes = '';
+    }
+
+    // Define o caminho completo do arquivo
+    $filepath = dirname(__DIR__) . '\app\components\assets\js\\' . $filename;
+
+    // Verifica se o arquivo existe antes de tentar obter o timestamp
+    if (file_exists($filepath)) {
+        $version = filemtime($filepath); // Obtém o timestamp da última modificação
+        // Adiciona o parâmetro de versionamento ao nome do arquivo
+        $filename = str_replace('.js', ".js?v=$version", $filename);
+    }
+
+    // Retorna o arquivo com o parâmetro de versionamento e os atributos adicionais
+    return trim($filename . ' ' . $attributes);
+}
 }
