@@ -7,7 +7,7 @@ class CSPManager
   private static $nonce;
 
   private static $directives = [
-    'script-src' => ["'self'", "'unsafe-eval'"],
+    'script-src' => ["'self'"],
   ];
 
   public static function setNonce()

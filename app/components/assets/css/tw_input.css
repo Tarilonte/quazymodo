@@ -28,3 +28,7 @@
   exclude: rootscrollgutter;
   themes: all;
 }
+@plugin "daisyui/theme" {
+  name: "silk";
+  --color-accent: purple;
+}
