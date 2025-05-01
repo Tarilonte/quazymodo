@@ -13,6 +13,8 @@ use Pusher\Pusher;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 use Quazymodo\Helper;
+use Reflection;
+use ReflectionClass;
 use Throwable;
 use voku\helper\AntiXSS;
 
@@ -131,7 +133,7 @@ class TestController extends AbstractController
       "page-base",
       [
         "js" => "https://unpkg.com/htmx.org@2.0.0",
-        "css" => "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+        "css" => ASSET_ANIMATECSS,
         "body" => [
           ComponentFactory::create("navbar-01"),
           ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")
@@ -276,5 +278,55 @@ class TestController extends AbstractController
           // Em caso de erro
           return $this->json(['status' => 'error', 'message' => $e->getMessage()], 500);
       }
+  }
+
+  public function sse()
+  {
+    header('Content-Type: text/event-stream');
+    header('Cache-Control: no-cache');
+    header('Connection: keep-alive');
+    
+    while (true) {
+      $message = 'event: horacerta' . PHP_EOL;
+      $message .= 'data: ' . date('H:i:s') . PHP_EOL . PHP_EOL;
+      echo $message;
+      ob_flush();
+      flush();
+      sleep(1);
+    }  
+  }
+
+  public function list()
+  {
+    $reflection = new ReflectionClass($this);
+    $metodos = $reflection->getMethods();
+
+    foreach ($metodos as $metodo) {
+        $name = $metodo->getName();
+        $modifiers = implode(', ', Reflection::getModifierNames($metodo->getModifiers()));
+        echo "<a href='test/$name'>$name</a> - $modifiers <br>";
+        
+        
+    }
+    exit;
+  }
+
+  public function emoji()
+  {
+    $page = ComponentFactory::create(
+      "page-base",
+      [
+        "js" => [
+          "https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js",
+          "emoji-mart.js"
+        ],
+        "body" => [
+          ComponentFactory::create("navbar-01"),
+          '<div id="content" class="grow flex justify-center items-center"></div>'
+        ],
+        "body-class" => "flex flex-col"
+      ]
+        );
+    return $this->html($page);
   }
 }

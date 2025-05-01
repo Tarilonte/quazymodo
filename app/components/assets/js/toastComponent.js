@@ -2,7 +2,6 @@ class ToastComponent {
 
   static container = $('#toasts_container');
   static template = this.container.find('.toast_message.hidden');
- 
 
   static newToast(message, duration = 5000, toastType = null) {
     // Declara os toastTypes para refletir no tailwind
@@ -59,7 +58,6 @@ class ToastComponent {
     }, duration);
   }
 }
-
 
 setInterval(() => {
   const messages = [
