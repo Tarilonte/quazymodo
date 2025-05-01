@@ -35,6 +35,10 @@ const DB = [
   ]
 ];
 
+//ASSETS
+const ASSET_JQUERY = "https://code.jquery.com/jquery-4.0.0-beta.min.js";
+const ASSET_ANIMATECSS = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
 // EXTERNAL SERVICES CREDENTIALS
   // CONFIGURAÇÕES DE EMAIL
 const MAILBABY_API_KEY = "8D3ZkbB7djvEuV1AOoIGKeg7vBgZDRGvUoCeZQtrV4VyloTN74V9vedGHcyUhainkjzzJg6eNzwTSqlt7dKj9VV6534w5Z4lJvJmke4P5vL2zERsdpPLM8cf3cqMjPHt";
