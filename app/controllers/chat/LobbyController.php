@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Quazymodo\AbstractController;
 use Quazymodo\ComponentFactory;
+use Quazymodo\CSPManager;
 
 class LobbyController extends AbstractController
 {
@@ -36,70 +37,19 @@ class LobbyController extends AbstractController
     $nickname = $parsedBody['nickname'] ?? null;
 
     sleep(1); // Simulate a delay for the login process
-    $page = ComponentFactory::create(
+    $response = ComponentFactory::create(
       "js",
       [
+        "inlineScript" => "nickname = '$nickname'",
         "js" => "chat/login-fail.js [defer]",
+        "nonce" => CSPManager::getNonce()
       ],
-      "templateOnly"
+      "templateOnly",
+      shouldSetNonce:false
     );
-    return $this->html($page);
-    // Captura a lista de usuários no Lobby
-    $onlineUsers = $this->getOnlineUsers();
-
-    // Verifica se o apelido já está em uso
-    if (in_array($nickname, $onlineUsers)) {
-      $page = ComponentFactory::create(
-        "chat/chat-login",
-        ["error" => "O apelido '$nickname' já está em uso. Escolha outro."]
-      );
-      return $this->html($page);
-    }
-
-    // Salva o apelido na sessão
-    $_SESSION['nickname'] = $nickname;
-
-    // Renderiza o Lobby
-    $page = ComponentFactory::create(
-      "chat/chat-lobby",
-      ["nickname" => $nickname, "onlineUsers" => $onlineUsers]
-    );
-    return $this->html($page);
+    return $this->html($response);
+    
   }
 
-  private function getOnlineUsers(): array
-  {
-    $channel = 'lobby';
-    $url = $this->centrifugoApiUrl . '/presence/' . $channel;
 
-    try {
-        // Cria um cliente Guzzle
-        $client = new \GuzzleHttp\Client();
-
-        // Faz a requisição GET para o Centrifugo
-        $response = $client->get($url, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'apikey ' . $this->centrifugoApiKey,
-            ],
-        ]);
-
-        // Decodifica a resposta JSON
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        // Extrai os apelidos dos usuários conectados
-        $users = [];
-        if (isset($data['result']['presence'])) {
-            foreach ($data['result']['presence'] as $user) {
-                $users[] = $user['user']; // Substitua 'user' pelo campo correto, se necessário
-            }
-        }
-
-        return $users;
-    } catch (\Exception $e) {
-        // Em caso de erro, retorna uma lista vazia e registra o erro
-        error_log('Erro ao obter usuários online: ' . $e->getMessage());
-        return [];
-    }
-  }
 }
