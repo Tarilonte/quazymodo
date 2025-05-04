@@ -1,0 +1,70 @@
+# Stage 1: Build environment
+FROM alpine:edge AS builder
+
+# Install all dependencies for build
+RUN apk add --no-cache \
+    php84 \
+    php84-fpm \
+    php84-opcache \
+    php84-pdo \
+    php84-pdo_mysql \
+    php84-mbstring \
+    php84-xml \
+    php84-session \
+    php84-curl
+
+# Configure PHP-FPM
+RUN sed -i 's/user = nobody/user = nginx/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/group = nobody/group = nginx/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/;listen.owner = nobody/listen.owner = nginx/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/;listen.group = nobody/listen.group = nginx/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /etc/php84/php-fpm.d/www.conf && \
+    echo "clear_env = no" >> /etc/php84/php-fpm.d/www.conf
+
+# Create app directory
+RUN mkdir -p /var/www/html/public
+
+# Stage 2: Production image
+FROM alpine:edge
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    nginx \
+    php84 \
+    php84-fpm \
+    php84-opcache \
+    php84-pdo \
+    php84-pdo_mysql \
+    php84-mbstring \
+    php84-xml \
+    php84-session \
+    php84-curl \
+    supervisor
+
+# Create required directories
+RUN mkdir -p /var/www/html/public \
+    /run/nginx \
+    /var/run/php-fpm \
+    /var/log/supervisor
+
+# Copy PHP config from builder
+COPY --from=builder /etc/php84 /etc/php84
+
+# Copy configuration files
+COPY nginx.conf /etc/nginx/http.d/default.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy application files
+WORKDIR /var/www/html
+COPY . /var/www/html
+
+# Set proper permissions
+RUN chown -R nginx:nginx /var/www/html && \
+    chmod -R 755 /var/www/html && \
+    chown -R nginx:nginx /var/run/php-fpm
+
+# Expose web port
+EXPOSE 80
+
+# Start supervisor to manage services
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
