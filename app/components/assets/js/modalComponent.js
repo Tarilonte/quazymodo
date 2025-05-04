@@ -34,20 +34,17 @@ function modal_open(header='', message='') {
   modal_setMessage(message);
   Modal
     .addClass("modal-open")
-    .focus()
     .find(".modal-backdrop")
       .css('opacity', '0')
       .animate({opacity: "1"},800);
+  setTimeout(function() {
+    Modal.focus();
+  }, 100);
 }
 
 function modal_close() {
-  //modal_setHeader('');
-  //modal_setMessage('');
   Modal
-  // .fadeOut()
-  //.addClass('animate__animated animate__hinge')
   .removeClass("modal-open")
-  //.removeClass('animate__animated animate__hinge')
   .find(".modal-box").removeClass('bg-warning text-warning-content');
 }
 
