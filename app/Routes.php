@@ -10,7 +10,6 @@ if(RATE_LIMIT_REQUESTS > 0){
 $router->map('GET', '/', 'Controller\HomeController::index');
 $router->map('GET', '/login', 'Controller\userController::showLoginForm');
 $router->map('POST', '/User/processLoginForm', 'Controller\userController::processLoginForm');
-$router->map('GET', '/info', 'Controller\PHPInfoController::index');
 
 //Adminer
 $router->map('GET', '/adminer', function () {
@@ -30,3 +29,8 @@ $router->map(['GET','POST'], '/test/{test:.*}', 'Controller\Test\TestController:
 // chat
 $router->map('GET', '/chat', 'Controller\Chat\LobbyController::index');
 $router->map('POST', '/chat/enterLobby', 'Controller\Chat\LobbyController::enterLobby');
+
+// Rotas disponiveis apenas em dev
+if (APP_ENV == "development") {
+  $router->map('GET', '/info', 'Controller\PHPInfoController::index');
+} 

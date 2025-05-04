@@ -28,6 +28,7 @@ RUN mkdir -p /var/www/html/public
 FROM alpine:edge
 
 # Install runtime dependencies
+# This will create the nginx user and group
 RUN apk add --no-cache \
     nginx \
     php84 \
@@ -51,18 +52,16 @@ RUN mkdir -p /var/www/html/public \
 COPY --from=builder /etc/php84 /etc/php84
 
 # Copy configuration files from the Container directory within the build context
-COPY Container/nginx.conf /etc/nginx/http.d/default.conf
-COPY Container/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY Container/Nginx/nginx.conf /etc/nginx/http.d/default.conf
+COPY Container/Nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy application files from the build context root
 WORKDIR /var/www/html
 # This copies everything from the project root (build context)
 COPY . /var/www/html
 
-# Set proper permissions
-# Ensure nginx user/group exists before chown
-RUN addgroup -S nginx && adduser -S -G nginx nginx && \
-    chown -R nginx:nginx /var/www/html && \
+# Set proper permissions (nginx user/group already exists from apk add nginx)
+RUN chown -R nginx:nginx /var/www/html && \
     chmod -R 755 /var/www/html && \
     chown -R nginx:nginx /var/run/php-fpm && \
     chown -R nginx:nginx /var/log/supervisor && \

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      # Agora precisamos subir dois níveis (Container/Nginx -> raiz do projeto)
+      context: ../..
+      # O caminho do Dockerfile relativo à raiz do projeto
+      dockerfile: Container/Nginx/Dockerfile
+    container_name: quazymodo
+    restart: unless-stopped
+    ports:
+      - "8080:80"  
+      - "8443:443"
+    volumes:
+      - ../../:/var/www/html
+      - ../ssl:/etc/nginx/ssl:ro
