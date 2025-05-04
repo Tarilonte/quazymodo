@@ -1,0 +1,15 @@
+{
+    frankenphp
+    order php_server before file_server
+}
+
+:80 {
+    root * /app/public
+    
+    # Enable worker mode
+    php_server {
+        worker
+        worker_count 3
+        resolver_timeout 10s
+    }
+}
