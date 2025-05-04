@@ -3,29 +3,16 @@ version: '3'
 services:
   frankenphp:
     build:
-      context: .
-      dockerfile: Container/Frankenphp/Dockerfile
+      # Context should be the project root, relative to this compose file's location
+      context: ../.. 
+      # Dockerfile path relative to the new context (project root)
+      dockerfile: ./Container/Frankenphp/Dockerfile 
     ports:
-      - "80:80"
+      # Map host port 8080 to container port 80
+      - "8080:80" 
     volumes:
-      - .:/app
+      # Mount the project root (context) into /app
+      - ../..:/app 
     environment:
       - APP_ENV=development
-      - FRANKENPHP_CONFIG="worker_count=3"
-    depends_on:
-      - database
     restart: unless-stopped
-
-  database:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: quazymodo
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
-
-volumes:
-  db_data:

@@ -1,15 +1,14 @@
 {
     frankenphp
     order php_server before file_server
+    # Optional: Define php.ini settings here
+    # php_ini { ... }
 }
 
 :80 {
     root * /app/public
     
-    # Enable worker mode
+    # php_server directive is needed
     php_server {
-        worker
-        worker_count 3
-        resolver_timeout 10s
     }
 }
