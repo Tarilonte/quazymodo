@@ -38,8 +38,10 @@ function modal_open(header='', message='') {
       .css('opacity', '0')
       .animate({opacity: "1"},800);
   setTimeout(function() {
-    Modal.focus();
-  }, 100);
+    Modal
+      .focus()
+      .css('outline', 'none');
+  }, 200);
 }
 
 function modal_close() {

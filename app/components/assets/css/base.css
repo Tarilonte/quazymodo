@@ -1623,6 +1623,11 @@
     overflow-y: auto;
     overscroll-behavior: contain;
   }
+  .drawer-content {
+    grid-column-start: 2;
+    grid-row-start: 1;
+    min-width: calc(0.25rem * 0);
+  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -2366,6 +2371,9 @@
   .border-primary {
     border-color: var(--color-primary);
   }
+  .border-red-500 {
+    border-color: var(--color-red-500);
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
@@ -2611,6 +2619,10 @@
     --tw-duration: 300ms;
     transition-duration: 300ms;
   }
+  .duration-1000 {
+    --tw-duration: 1000ms;
+    transition-duration: 1000ms;
+  }
   .ease-in-out {
     --tw-ease: var(--ease-in-out);
     transition-timing-function: var(--ease-in-out);
@@ -2655,6 +2667,10 @@
     --btn-color: var(--color-secondary);
     --btn-fg: var(--color-secondary-content);
   }
+  .outline-none {
+    --tw-outline-style: none;
+    outline-style: none;
+  }
   .select-none {
     -webkit-user-select: none;
     user-select: none;
@@ -2665,10 +2681,50 @@
   .\[program\:php-fpm\] {
     program: php-fpm;
   }
+  .focus\:border-0 {
+    &:focus {
+      border-style: var(--tw-border-style);
+      border-width: 0px;
+    }
+  }
   .focus\:border-2 {
     &:focus {
       border-style: var(--tw-border-style);
       border-width: 2px;
+    }
+  }
+  .focus\:border-4 {
+    &:focus {
+      border-style: var(--tw-border-style);
+      border-width: 4px;
+    }
+  }
+  .focus\:border-6 {
+    &:focus {
+      border-style: var(--tw-border-style);
+      border-width: 6px;
+    }
+  }
+  .focus\:border-\[10px\] {
+    &:focus {
+      border-style: var(--tw-border-style);
+      border-width: 10px;
+    }
+  }
+  .focus\:outline-hidden {
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+      @media (forced-colors: active) {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+  }
+  .focus\:outline-none {
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
     }
   }
   .sm\:w-32 {
