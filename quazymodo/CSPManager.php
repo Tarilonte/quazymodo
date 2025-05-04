@@ -8,6 +8,8 @@ class CSPManager
 
   private static $directives = [
     'script-src' => ["'self'"],
+    'frame-ancestors' => ["'self'"],
+    //'style-src' => ["'self'"],
   ];
 
   public static function setNonce()

@@ -46,7 +46,8 @@ abstract class AbstractController
     // Headers padrão (comuns a todos os tipos)
     $defaultHeaders = [
       'Content-Type' => $contentType,
-      'X-Content-Type-Options' => 'nosniff'
+      'X-Content-Type-Options' => 'nosniff',
+      'X-Frame-Options' => 'SAMEORIGIN'
     ];
 
     // Adiciona CSP apenas se existir (para HTML)

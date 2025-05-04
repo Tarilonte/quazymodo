@@ -209,7 +209,7 @@ class BaseComponent
   }
 
   private function versionedFile(string $file): string
-{
+  {
     // Localiza o primeiro espaço na string
     $spacePosition = strpos($file, ' ');
 
@@ -223,8 +223,8 @@ class BaseComponent
         $attributes = '';
     }
 
-    // Define o caminho completo do arquivo
-    $filepath = dirname(__DIR__) . '\app\components\assets\js\\' . $filename;
+    // Define o caminho completo do arquivo usando DIRECTORY_SEPARATOR para compatibilidade
+    $filepath = dirname(__DIR__) . '/app/components/assets/js/' . $filename;
 
     // Verifica se o arquivo existe antes de tentar obter o timestamp
     if (file_exists($filepath)) {
@@ -235,5 +235,5 @@ class BaseComponent
 
     // Retorna o arquivo com o parâmetro de versionamento e os atributos adicionais
     return trim($filename . ' ' . $attributes);
-}
+  }
 }
