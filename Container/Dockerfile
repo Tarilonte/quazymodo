@@ -21,7 +21,7 @@ RUN sed -i 's/user = nobody/user = nginx/' /etc/php84/php-fpm.d/www.conf && \
     sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /etc/php84/php-fpm.d/www.conf && \
     echo "clear_env = no" >> /etc/php84/php-fpm.d/www.conf
 
-# Create app directory
+# Create app directory (optional in builder if not used, but harmless)
 RUN mkdir -p /var/www/html/public
 
 # Stage 2: Production image
@@ -50,21 +50,26 @@ RUN mkdir -p /var/www/html/public \
 # Copy PHP config from builder
 COPY --from=builder /etc/php84 /etc/php84
 
-# Copy configuration files
-COPY nginx.conf /etc/nginx/http.d/default.conf
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Copy configuration files from the Container directory within the build context
+COPY Container/nginx.conf /etc/nginx/http.d/default.conf
+COPY Container/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Copy application files
+# Copy application files from the build context root
 WORKDIR /var/www/html
+# This copies everything from the project root (build context)
 COPY . /var/www/html
 
 # Set proper permissions
-RUN chown -R nginx:nginx /var/www/html && \
+# Ensure nginx user/group exists before chown
+RUN addgroup -S nginx && adduser -S -G nginx nginx && \
+    chown -R nginx:nginx /var/www/html && \
     chmod -R 755 /var/www/html && \
-    chown -R nginx:nginx /var/run/php-fpm
+    chown -R nginx:nginx /var/run/php-fpm && \
+    chown -R nginx:nginx /var/log/supervisor && \
+    chown -R nginx:nginx /run/nginx
 
-# Expose web port
-EXPOSE 80
+# Expose web ports
+EXPOSE 80 443
 
 # Start supervisor to manage services
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

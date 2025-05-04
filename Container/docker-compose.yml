@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      # The context is the project root directory (one level up from this file)
+      # This allows the Dockerfile to COPY files from the project root.
+      context: ..
+      # The Dockerfile path is relative to the context directory.
+      dockerfile: Container/Dockerfile
+    container_name: quazymodo
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "8443:443" # Map host port 8443 to container port 443
+    volumes:
+      # Mount the project root (..) into the container at /var/www/html
+      - ../:/var/www/html
+      # Mount the ssl directory from the project root (../ssl) into the container
+      # Assumes your 'ssl' folder is in the project root, alongside the 'Container' folder.
+      - ./ssl:/etc/nginx/ssl:ro # Mount SSL certs read-only
