@@ -4,6 +4,7 @@ return [
   'css' => ['base.css'],
   'js' => [
     ASSET_JQUERY,
+    'base.js',
     'themeSelector-01.js'
   ],
   'inserts' => []

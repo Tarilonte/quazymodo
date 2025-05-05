@@ -6,7 +6,8 @@
         "nyholm/psr7": "^1.8",
         "nyholm/psr7-server": "^1.1",
         "catfan/medoo": "^2.1",
-        "pusher/pusher-php-server": "^7.2"
+        "pusher/pusher-php-server": "^7.2",
+        "voku/anti-xss": "^4.1"
     },
     "autoload": {
         "psr-4": {
