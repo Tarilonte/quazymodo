@@ -85,7 +85,7 @@ class BaseComponent
   {
     $template = file_get_contents("../app/components/templates/$templateName.html");
     $template = str_replace('[{', '{{', $template);
-      $template = str_replace('}]', '}}', $template);
+    $template = str_replace('}]', '}}', $template);
     return $template;
   }
 

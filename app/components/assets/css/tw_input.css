@@ -26,7 +26,7 @@
 @import "tailwindcss";
 @plugin "daisyui" {
   exclude: rootscrollgutter;
-  themes: all;
+  themes: silk --default, sunset --prefersdark;
 }
 @plugin "daisyui/theme" {
   name: "silk";
