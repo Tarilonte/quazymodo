@@ -17,6 +17,7 @@ class ErrorController extends AbstractController
         $component = ComponentFactory::create(
           'page-error',
           [
+            'body' => ComponentFactory::loadTemplate('pages/error'),
             'requested-uri' => $REQUEST_URI,
             'page-title' => $this->getErrorMessage($statusCode)[1],
             'error-code' => $statusCode,
@@ -24,11 +25,6 @@ class ErrorController extends AbstractController
             'error-message' => $this->getErrorMessage($statusCode)[1],
             'error-description' => $this->getErrorMessage($statusCode, $REQUEST_URI)[2],
             'take-me-back' => $this->getErrorMessage($statusCode)[3],
-            'body' => ComponentFactory::create(
-                'pages/error',
-                [],
-                'templateOnly'
-            )
             ]
       );
   

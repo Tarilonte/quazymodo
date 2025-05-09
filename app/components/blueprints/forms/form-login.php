@@ -15,17 +15,13 @@ return [
         'themeSelector-01',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],
       ),
-      ComponentFactory::create(
-        componentName:'forms/form-login',
-        componentType:'templateOnly'
-      ),
+      ComponentFactory::loadTemplate('forms/form-login'),
     ],
     'body-class' => 'flex flex-col md:bg-base-200',
     'csrf-token' => Csrf::setToken(),
-    'site-logo' => ComponentFactory::create(
+    'site-logo' => ComponentFactory::loadTemplate(
       'logo', 
       ['logo-class' => 'h-16 fill-primary align-self-center'],
-      'templateOnly'
     ),
   ]
 ];

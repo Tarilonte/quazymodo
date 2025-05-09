@@ -15,10 +15,7 @@ return [
         'themeSelector-01',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],
       ),
-      ComponentFactory::create(
-        componentName:'chat/chat-login',
-        componentType:'templateOnly'
-      ),
+      ComponentFactory::loadTemplate('chat/chat-login'),
     ],
     'body-class' => 'flex flex-col md:bg-base-200',
     'csrf-token' => Csrf::setToken()

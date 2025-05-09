@@ -11,11 +11,7 @@ return [
   'inserts' => [
     'page-title' => 'Chat Público',
     'body' => [
-      ComponentFactory::create(
-        'chatRoom',
-        [],
-        'templateOnly'
-      ),
+      ComponentFactory::loadTemplate('chatRoom')
     ],
     'body-class' => 'bg-base-100 min-h-screen',
   ]

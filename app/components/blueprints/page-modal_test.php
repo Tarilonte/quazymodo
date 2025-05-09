@@ -9,11 +9,11 @@ return [
     'page-title' => 'Teste Modal',
     'body' => [
       ComponentFactory::create(componentName:'navbar-01'),
-      ComponentFactory::create(componentName:'pages/modal_test-page', componentType:'templateOnly'),
+      ComponentFactory::loadTemplate(componentName:'pages/modal_test-page'),
       ComponentFactory::create(componentName:'modalComponent'),
     ],
     'body-class'=> 'flex flex-col',
-    'navbar-logo' => ComponentFactory::create(componentName:'logo', componentType:'templateOnly'),
+    'navbar-logo' => ComponentFactory::loadTemplate(componentName:'logo'),
     'logo-class' => 'h-8 fill-primary',
     'navbar-start' => 'Teste Modal'
   ]

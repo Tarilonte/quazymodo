@@ -100,9 +100,9 @@ class TestController extends AbstractController
       [
         "body" => [
           ComponentFactory::create("navbar-01"),
-          ComponentFactory::create("table-test", $tableData,  "templateOnly")
+          ComponentFactory::loadTemplate("table-test", $tableData)
         ],
-        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
+        "navbar-logo" =>  ComponentFactory::loadTemplate("logo",["logo-class" => "h-8 fill-primary"]),
         "navbar-start" =>  "Table Test",
       ]
     );
@@ -136,7 +136,7 @@ class TestController extends AbstractController
         "css" => ASSET_ANIMATECSS,
         "body" => [
           ComponentFactory::create("navbar-01"),
-          ComponentFactory::create("pages/htmx_test-page", componentType: "templateOnly")
+          ComponentFactory::loadTemplate("pages/htmx_test-page")
         ],
         'nonce' => CSPManager::getNonce(),
       ]
@@ -169,7 +169,7 @@ class TestController extends AbstractController
           ComponentFactory::create("navbar-01"),
           $table
         ],
-        "navbar-logo" =>  ComponentFactory::create("logo",["logo-class" => "h-8 fill-primary"], componentType: "templateOnly"),
+        "navbar-logo" =>  ComponentFactory::loadTemplate("logo",["logo-class" => "h-8 fill-primary"]),
         "navbar-start" =>  "User Info",
       ]
     );

@@ -11,10 +11,10 @@ return [
   'inserts' => [  
     'body' => [
       ComponentFactory::create(componentName:'navbar-01'),
-      ComponentFactory::create(componentName:'daisy-test', componentType:'templateOnly'),
+      ComponentFactory::loadTemplate(componentName:'daisy-test'),
     ],
     'navbar-start' => 'Daisy Test',
-    'navbar-logo' => ComponentFactory::create(componentName:'logo', componentType:'templateOnly'),
+    'navbar-logo' => ComponentFactory::loadTemplate(componentName:'logo'),
     'logo-class' => 'h-8 fill-primary'   
   ] 
 ];

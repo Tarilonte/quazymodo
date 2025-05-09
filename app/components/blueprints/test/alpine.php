@@ -14,12 +14,12 @@ return [
   'inserts' => [  
     'body' => [
       ComponentFactory::create(componentName:'navbar-01'),
-      ComponentFactory::create(componentName:'alpine-test', componentType:'templateOnly'),
+      ComponentFactory::loadTemplate(componentName:'alpine-test'),
     ],
     'nonce' => CSPManager::getNonce(),
     'body-class' => 'flex flex-col',
     'navbar-start' => 'Alpine JS Test',
-    'navbar-logo' => ComponentFactory::create(componentName:'logo', componentType:'templateOnly'),
+    'navbar-logo' => ComponentFactory::loadTemplate(componentName:'logo'),
     'logo-class' => 'h-8 fill-primary', 
   ] 
 ];

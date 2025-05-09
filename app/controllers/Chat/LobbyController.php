@@ -37,18 +37,15 @@ class LobbyController extends AbstractController
     $nickname = $parsedBody['nickname'] ?? null;
 
     sleep(1); // Simulate a delay for the login process
-    $response = ComponentFactory::create(
+    $response = ComponentFactory::loadTemplate(
       "js",
       [
         "inlineScript" => "nickname = '$nickname'",
         "js" => "chat/login-fail.js [defer]",
         "nonce" => CSPManager::getNonce()
-      ],
-      "templateOnly",
-      shouldSetNonce:false
+      ]
     );
-    return $this->html($response);
-    
+    return $this->html($response);    
   }
 
 

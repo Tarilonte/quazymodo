@@ -23,7 +23,7 @@
 foreach ($controllerData['rows'] as $fieldName => $value) {
   $fieldName = ucwords(str_replace("_", " ", $fieldName));
   $value = is_bool($value) ? var_export($value,true) : $value;
-  $componentRow = Quazymodo\ComponentFactory::create(
+  $componentRow = Quazymodo\ComponentFactory::loadTemplate(
     "tables/vertical-table-tr",
     [
       "tr-class" => "hover",
@@ -32,7 +32,6 @@ foreach ($controllerData['rows'] as $fieldName => $value) {
       "td-class" => is_null($value) ? "italic text-base-content/40" : "",
       "td-content" => is_null($value) ? "-" : $value
     ],
-    "templateOnly"
   );
   $renderedRow[] = $componentRow->render();
 }
