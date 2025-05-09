@@ -39,7 +39,7 @@ class TestController extends AbstractController
 
   public function modal(): ResponseInterface
   {    
-    $page = ComponentFactory::create("page-modal_test");
+    $page = componentFactory::Page("page-modal_test");
     return $this->html($page);
   }
 
@@ -95,14 +95,14 @@ class TestController extends AbstractController
     }
   
     // Montar a página
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "page-base",
       [
         "body" => [
-          ComponentFactory::create("navbar-01"),
-          ComponentFactory::loadTemplate("table-test", $tableData)
+          componentFactory::Component("navbar-01"),
+          componentFactory::Template("table-test", $tableData)
         ],
-        "navbar-logo" =>  ComponentFactory::loadTemplate("logo",["logo-class" => "h-8 fill-primary"]),
+        "navbar-logo" =>  componentFactory::Template("logo",["logo-class" => "h-8 fill-primary"]),
         "navbar-start" =>  "Table Test",
       ]
     );
@@ -121,22 +121,21 @@ class TestController extends AbstractController
     // Resposta caso haja o argumento 'teste' na URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $response = ComponentFactory::create(
-        componentName:'test/salsifufu',
-        shouldSetNonce: false,
+      $response = componentFactory::Component(
+        componentName:'test/salsifufu'
       );
       return $this->html($response);
     }
 
     // Resposta padrão
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "page-base",
       [
         "js" => "https://unpkg.com/htmx.org@2.0.0",
         "css" => ASSET_ANIMATECSS,
         "body" => [
-          ComponentFactory::create("navbar-01"),
-          ComponentFactory::loadTemplate("pages/htmx_test-page")
+          componentFactory::Component("navbar-01"),
+          componentFactory::Template("pages/htmx_test-page")
         ],
         'nonce' => CSPManager::getNonce(),
       ]
@@ -159,17 +158,17 @@ class TestController extends AbstractController
     $userInfo = $antiXss->xss_clean($userInfo);
 
     // Monta a tabela com as informações do usuário
-    $table = ComponentFactory::create("tables/vertical-table",["rows" => $userInfo]);
+    $table = componentFactory::Component("tables/vertical-table",["rows" => $userInfo]);
 
     // Monta a página
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "page-base",
       [
         "body" => [
-          ComponentFactory::create("navbar-01"),
+          componentFactory::Component("navbar-01"),
           $table
         ],
-        "navbar-logo" =>  ComponentFactory::loadTemplate("logo",["logo-class" => "h-8 fill-primary"]),
+        "navbar-logo" =>  componentFactory::Template("logo",["logo-class" => "h-8 fill-primary"]),
         "navbar-start" =>  "User Info",
       ]
     );
@@ -180,7 +179,7 @@ class TestController extends AbstractController
 
   public function component(): ResponseInterface
   {    
-    $page = ComponentFactory::create("themeSelector-01");
+    $page = componentFactory::Component("themeSelector-01");
     return $this->html($page);
   }
 
@@ -198,7 +197,7 @@ class TestController extends AbstractController
 
   public function daisy(): ResponseInterface
   {     
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "test/daisy"
     );
     return $this->html($page);
@@ -206,7 +205,7 @@ class TestController extends AbstractController
 
   public function alpine(): ResponseInterface
   {     
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "test/alpine"
     );
     return $this->html($page);
@@ -214,7 +213,7 @@ class TestController extends AbstractController
 
   public function toast(): ResponseInterface
   {     
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "test/toast"
     );
     return $this->html($page);
@@ -222,7 +221,7 @@ class TestController extends AbstractController
 
   public function centrifugo(): ResponseInterface
   {     
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       componentName:"test/centrifugo"
     );
     return $this->html($page);
@@ -230,7 +229,7 @@ class TestController extends AbstractController
 
   public function soketi(ServerRequestInterface $request): ResponseInterface
   {
-    $page = ComponentFactory::create("chatRoom");
+    $page = componentFactory::Page("chatRoom");
     return $this->html($page);
   }
 
@@ -313,7 +312,7 @@ class TestController extends AbstractController
 
   public function emoji()
   {
-    $page = ComponentFactory::create(
+    $page = componentFactory::Page(
       "page-base",
       [
         "js" => [
@@ -321,7 +320,7 @@ class TestController extends AbstractController
           "emoji-mart.js"
         ],
         "body" => [
-          ComponentFactory::create("navbar-01"),
+          componentFactory::Component("navbar-01"),
           '<div id="content" class="grow flex justify-center items-center"></div>'
         ],
         "body-class" => "flex flex-col"

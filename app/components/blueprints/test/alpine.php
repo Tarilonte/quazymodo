@@ -13,13 +13,13 @@ return [
     ],
   'inserts' => [  
     'body' => [
-      ComponentFactory::create(componentName:'navbar-01'),
-      ComponentFactory::loadTemplate(componentName:'alpine-test'),
+      componentFactory::Component(componentName:'navbar-01'),
+      componentFactory::Template(componentName:'alpine-test'),
     ],
     'nonce' => CSPManager::getNonce(),
     'body-class' => 'flex flex-col',
     'navbar-start' => 'Alpine JS Test',
-    'navbar-logo' => ComponentFactory::loadTemplate(componentName:'logo'),
+    'navbar-logo' => componentFactory::Template(componentName:'logo'),
     'logo-class' => 'h-8 fill-primary', 
   ] 
 ];

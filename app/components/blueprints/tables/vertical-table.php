@@ -23,7 +23,7 @@
 foreach ($controllerData['rows'] as $fieldName => $value) {
   $fieldName = ucwords(str_replace("_", " ", $fieldName));
   $value = is_bool($value) ? var_export($value,true) : $value;
-  $componentRow = Quazymodo\ComponentFactory::loadTemplate(
+  $componentRow = Quazymodo\componentFactory::Template(
     "tables/vertical-table-tr",
     [
       "tr-class" => "hover",

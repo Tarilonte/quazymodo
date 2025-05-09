@@ -10,12 +10,12 @@ return [
   'inserts' => [    
     'page-title' => 'Entrar',
     'body' => [
-      ComponentFactory::create('modalComponent'),
-      ComponentFactory::create(
+      componentFactory::Component('modalComponent'),
+      componentFactory::Component(
         'themeSelector-01',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],
       ),
-      ComponentFactory::loadTemplate('chat/chat-login'),
+      componentFactory::Template('chat/chat-login'),
     ],
     'body-class' => 'flex flex-col md:bg-base-200',
     'csrf-token' => Csrf::setToken()

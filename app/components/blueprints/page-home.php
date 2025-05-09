@@ -7,12 +7,12 @@ return [
   'inserts' => [
     'page-title' => APP_NAME,
     'body' => [
-      ComponentFactory::create('navbar-01'),
-      ComponentFactory::loadTemplate('pages/home'),
+      componentFactory::Component('navbar-01'),
+      componentFactory::Template('pages/home'),
     ],
     'logo' => [
-      ComponentFactory::create('animatedBackground'),
-      ComponentFactory::loadTemplate('logo'),
+      componentFactory::Component('animatedBackground'),
+      componentFactory::Template('logo'),
     ],
     'logo-class' => 'w-24 sm:w-32 fill-primary m-auto'
   ]

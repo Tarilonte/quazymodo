@@ -10,16 +10,16 @@ return [
   'inserts' => [    
     'page-title' => 'Login',
     'body' => [
-      ComponentFactory::create('modalComponent'),
-      ComponentFactory::create(
+      componentFactory::Component('modalComponent'),
+      componentFactory::Component(
         'themeSelector-01',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],
       ),
-      ComponentFactory::loadTemplate('forms/form-login'),
+      componentFactory::Template('forms/form-login'),
     ],
     'body-class' => 'flex flex-col md:bg-base-200',
     'csrf-token' => Csrf::setToken(),
-    'site-logo' => ComponentFactory::loadTemplate(
+    'site-logo' => componentFactory::Template(
       'logo', 
       ['logo-class' => 'h-16 fill-primary align-self-center'],
     ),

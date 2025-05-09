@@ -6,8 +6,8 @@ return [
   'extends' => 'page-base',
   'inserts' => [  
     'body' => [
-      ComponentFactory::create(componentName:'navbar-01'),
-      ComponentFactory::create(componentName:'toastComponent')
+      componentFactory::Component(componentName:'navbar-01'),
+      componentFactory::Component(componentName:'toastComponent')
     ],
   ] 
 ];

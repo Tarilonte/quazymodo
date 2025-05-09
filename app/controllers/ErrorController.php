@@ -14,10 +14,10 @@ class ErrorController extends AbstractController
       int $statusCode
     ): ResponseInterface {
         $REQUEST_URI = $request->getServerParams()['REQUEST_URI'] ?? '';
-        $component = ComponentFactory::create(
+        $component = componentFactory::Page(
           'page-error',
           [
-            'body' => ComponentFactory::loadTemplate('pages/error'),
+            'body' => componentFactory::Template('pages/error'),
             'requested-uri' => $REQUEST_URI,
             'page-title' => $this->getErrorMessage($statusCode)[1],
             'error-code' => $statusCode,
