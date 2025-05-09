@@ -23,18 +23,17 @@ class BaseComponent
    * @param mixed $componentName 
    * @param array $controllerData 
    * @param string $componentType
-   * default "component", use "templateOnly" for components without blueprint
    * @return $this 
    */
-  public function __construct($componentName, $controllerData = [], $componentType = "component", $shouldSetNonce = true)
+  public function __construct($componentName, $controllerData = [], $componentType)
   {
-    if($shouldSetNonce){
+    if($componentType === "page"){
       CSPManager::setNonce($componentName);
     }
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
-    if ($componentType === "templateOnly") {
-      $this->construct_templateOnly($componentName, $controllerData);
+    if ($componentType === "template") {
+      $this->construct_template($componentName, $controllerData);
     } else {
       $this->blueprint = new Blueprint($componentName, $controllerData);  
       $this->html = $this->load_template($this->blueprint->array()['template']);
@@ -54,11 +53,11 @@ class BaseComponent
     return $this;
   }
 
-  private function construct_templateOnly($templateName, $controllerData = [])
+  private function construct_template($templateName, $controllerData = [])
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
-    $this->write_componentName($templateName . '_templateOnly');
+    $this->write_componentName($templateName . '_template');
     $this->data = new ComponentData([], $controllerData);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;

@@ -4,32 +4,36 @@ namespace Quazymodo;
 
 class ComponentFactory
 {
-  public static function create(
+  public static function Page(
     $componentName, 
-    $controllerData = [], 
-    $componentType = "component", 
-    $shouldSetNonce = true
+    $controllerData = []
     ) : BaseComponent
   {
-    return self::returnComponent($componentName, $controllerData, $componentType, $shouldSetNonce);
+    return self::return($componentName, $controllerData, componentType:'page');
   }
 
-  public static function loadTemplate(
+  public static function Component(
     $componentName, 
     $controllerData = [], 
-    $componentType = "templateOnly", 
-    $shouldSetNonce = false
     ) : BaseComponent
   {
-    return self::returnComponent($componentName, $controllerData, $componentType, $shouldSetNonce);
+    return self::return($componentName, $controllerData, componentType:'component');
   }
 
-  private static function returnComponent($componentName, $controllerData, $componentType, $shouldSetNonce) : BaseComponent
+  public static function Template(
+    $componentName, 
+    $controllerData = [], 
+    ) : BaseComponent
+  {
+    return self::return($componentName, $controllerData, componentType:'template');
+  }
+
+  private static function return($componentName, $controllerData, $componentType) : BaseComponent
   {
     if (APP_ENV === 'development') {
-      return new ComponentDebug($componentName, $controllerData, $componentType, $shouldSetNonce);
+      return new ComponentDebug($componentName, $controllerData, $componentType);
     }
-    return new BaseComponent($componentName, $controllerData, $componentType, $shouldSetNonce);
+    return new BaseComponent($componentName, $controllerData, $componentType);
   }
 
 }
