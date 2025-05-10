@@ -43,72 +43,6 @@ class TestController extends AbstractController
     return $this->html($page);
   }
 
-  public function table(): ResponseInterface
-  {    
-    function readLogFileToArray($filePath) {
-        $logEntries = [];
-        
-        // Verificar se o arquivo existe
-        if (file_exists($filePath)) {
-            // Abrir o arquivo para leitura
-            $fileHandle = fopen($filePath, 'r');
-            
-            if ($fileHandle) {
-                // Ler cada linha do arquivo
-                while (($line = fgets($fileHandle)) !== false) {
-                    // Decodificar a linha JSON e adicionar ao array principal
-                    $logEntries[] = json_decode($line, true);
-                }
-                // Fechar o arquivo
-                fclose($fileHandle);
-            } else {
-                // Erro ao abrir o arquivo
-                throw new Exception("Erro ao abrir o arquivo: $filePath");
-            }
-        } else {
-            // Arquivo não encontrado
-            throw new Exception("Arquivo não encontrado: $filePath");
-        }
-        
-        return $logEntries;
-    }
-
-    // Caminho para o arquivo de log
-    $filePath = '../app/writable/logs/requests.json';
-
-    // Chamar a função e obter o array de logs
-    try {
-        $logsArray = readLogFileToArray($filePath);
-    } catch (Exception $e) {
-        throw new Exception("Erro ao ler o arquivo de log: " . $e->getMessage());
-    }
-
-    // Definir as chaves que você deseja no array
-    $keys = ['timestamp', 'ip', 'method', 'path', 'query', 'body', 'status_code', 'execution_time_ms', 'session'];
-
-    // Criar um array vazio com essas chaves
-    $tableFields = array_fill_keys($keys, null);
-
-    // Popular o array com os valores correspondentes
-    foreach ($tableFields as $key => $value) {
-      $tableData[$key] = Helper::recursiveArraySearch($logsArray, $key);
-    }
-  
-    // Montar a página
-    $page = componentFactory::Page(
-      "page-base",
-      [
-        "body" => [
-          componentFactory::Component("navbar-01"),
-          componentFactory::Template("table-test", $tableData)
-        ],
-        "navbar-logo" =>  componentFactory::Template("logo",["logo-class" => "h-8 fill-primary"]),
-        "navbar-start" =>  "Table Test",
-      ]
-    );
-    return $this->html($page);
-  }
-
   public function error(RequestInterface $request): ResponseInterface|Throwable
   {  
     $errorCode = $request->getQueryParams()['code'] ?? 500;
@@ -121,25 +55,16 @@ class TestController extends AbstractController
     // Resposta caso haja o argumento 'teste' na URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
-      $response = componentFactory::Component(
-        componentName:'test/salsifufu'
+      $response = componentFactory::Plugin(
+        componentName:'/pages/test-pages/htmx/salsifufu/salsifufu'
       );
       return $this->html($response);
     }
 
     // Resposta padrão
-    $page = componentFactory::Page(
-      "page-base",
-      [
-        "js" => "https://unpkg.com/htmx.org@2.0.0",
-        "css" => ASSET_ANIMATECSS,
-        "body" => [
-          componentFactory::Component("navbar-01"),
-          componentFactory::Template("pages/htmx_test-page")
-        ],
-        'nonce' => CSPManager::getNonce(),
-      ]
-        );
+      $page = componentFactory::Page(
+        "/pages/test-pages/htmx/htmx"
+      );
     return $this->html($page);
   }
 
@@ -158,17 +83,20 @@ class TestController extends AbstractController
     $userInfo = $antiXss->xss_clean($userInfo);
 
     // Monta a tabela com as informações do usuário
-    $table = componentFactory::Component("tables/vertical-table",["rows" => $userInfo]);
+    $table = componentFactory::Plugin(
+      "/plugins/tableComponent/verticalTable/verticalTable",
+      ["rows" => $userInfo]
+    );
 
     // Monta a página
     $page = componentFactory::Page(
-      "page-base",
+      "/pages/base/base",
       [
         "body" => [
-          componentFactory::Component("navbar-01"),
+          componentFactory::Plugin("/plugins/navbar/navbar-01"),
           $table
         ],
-        "navbar-logo" =>  componentFactory::Template("logo",["logo-class" => "h-8 fill-primary"]),
+        "navbar-logo" =>  componentFactory::Template("/plugins/logo/logo",["logo-class" => "h-8 fill-primary"]),
         "navbar-start" =>  "User Info",
       ]
     );
@@ -179,7 +107,7 @@ class TestController extends AbstractController
 
   public function component(): ResponseInterface
   {    
-    $page = componentFactory::Component("themeSelector-01");
+    $page = componentFactory::Plugin("themeSelector-01");
     return $this->html($page);
   }
 
@@ -214,7 +142,7 @@ class TestController extends AbstractController
   public function toast(): ResponseInterface
   {     
     $page = componentFactory::Page(
-      "test/toast"
+      "pages/test-pages/toast/toast"
     );
     return $this->html($page);
   }
@@ -320,7 +248,7 @@ class TestController extends AbstractController
           "emoji-mart.js"
         ],
         "body" => [
-          componentFactory::Component("navbar-01"),
+          componentFactory::Plugin("navbar-01"),
           '<div id="content" class="grow flex justify-center items-center"></div>'
         ],
         "body-class" => "flex flex-col"

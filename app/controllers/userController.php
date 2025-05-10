@@ -13,7 +13,7 @@ class userController extends AbstractController
   public function showLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     $page = componentFactory::Page(
-      "forms/form-login"
+      "/pages/login/form-login"
     );
     return $this->html($page);
   }
@@ -22,7 +22,7 @@ class userController extends AbstractController
   {
     sleep(1); // Simulate a delay for the login process
     $page = componentFactory::Template(
-      "js",
+      "/plugins/jsComponent/jsComponent",
       [
         "js" => "login-fail.js",
         "nonce" => CSPManager::getNonce(),
