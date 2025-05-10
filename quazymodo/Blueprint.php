@@ -22,24 +22,22 @@ class Blueprint
       $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $controllerData);
     }
 
+    // Caso a chave seja css ou js e o valor seja uma string, converte para array
     foreach ($blueprint as $item => $value) {
-      // Caso a chave seja css ou js e o valor seja uma string, converte para array
-      if (in_array($item, ['css', 'js']) && is_string($value)) {
-        if (strlen($value)>0) {
-          $blueprint[$item] = [$value];
-        }
+      if (in_array($item, ['css', 'js']) && is_string($value) && strlen($value)>0) {
+        $blueprint[$item] = [$value];
       }
     }
     return $blueprint;
   }
 
-  private function load_blueprint($componentName, $controllerData) : array
+  private function load_blueprint($blueprintName, $controllerData) : array
   {
     // Require blueprint file
-    if (file_exists("../app/components/blueprints/$componentName.php")) {
-      return include "../app/components/blueprints/$componentName.php";
+    if (file_exists("../app/components/$blueprintName.php")) {
+      return include "../app/components/$blueprintName.php";
     }else{
-      die("Blueprint [$componentName] não encontrado.");
+      die("Blueprint [$blueprintName] não encontrado.");
     }
   }
 
@@ -67,6 +65,17 @@ class Blueprint
       }
     }
     return $parent_blueprint;
+  }
+
+  private function componentPath(string $componentName): string
+  {
+    // Returns the path until the last slash of the component name
+    $lastSlashPosition = strrpos($componentName, '/');
+    if ($lastSlashPosition !== false) {
+        return substr($componentName, 0, $lastSlashPosition + 1); 
+    } else {
+        return '';
+    }
   }
 
   // Getters e setters

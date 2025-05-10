@@ -16,16 +16,15 @@ class BaseComponent
   public array $js = [];
   public array $css = [];
   public array $slots = [];
-  public string $assetsURL = "/assets";
   public static array $allData = [];
 
   /**
    * @param mixed $componentName 
-   * @param array $controllerData 
+   * @param array $inserts 
    * @param string $componentType
    * @return $this 
    */
-  public function __construct($componentName, $controllerData = [], $componentType)
+  public function __construct($componentName, $inserts = [], $componentType)
   {
     if($componentType === "page"){
       CSPManager::setNonce($componentName);
@@ -33,13 +32,13 @@ class BaseComponent
     $this->componentName = $componentName;
     $this->componentType = $componentType; 
     if ($componentType === "template") {
-      $this->construct_template($componentName, $controllerData);
+      $this->construct_template($componentName, $inserts);
     } else {
-      $this->blueprint = new Blueprint($componentName, $controllerData);  
+      $this->blueprint = new Blueprint($componentName, $inserts);  
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);
-      $this->data = new ComponentData($this->blueprint->inserts, $controllerData);
+      $this->data = new ComponentData($this->blueprint->inserts, $inserts);
 
       foreach($this->data->final_data as $key => $value) {
         self::$allData[$key] = $value;
@@ -53,12 +52,12 @@ class BaseComponent
     return $this;
   }
 
-  private function construct_template($templateName, $controllerData = [])
+  private function construct_template($templateName, $inserts = [])
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
     $this->write_componentName($templateName . '_template');
-    $this->data = new ComponentData([], $controllerData);
+    $this->data = new ComponentData([], $inserts);
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
@@ -82,7 +81,7 @@ class BaseComponent
 
   private function load_template($templateName)
   {
-    $template = file_get_contents("../app/components/templates/$templateName.html");
+    $template = file_get_contents("../app/components/$templateName.html");
     $template = str_replace('[{', '{{', $template);
     $template = str_replace('}]', '}}', $template);
     return $template;
@@ -120,7 +119,7 @@ class BaseComponent
     $this->flush_assets();
     $void_slots = $this->map_slots($this->html);
     foreach ($void_slots as $slot) {
-      $this->html = preg_replace('/ *{{ ?' . $slot . ' ?}} */', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
+      $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
       unset(self::$allData[$slot]);
     }
     if ($this->map_slots($this->html)) {
@@ -145,7 +144,7 @@ class BaseComponent
             $href = $file;
         } else {
             // Caso contrário, é um arquivo interno e adiciona o caminho 'assets/css/'
-            $href = $this->assetsURL . "/css/$file";
+            $href ="/assets/css/$file";
         }
         $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
         unset($this->css[$index]);
@@ -167,7 +166,7 @@ class BaseComponent
       } else {
         // Otherwise, it is an internal file and add the 'assets/js/' path
         $versionedFile = $this->versionedFile($file);
-        $source = $this->assetsURL . "/js/$versionedFile";
+        $source = "/assets/js/$versionedFile";
         $isExternal = false;
       }
       // Extract the attributes of the script - Example: [defer]

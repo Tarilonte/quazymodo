@@ -11,10 +11,10 @@ class ComponentDebug extends BaseComponent
     private static $panelAdded = false;
     private $startTime;
 
-    public function __construct($componentName, $controllerData = [], $componentType = "component", $shouldSetNonce = true)
+    public function __construct($componentName, $inserts = [], $componentType)
     {
         $this->startTime = microtime(true);
-        parent::__construct($componentName, $controllerData, $componentType, $shouldSetNonce);
+        parent::__construct($componentName, $inserts, $componentType);
         $executionTime = microtime(true) - $this->startTime;
         self::$components[] = [
             'name' => $this->componentName,
