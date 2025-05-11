@@ -1,6 +1,6 @@
 <?php
 return [
-  'template' => 'plugins/theme-selector/btn-themeSelector-01',
+  'template' => 'plugins/theme-selector/',
   'js' => [
     ASSET_JQUERY,
     'themeSelector-01.js'

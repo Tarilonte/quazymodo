@@ -1,7 +1,7 @@
 <?php
 
 return [
-  "template" => "plugins/modalComponent/modalComponent",
+  "template" => "plugins/modalComponent/",
   "js" => ["modalComponent.js"],
   "inserts" => []
 ];

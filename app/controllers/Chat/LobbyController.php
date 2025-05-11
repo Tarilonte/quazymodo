@@ -25,7 +25,7 @@ class LobbyController extends AbstractController
   public function showLoginForm(): ResponseInterface
   {
     $page = componentFactory::Page(
-      "/pages/chat/chat-login"
+      "/pages/chat/"
     );
     return $this->html($page);
   }

@@ -1,6 +1,6 @@
 <?php
 return [
-  'template' => '/plugins/toastComponent/toastComponent',
+  'template' => '/plugins/toastComponent/',
   'css' => [
       'toastComponent.css',
       ASSET_ANIMATECSS

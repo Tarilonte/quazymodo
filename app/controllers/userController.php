@@ -12,7 +12,7 @@ class userController extends AbstractController
   public function showLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     $page = componentFactory::Page(
-      "/pages/login/form-login"
+      "/pages/login/"
     );
     return $this->html($page);
   }
@@ -21,7 +21,7 @@ class userController extends AbstractController
   {
     sleep(1); // Simulate a delay for the login process
     $page = componentFactory::Plugin(
-      "/plugins/jsComponent/jsComponent",
+      "/plugins/jsComponent/",
       [
         "fileScript" => "/pages/login/login-fail.js"
       ]

@@ -10,7 +10,7 @@ class HomeController extends AbstractController
 {
   public function index(): ResponseInterface
   {
-    $page = componentFactory::Page("/pages/home/home");
+    $page = componentFactory::Page("/pages/home/");
     return $this->html($page);
   }
 }

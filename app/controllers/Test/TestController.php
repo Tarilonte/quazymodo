@@ -142,7 +142,7 @@ class TestController extends AbstractController
   public function toast(): ResponseInterface
   {     
     $page = componentFactory::Page(
-      "pages/test-pages/toast/toast"
+      "/pages/test-pages/toast/"
     );
     return $this->html($page);
   }
