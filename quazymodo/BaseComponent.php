@@ -17,6 +17,7 @@ class BaseComponent
   public array $css = [];
   public array $slots = [];
   public static array $allData = [];
+  private string $assetsPath = '/assets';
 
   /**
    * @param mixed $componentName 
@@ -81,6 +82,11 @@ class BaseComponent
 
   private function load_template($templateName)
   {
+    // If $templateName ends with a slash, the template file has the same name as the last folder in the path
+    if (substr($templateName, -1) === '/') {
+      $templateName .= basename($templateName);
+    }
+
     $template = file_get_contents("../app/components/$templateName.html");
     $template = str_replace('[{', '{{', $template);
     $template = str_replace('}]', '}}', $template);
@@ -138,16 +144,12 @@ class BaseComponent
   private function flush_css()
   {
     $cssLinks = '';
-    foreach ($this->css as $index => $file) {
-        // Verifica se o arquivo é um link externo (começa com 'http://' ou 'https://')
-        if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
-            $href = $file;
-        } else {
-            // Caso contrário, é um arquivo interno e adiciona o caminho 'assets'
-            $href = $file;
-        }
-        $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
-        unset($this->css[$index]);
+    foreach ($this->css as $index => $href) {
+      if (strpos($href, 'http') === false) {
+        $href = $this->assetsPath . $href;
+      }
+      $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
+      unset($this->css[$index]);
     }
     if (preg_match('/{{ ?CSS ?}}/i', $this->html)) {
       $this->html = preg_replace('/{{ ?CSS ?}}/i', $cssLinks, $this->html);
@@ -159,22 +161,18 @@ class BaseComponent
   private function flush_js() {
     $jsLinks = '';
     foreach ($this->js as $index => $file) {
-      // Check if the file is an external link (starts with 'http://' or 'https://')
-      if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
-        $source = $file;
-        $isExternal = true;
+      // Check if the file is an external link (starts with 'http')
+      if (strpos($file, 'http') === 0) {
+        $href = $file;
+        CSPManager::addSource('script-src', $file);
       } else {
         // Otherwise, it is an internal file and add the 'assets/js/' path
         $versionedFile = $this->versionedFile($file);
-        $source = $versionedFile;
-        $isExternal = false;
+        $href = $this->assetsPath . $versionedFile;
       }
       // Extract the attributes of the script - Example: [defer]
-      list($src, $attributes) = $this->get_jsAttributes($source);
-      // Add the external source script to the list of script sources allowed by CSP
-      if ($isExternal && APP_CSP_ENABLED) {
-        CSPManager::addSource('script-src', $src);
-      }
+      list($src, $attributes) = $this->get_jsAttributes($href);
+
       // Add the script to the $jsLinks variable then remove it from the $this->js array
       $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
       unset($this->js[$index]);
