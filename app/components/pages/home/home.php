@@ -3,7 +3,7 @@
 use Quazymodo\ComponentFactory;
 
 return [
-  'extends' => 'pages/base/base',
+  'extends' => '/pages/base/base',
   'inserts' => [
     'page-title' => APP_NAME,
     'body' => [

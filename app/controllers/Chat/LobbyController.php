@@ -25,7 +25,7 @@ class LobbyController extends AbstractController
   public function showLoginForm(): ResponseInterface
   {
     $page = componentFactory::Page(
-      "pages/chat/chat-login"
+      "/pages/chat/chat-login"
     );
     return $this->html($page);
   }
@@ -37,16 +37,14 @@ class LobbyController extends AbstractController
     $nickname = $parsedBody['nickname'] ?? null;
 
     sleep(1); // Simulate a delay for the login process
-    $response = componentFactory::Template(
-      "plugins/jsComponent/jsComponent",
+    $response = componentFactory::Plugin(
+      "/plugins/jsComponent/jsComponent",
       [
         "inlineScript" => "nickname = '$nickname'",
-        "js" => "chat/login-fail.js [defer]",
-        "nonce" => CSPManager::getNonce()
+        "fileScript" => "/pages/chat/login-fail.js",
       ]
     );
     return $this->html($response);    
   }
-
-
+  
 }

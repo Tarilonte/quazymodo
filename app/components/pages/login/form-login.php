@@ -5,7 +5,7 @@ use Quazymodo\Csrf;
 
 return [
   'extends' => '/pages/base/base',
-  'css' => ['form-login.css'],
+  'css' => 'form-login.css',
   'js' => ASSET_HTMX,
   'inserts' => [    
     'page-title' => 'Login',

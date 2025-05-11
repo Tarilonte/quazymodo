@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Quazymodo\AbstractController;
 use Quazymodo\ComponentFactory;
-use Quazymodo\CSPManager;
 
 class userController extends AbstractController
 {
@@ -21,11 +20,10 @@ class userController extends AbstractController
   public function processLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     sleep(1); // Simulate a delay for the login process
-    $page = componentFactory::Template(
+    $page = componentFactory::Plugin(
       "/plugins/jsComponent/jsComponent",
       [
-        "js" => "login-fail.js",
-        "nonce" => CSPManager::getNonce(),
+        "fileScript" => "/pages/login/login-fail.js"
       ]
     );
     return $this->html($page);

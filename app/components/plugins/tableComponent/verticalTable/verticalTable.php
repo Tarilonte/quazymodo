@@ -20,7 +20,7 @@
 |---------------------------------
 |*/
 
-foreach ($controllerData['rows'] as $fieldName => $value) {
+foreach ($inserts['rows'] as $fieldName => $value) {
   $fieldName = ucwords(str_replace("_", " ", $fieldName));
   $value = is_bool($value) ? var_export($value,true) : $value;
   $componentRow = Quazymodo\componentFactory::Template(
