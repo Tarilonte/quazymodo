@@ -108,7 +108,7 @@ class BaseComponent
     foreach ($this->slots as $slot) {
       if(isset(self::$allData[$slot])) {
         $content = implode(PHP_EOL, self::$allData[$slot]);
-        $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . " {{ $slot }} ", $this->html);
+        $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . "{{ $slot }}", $this->html);
         unset(self::$allData[$slot]);
       }
     }
@@ -143,8 +143,8 @@ class BaseComponent
         if (strpos($file, 'http://') === 0 || strpos($file, 'https://') === 0) {
             $href = $file;
         } else {
-            // Caso contrário, é um arquivo interno e adiciona o caminho 'assets/css/'
-            $href ="/assets/css/$file";
+            // Caso contrário, é um arquivo interno e adiciona o caminho 'assets'
+            $href = $file;
         }
         $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
         unset($this->css[$index]);
@@ -166,7 +166,7 @@ class BaseComponent
       } else {
         // Otherwise, it is an internal file and add the 'assets/js/' path
         $versionedFile = $this->versionedFile($file);
-        $source = "/assets/js/$versionedFile";
+        $source = $versionedFile;
         $isExternal = false;
       }
       // Extract the attributes of the script - Example: [defer]
@@ -222,7 +222,7 @@ class BaseComponent
     }
 
     // Define o caminho completo do arquivo usando DIRECTORY_SEPARATOR para compatibilidade
-    $filepath = dirname(__DIR__) . '/app/components/assets/js/' . $filename;
+    $filepath = dirname(__DIR__) . '/app/components/' . $filename;
 
     // Verifica se o arquivo existe antes de tentar obter o timestamp
     if (file_exists($filepath)) {

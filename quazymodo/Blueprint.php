@@ -6,20 +6,20 @@ class Blueprint
 {
   private array $array;
 
-  public function __construct($componentName, $controllerData)
+  public function __construct($componentName, $inserts)
   {
-    $this->array = $this->parse_blueprint($componentName, $controllerData);
+    $this->array = $this->parse_blueprint($componentName, $inserts);
     $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
   }
 
-  private function parse_blueprint($componentName, $controllerData) : array
+  private function parse_blueprint($componentName, $inserts) : array
   {
     // Load blueprint file
-    $blueprint = $this->load_blueprint($componentName, $controllerData);
+    $blueprint = $this->load_blueprint($componentName, $inserts);
 
     // Verify if blueprint is extending another blueprint
     if (isset($blueprint['extends'])) {
-      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $controllerData);
+      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $inserts);
     }
 
     // Caso a chave seja css ou js e o valor seja uma string, converte para array
@@ -28,10 +28,33 @@ class Blueprint
         $blueprint[$item] = [$value];
       }
     }
+
+    //Include css path
+    if (isset($blueprint['css'])) {
+      foreach ($blueprint['css'] as $key => $value) {
+        //Verity if already has path (starts with slash)
+        if (substr($value, 0, 1) === '/' || strpos($value, 'http') === 0) {
+          continue;
+        }
+        $blueprint['css'][$key] = "/assets" . $this->componentPath($componentName) . $value;
+      }
+    }
+
+    //Include js path
+    if (isset($blueprint['js'])) {
+      foreach ($blueprint['js'] as $key => $value) {
+        //Verity if already has path (starts with slash or http)
+        if (substr($value, 0, 1) === '/' || strpos($value, 'http') === 0) {
+          continue;
+        }
+        $blueprint['js'][$key] = "/assets" . $this->componentPath($componentName) . $value;
+      }
+    }
+
     return $blueprint;
   }
 
-  private function load_blueprint($blueprintName, $controllerData) : array
+  private function load_blueprint($blueprintName, $inserts) : array
   {
     // Require blueprint file
     if (file_exists("../app/components/$blueprintName.php")) {
@@ -41,12 +64,15 @@ class Blueprint
     }
   }
 
-  private function extend_blueprint($parent_blueprint, $child_blueprint, $controllerData) : array
+  private function extend_blueprint($parent_blueprint, $child_blueprint, $inserts) : array
   {
     // Load parent blueprint file
-    $parent_blueprint = $this->load_blueprint($parent_blueprint, $controllerData);
+    $parent_blueprintFile = $parent_blueprint;
+
+    //$parent_blueprint = $this->load_blueprint($parent_blueprint, $inserts);
+    $parent_blueprint = new Blueprint($parent_blueprintFile, $inserts)->array();
     
-    // Extend parent blueprint with child blueprint
+    // Merge parent blueprint with child blueprint
     foreach ($child_blueprint as $key => $value) {
       if (isset($parent_blueprint[$key])) {
           if (is_array($parent_blueprint[$key]) && is_array($value)) {

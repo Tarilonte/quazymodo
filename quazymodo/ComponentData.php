@@ -5,20 +5,20 @@ namespace quazymodo;
 class ComponentData
 {
   private $blueprintInserts = [];
-  private $controllerData = [];
+  private $inserts = [];
   private $merged_data = [];
   public  $final_data = [];
   public  $js = [];
   public  $css = [];
 
-  public function __construct(array $blueprintInserts = [], array $controllerData = [])
+  public function __construct(array $blueprintInserts = [], array $inserts = [])
   {
     $this->blueprintInserts = $blueprintInserts;
-    $this->controllerData = $controllerData;
+    $this->inserts = $inserts;
     foreach ($this->blueprintInserts as $slot => $content) {
       $this->merge_blueprintInserts($slot, $content);
     }
-    $this->merge_controllerData($this->controllerData);
+    $this->merge_inserts($this->inserts);
     $this->parse_mergedData($this->merged_data);
   }
 
@@ -37,18 +37,18 @@ class ComponentData
 
   /*
   |--------------------------------------------------------------------------
-  | merge_controllerData
+  | merge_inserts
   |--------------------------------------------------------------------------
   |
   | Processa o array de dados recebidos do controller e o armazena em $merged_data
   |
   |*/
-  private function merge_controllerData($controllerData) : void
+  private function merge_inserts($inserts) : void
   {
-    foreach ($controllerData as $slot => $content) {
+    foreach ($inserts as $slot => $content) {
       if (is_array($content) && array_is_list($content)) {
         for ($i = 0; $i < count($content); $i++) {
-          $this->merge_controllerData([$slot => $content[$i]]);         
+          $this->merge_inserts([$slot => $content[$i]]);         
         }
       }elseif(in_array($slot, ['css', 'js'])){
           $this->$slot[] = $content;
