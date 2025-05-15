@@ -8,35 +8,36 @@ class Blueprint
 
   public function __construct($componentName, $inserts)
   {
-  $this->array = $this->parse_blueprint($componentName, $inserts);
-  $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
+    $this->array = $this->parse_blueprint($componentName, $inserts);
+    $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
   }
 
   private function parse_blueprint($componentName, $inserts) : array
   {
-  // Load blueprint file
-  $blueprint = $this->load_blueprint($componentName, $inserts);
+    // Load blueprint file
+    $blueprint = $this->load_blueprint($componentName, $inserts);
 
-  // Verify if blueprint is extending another blueprint
-  if (isset($blueprint['extends'])) {
-    $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $inserts);
-  }
-
-  // Caso a chave seja css ou js e o valor seja uma string, converte para array
-  foreach ($blueprint as $item => $value) {
-    if (in_array($item, ['css', 'js']) && is_string($value) && strlen($value)>0) {
-    $blueprint[$item] = [$value];
+    // Verify if blueprint is extending another blueprint
+    if (isset($blueprint['extends'])) {
+      $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $inserts);
     }
-  }
 
-  $this->insertAssetsPath($blueprint, $componentName);
+    // Caso a chave seja css ou js e o valor seja uma string, converte para array
+    foreach ($blueprint as $item => $value) {
+      if (in_array($item, ['css', 'js']) && is_string($value) && strlen($value)>0) {
+      $blueprint[$item] = [$value];
+      }
+    }
 
-  return $blueprint;
+    $this->insertAssetsPath($blueprint, $componentName);
+
+    return $blueprint;
   }
 
   private function load_blueprint($blueprintName, $inserts) : array
   {
     // If $blueprintName ends with a slash, includes the file with the same name as the last folder in the string
+    // E.g. /pages/base/ => /pages/base/base.blueprint.php
     if (substr($blueprintName, -1) === '/') {
       $blueprintName .= basename($blueprintName);
     }

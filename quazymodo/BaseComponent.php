@@ -35,7 +35,7 @@ class BaseComponent
     if ($componentType === "template") {
       $this->construct_template($componentName, $inserts);
     } else {
-      $this->blueprint = new Blueprint($componentName, $inserts);  
+      $this->blueprint = new Blueprint($componentName, $inserts, $componentType);  
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);
@@ -83,6 +83,7 @@ class BaseComponent
   private function load_template($templateName)
   {
     // If $templateName ends with a slash, the template file has the same name as the last folder in the path
+    // E.g. /pages/home/ -> /pages/home/home.html
     if (substr($templateName, -1) === '/') {
       $templateName .= basename($templateName);
     }
