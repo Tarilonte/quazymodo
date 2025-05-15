@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     php84-mbstring \
     php84-xml \
     php84-session \
-    php84-curl
+    php84-curl \
+    php84-tokenizer
 
 # Configure PHP-FPM
 RUN sed -i 's/user = nobody/user = nginx/' /etc/php84/php-fpm.d/www.conf && \
@@ -40,6 +41,7 @@ RUN apk add --no-cache \
     php84-xml \
     php84-session \
     php84-curl \
+    php84-tokenizer \
     supervisor
 
 # Create required directories
