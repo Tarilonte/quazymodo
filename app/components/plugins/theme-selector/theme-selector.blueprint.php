@@ -3,7 +3,8 @@ return [
   'template' => 'plugins/theme-selector/',
   'js' => [
     ASSET_JQUERY,
-    'themeSelector-01.js'
+    'apply-theme.js',
+    'themeSelector-01.js',
   ],
   'inserts' => []
 ];

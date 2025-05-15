@@ -10,7 +10,7 @@ return [
   'inserts' => [    
     'page-title' => 'Login',
     'body' => [
-      componentFactory::Template('/pages/login/'),
+      componentFactory::Template('/pages/user/login/'),
       componentFactory::Plugin('/plugins/modalComponent/'),
       componentFactory::Plugin('/plugins/theme-selector/',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],

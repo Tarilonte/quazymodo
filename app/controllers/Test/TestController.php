@@ -16,6 +16,7 @@ use Quazymodo\Helper;
 use Reflection;
 use ReflectionClass;
 use Throwable;
+use Tracy\Debugger;
 use voku\helper\AntiXSS;
 
 use function Quazymodo\Functions\recursiveArraySearch;
@@ -72,11 +73,6 @@ class TestController extends AbstractController
   {    
     $user = new UserEntity();
 
-    // Verifica se o argumento 'reset' está presente na URL
-    if (isset($request->getQueryParams()['reset'])) {
-      $user->resetSessionInfo();
-    }
-
     // Obtém as informações do usuário
     $userInfo = $user->get(83);
     $antiXss = new AntiXSS();
@@ -84,31 +80,18 @@ class TestController extends AbstractController
 
     // Monta a tabela com as informações do usuário
     $table = componentFactory::Plugin(
-      "/plugins/tableComponent/verticalTable/verticalTable",
+      "/plugins/tableComponent/verticalTable/",
       ["rows" => $userInfo]
     );
 
     // Monta a página
     $page = componentFactory::Page(
-      "/pages/base/base",
+      "/pages/test-pages/user/",
       [
-        "body" => [
-          componentFactory::Plugin("/plugins/navbar/navbar-01"),
-          $table
-        ],
-        "navbar-logo" =>  componentFactory::Template("/plugins/logo/logo",["logo-class" => "h-8 fill-primary"]),
-        "navbar-start" =>  "User Info",
+        "table" => $table,
       ]
     );
-    return $this->html($page);
-    exit;
-    
-  }
-
-  public function component(): ResponseInterface
-  {    
-    $page = componentFactory::Plugin("themeSelector-01");
-    return $this->html($page);
+    return $this->html($page);    
   }
 
   public function json_response(): ResponseInterface
@@ -123,104 +106,12 @@ class TestController extends AbstractController
     return $this->json($array);
   }
 
-  public function daisy(): ResponseInterface
-  {     
-    $page = componentFactory::Page(
-      "test/daisy"
-    );
-    return $this->html($page);
-  }
-
-  public function alpine(): ResponseInterface
-  {     
-    $page = componentFactory::Page(
-      "test/alpine"
-    );
-    return $this->html($page);
-  }
-
   public function toast(): ResponseInterface
   {     
     $page = componentFactory::Page(
       "/pages/test-pages/toast/"
     );
     return $this->html($page);
-  }
-
-  public function centrifugo(): ResponseInterface
-  {     
-    $page = componentFactory::Page(
-      componentName:"test/centrifugo"
-    );
-    return $this->html($page);
-  }
-
-  public function soketi(ServerRequestInterface $request): ResponseInterface
-  {
-    $page = componentFactory::Page("chatRoom");
-    return $this->html($page);
-  }
-
-  public function soketiBroadcast(ServerRequestInterface $request): ResponseInterface
-  {
-      // Decodificando os dados da requisição
-      $data = json_decode((string) $request->getBody(), true);
-
-      // Configuraçao do GuzzleHttp Client
-      // Desativando a verificação SSL para o cliente GuzzleHttp
-      $custom_client = new Client([
-          'verify' => false, // Desativa verificação SSL
-      ]);
-  
-      // Configurações do Pusher
-      $options = [
-          'useTLS' => true,  
-          'host' => 'quazymodo',
-          'port' => 6001,
-          'scheme' => 'https',
-          'encrypted' => false,
-      ];
-  
-      // Instanciando o Pusher
-      $pusher = new Pusher(
-          'app-key', // Substitua pela sua chave do app
-          'app-secret', // Substitua pelo seu segredo do app
-          'app-id', // Substitua pelo seu ID do app
-          $options,
-          $custom_client // Passando o cliente GuzzleHttp personalizado
-      );
-  
-      // Dados do evento
-      $eventData = [
-          'name' => 'chat-message',
-          'channel' => 'public-chat',
-          'data' => ['message' => $data['message']]
-      ];
-  
-      // Enviando o evento via Pusher
-      try {
-          $pusher->trigger($eventData['channel'], $eventData['name'], $eventData['data']);
-          return $this->json(['status' => 'ok'], 200);
-      } catch (\Pusher\PusherException $e) {
-          // Em caso de erro
-          return $this->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-      }
-  }
-
-  public function sse()
-  {
-    header('Content-Type: text/event-stream');
-    header('Cache-Control: no-cache');
-    header('Connection: keep-alive');
-    
-    while (true) {
-      $message = 'event: horacerta' . PHP_EOL;
-      $message .= 'data: ' . date('H:i:s') . PHP_EOL . PHP_EOL;
-      echo $message;
-      ob_flush();
-      flush();
-      sleep(1);
-    }  
   }
 
   public function list()
@@ -238,22 +129,4 @@ class TestController extends AbstractController
     exit;
   }
 
-  public function emoji()
-  {
-    $page = componentFactory::Page(
-      "page-base",
-      [
-        "js" => [
-          "https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js",
-          "emoji-mart.js"
-        ],
-        "body" => [
-          componentFactory::Plugin("navbar-01"),
-          '<div id="content" class="grow flex justify-center items-center"></div>'
-        ],
-        "body-class" => "flex flex-col"
-      ]
-        );
-    return $this->html($page);
-  }
 }

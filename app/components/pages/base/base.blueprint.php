@@ -1,15 +1,12 @@
 <?php
-
-$daisyTheme = $_COOKIE['css-theme'] ?? '';
-
 return [
-  'template' => '/pages/base/base',
-  'css' => ['base.css'],
+  'template' => '/pages/base/',
+  'css' => 'base.css',
   'js' => [
     ASSET_JQUERY,
-    'base.js'
+    'base.js',
+    '/plugins/theme-selector/apply-theme.js'
   ],
   'inserts' => [
-    'css-theme' => $daisyTheme
   ]
 ];

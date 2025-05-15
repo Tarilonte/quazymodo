@@ -4,13 +4,13 @@ use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 
 return [
-  'extends' => '/pages/base/base',
+  'extends' => '/pages/base/',
   'css' => [ASSET_ANIMATECSS, 'form-login.css'],
   'js' => ASSET_HTMX,
   'inserts' => [
     "body" => [
-      componentFactory::Plugin("/plugins/navbar/navbar-01"),
-      componentFactory::Template("/pages/test-pages/htmx/htmx"),
+      componentFactory::Plugin("/plugins/navbar/"),
+      componentFactory::Template("/pages/test-pages/htmx/"),
     ],
     'nonce' => CSPManager::getNonce(),
   ],

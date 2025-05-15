@@ -2,10 +2,11 @@
   id="toasts_container"
   class="toast"
 >
-  <div class="toast_message hidden alert alert-soft min-w-[200px]">
+  <div class="toast_message rounded-none p-6 hidden alert alert-soft min-w-[300px] relative">
+    <span class="btn-close-toast mdi mdi-close absolute top-2 right-2 cursor-pointer"></span>
     <div class="toast_message block mb-1"></div>
-    <div class="w-full">
-      <progress class="progress block h-1 w-full" value="100" max="100"></progress>
+    <div class="absolute bottom-0 left-0 w-full">
+      <progress class="progress block h-[1px] w-full" value="100" max="100"></progress>
     </div>
   </div>
 </div>

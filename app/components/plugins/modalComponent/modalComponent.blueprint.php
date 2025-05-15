@@ -2,6 +2,6 @@
 
 return [
   "template" => "plugins/modalComponent/",
-  "js" => ["modalComponent.js"],
+  "js" => "modalComponent.js",
   "inserts" => []
 ];
