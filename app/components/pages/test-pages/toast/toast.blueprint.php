@@ -8,7 +8,8 @@ return [
   'inserts' => [  
     'body' => [
       componentFactory::Plugin(componentName:'/plugins/navbar/'),
-      componentFactory::Plugin(componentName:'/plugins/toastComponent/')
+      componentFactory::Plugin(componentName:'/plugins/toastComponent/'),
+      ComponentFactory::Template('/pages/test-pages/toast/alert-examples')
     ],
   ] 
 ];

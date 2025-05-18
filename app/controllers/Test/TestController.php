@@ -19,6 +19,7 @@ use Throwable;
 use Tracy\Debugger;
 use voku\helper\AntiXSS;
 
+use function App\Components\verticalTable;
 use function Quazymodo\Functions\recursiveArraySearch;
 
 class TestController extends AbstractController
@@ -36,12 +37,6 @@ class TestController extends AbstractController
       // Retorna uma resposta de erro se o método não existir
       die("Teste $test não encontrado");
     }
-  }
-
-  public function modal(): ResponseInterface
-  {    
-    $page = componentFactory::Page("page-modal_test");
-    return $this->html($page);
   }
 
   public function error(RequestInterface $request): ResponseInterface|Throwable
@@ -69,26 +64,17 @@ class TestController extends AbstractController
     return $this->html($page);
   }
 
-  public function user(RequestInterface $request): ResponseInterface
+  public function user(): ResponseInterface
   {    
-    $user = new UserEntity();
-
     // Obtém as informações do usuário
+    $user = new UserEntity();
     $userInfo = $user->get(83);
-    $antiXss = new AntiXSS();
-    $userInfo = $antiXss->xss_clean($userInfo);
-
-    // Monta a tabela com as informações do usuário
-    $table = componentFactory::Plugin(
-      "/plugins/tableComponent/verticalTable/",
-      ["rows" => $userInfo]
-    );
 
     // Monta a página
     $page = componentFactory::Page(
       "/pages/test-pages/user/",
       [
-        "table" => $table,
+        "userInfo" => $userInfo
       ]
     );
     return $this->html($page);    

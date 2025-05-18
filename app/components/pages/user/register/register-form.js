@@ -1,13 +1,12 @@
 $(document).ready(function () {
+    const $registerForm = $('#register-form');
+
     // Show/Hide password
-    $(".pw-viewer").on("click", function(e) {
+    $(".pw-viewer").on("click", function() {
       $(".pw-viewer").toggleClass("swap-active");
       var $passwordInputs = $(".pw-input");
       $passwordInputs.attr('type', $passwordInputs.attr('type') === 'password' ? 'text' : 'password');
     });
-
-    // Verify if passwords match
-    const $registerForm = $('#register-form');
 
     // Submit form
     $registerForm.on('submit', function (event) {

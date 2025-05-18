@@ -66,6 +66,11 @@ class Helper
       $componentName = '/pages/' . $componentName;
     }
 
+    // If $componentType is 'plugin' and $componentName doesn't start with a slash, add /plugins/ directory to the path
+    if ($componentType === 'plugin' && !str_starts_with($componentName, '/')) {
+      $componentName = '/plugins/' . $componentName;
+    }
+
     return $componentName;
   }
 }

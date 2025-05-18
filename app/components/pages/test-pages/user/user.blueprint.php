@@ -2,17 +2,19 @@
 
 use Quazymodo\ComponentFactory;
 
+use function App\Components\verticalTable;
+
 return [
-  'extends' => '/pages/base/',
+  'extends' => '/pages/base/base-2',
   'inserts' => [
-    "body" => [
-      componentFactory::Plugin("/plugins/navbar/"),
-      $inserts["table"],
+    'body' => [
+      ComponentFactory::Template('/pages/test-pages/user/'),      
     ],
-    "navbar-logo" =>  componentFactory::Template(
-      "/plugins/logo/",
-      ["logo-class" => "h-8 fill-primary"]
-    ),
-    "navbar-start" =>  "User Info",
+    'table' => [
+      ComponentFactory::Plugin('/plugins/tableComponent/verticalTable/',['rows' => $inserts['userInfo'],'th-class' => 'text-blue-500']),
+      '<hr class="m-8">',
+      verticalTable($inserts['userInfo'],['th-class' => 'text-green-700']),
+    ],
+    'navbar-start' =>  'User Info',
   ]
 ];

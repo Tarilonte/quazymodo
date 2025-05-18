@@ -1,23 +1,36 @@
 <?php
 
 /*
-|----------------------------------
+|-----------------------------------
 | Vertical Table Component Blueprint
-|----------------------------------
+|-----------------------------------
 |
-| This Component receives an array with the table rows from the Controller and renders
-| it as a vertical table.
+| This Component receives an array with the table rows and renders it as a vertical table.
 |
-| The controller MUST pass the data (rows) as an associative array with the following structure:
+| The caller MUST pass the data (table rows) as an associative array with the following structure:
 | "rows" => ['field1' => 'value1', 'field2' => 'value2', ...]
 | where every pair 'field' => 'value' will be rendered as a table row.
+| The field name will be rendered as a table header (<th>) and the value as a table cell (<td>).
+|
+| The caller may pass css classes for the table rows, headers and cells as follows:
+| "tr-class" => "class-for-rows",
+| "th-class" => "class-for-headers",
+| "td-class" => "class-for-cells"
 |
 |*/
 
+/*
+| Set table's css styles
+|-----------------------
+|*/
+
+$tr_class = $inserts['tr-class'] ?? "";
+$th_class = $inserts['th-class'] ?? "text-primary";
+$td_class = $inserts['td-class'] ?? "text-base-content";
 
 /*
 | Assemble the table's rows
-|---------------------------------
+|--------------------------
 |*/
 
 foreach ($inserts['rows'] as $fieldName => $value) {
@@ -26,10 +39,10 @@ foreach ($inserts['rows'] as $fieldName => $value) {
   $componentRow = Quazymodo\componentFactory::Template(
     "/plugins/tableComponent/verticalTable/verticalTableRow",
     [
-      "tr-class" => "hover",
-      "th-class" => "text-primary",
+      "tr-class" => $tr_class,
+      "th-class" => $th_class,
       "th-content" => $fieldName,
-      "td-class" => is_null($value) ? "italic text-base-content/40" : "",
+      "td-class" => $td_class,
       "td-content" => is_null($value) ? "-" : $value
     ],
   );
@@ -39,7 +52,7 @@ $renderedRows = implode("\n", $renderedRow);
 
 /*
 | Return the blueprint with the rows included
-|---------------------------------
+|--------------------------------------------
 |*/
 
 return [

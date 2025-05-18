@@ -62,7 +62,6 @@ class ToastComponent {
 
   static removeToast(toast) {
     toast
-        .removeClass("animate__animated animate__backInUp")
         .addClass("animate__animated animate__backOutRight")
         .on("animationend webkitAnimationEnd oAnimationEnd", function() {
           $(this).remove();
@@ -71,7 +70,6 @@ class ToastComponent {
 }
 
 $('#toasts_container').on('click', ".btn-close-toast", function() {
-  console.log('close toast');
   const $toast = $(this).parent('.toast_message');
   ToastComponent.removeToast($toast);
 });

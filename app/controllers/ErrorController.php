@@ -15,7 +15,7 @@ class ErrorController extends AbstractController
     ): ResponseInterface {
         $REQUEST_URI = $request->getServerParams()['REQUEST_URI'] ?? '';
         $component = componentFactory::Page(
-          '/pages/error/error',
+          '/pages/error/',
           [
             'requested-uri' => $REQUEST_URI,
             'page-title' => $this->getErrorMessage($statusCode)[1],
