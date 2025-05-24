@@ -23,6 +23,7 @@
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-700: oklch(48.8% 0.243 264.376);
     --color-rose-500: oklch(64.5% 0.246 16.439);
+    --color-rose-600: oklch(58.6% 0.253 17.585);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -2302,6 +2303,9 @@
   }
   .bg-red-200 {
     background-color: var(--color-red-200);
+  }
+  .bg-rose-600 {
+    background-color: var(--color-rose-600);
   }
   .bg-transparent {
     background-color: transparent;

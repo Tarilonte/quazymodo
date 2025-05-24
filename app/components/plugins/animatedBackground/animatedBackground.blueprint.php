@@ -1,7 +1,7 @@
 <?php
 
 return [
-  'template' => '/pages/home/animatedBackground',
+  'template' => '/plugins/animatedBackground/',
   'css' => 'animatedBackground.css',
   'inserts' => [] 
 ];

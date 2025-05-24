@@ -3,7 +3,7 @@
 use Quazymodo\ComponentFactory;
 
 return [
-  'template' => 'plugins/navbar/',
+  'template' => '/plugins/navbar/',
   'inserts' => [
     'navbar-end' => componentFactory::Plugin('/plugins/theme-selector/')
   ]
