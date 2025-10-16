@@ -1,6 +1,5 @@
 <?php
 
-use Quazymodo\BaseComponent;
 use Quazymodo\ComponentFactory;
 
 return [
@@ -8,6 +7,7 @@ return [
   'inserts' => [
     'body' => [
       ComponentFactory::Plugin('/plugins/navbar/'),
+      
     ],
     'navbar-logo' => ComponentFactory::Template(
       '/plugins/logo/',

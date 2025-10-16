@@ -80,6 +80,15 @@ class TestController extends AbstractController
     return $this->html($page);    
   }
 
+   public function base2(): ResponseInterface
+  {    
+    // Monta a página
+    $page = componentFactory::Page(
+      "/pages/test-pages/base-2/"
+    );
+    return $this->html($page);    
+  }
+
   public function json_response(): ResponseInterface
   {    
     $array = [

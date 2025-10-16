@@ -29,7 +29,7 @@ class ComponentFactory
   }
 
   /**
-   * Components doesn't have a blueprint.
+   * Templates doesn't have a blueprint.
    * Loads directly from a html file
    */
   public static function Template(

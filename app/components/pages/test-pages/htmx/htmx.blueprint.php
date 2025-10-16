@@ -5,7 +5,7 @@ use Quazymodo\CSPManager;
 
 return [
   'extends' => '/pages/base/',
-  'css' => [ASSET_ANIMATECSS, 'form-login.css'],
+  'css' => [ASSET_ANIMATECSS],
   'js' => ASSET_HTMX,
   'inserts' => [
     "body" => [

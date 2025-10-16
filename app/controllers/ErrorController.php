@@ -1,5 +1,4 @@
 <?php
-
 namespace Controller;
 
 use Psr\Http\Message\ServerRequestInterface;

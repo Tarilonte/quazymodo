@@ -88,7 +88,14 @@ class BaseComponent
       $templateName .= basename($templateName);
     }
 
-    $template = file_get_contents("../app/components/$templateName.html");
+    $path = "../app/components/$templateName.html";
+
+    if (!file_exists($path)) {
+      die("Template [$path] não encontrado.");
+    }
+
+    $template = file_get_contents($path);
+    
     $template = str_replace('[{', '{{', $template);
     $template = str_replace('}]', '}}', $template);
     return $template;
