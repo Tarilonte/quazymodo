@@ -1,12 +1,12 @@
 <?php
 
 use Quazymodo\ComponentFactory;
-
 use function App\Components\verticalTable;
 
 return [
   'extends' => '/pages/base/base-2',
   'inserts' => [
+    'page-title' => 'Informações de ' . $inserts['userInfo']['name'],
     'body' => [
       ComponentFactory::Template('/pages/test-pages/user/'),      
     ],

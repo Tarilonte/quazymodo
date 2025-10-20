@@ -28,13 +28,13 @@ class userController extends AbstractController
   public function processLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     sleep(1); // Simulate a delay for the login process
-    $page = componentFactory::Plugin(
-      "/plugins/jsComponent/",
+    $script = componentFactory::Plugin(
+      "/plugins/jsComponent/jsComponent",
       [
         "fileScript" => "/pages/user/login/login-fail.js"
       ]
     );
-    return $this->html($page);
+    return $this->html($script);
   }
 
   public function processRegistrationForm(ServerRequestInterface $request): ResponseInterface

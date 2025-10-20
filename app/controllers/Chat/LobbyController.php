@@ -34,7 +34,7 @@ class LobbyController extends AbstractController
   {
     // Recupera o apelido enviado via POST
     $parsedBody = $request->getParsedBody();
-    $nickname = $parsedBody['nickname'] ?? null;
+    $nickname = htmlspecialchars($parsedBody['nickname']) ?? null;
 
     sleep(1); // Simulate a delay for the login process
     $response = componentFactory::Plugin(

@@ -63,10 +63,7 @@ class Blueprint
     if (isset($parent_blueprint[$key])) {
       if (is_array($parent_blueprint[$key]) && is_array($value)) {
         // Se ambos são arrays, mesclar os arrays
-        bdump($parent_blueprint[$key]);
-        bdump($value);
         $parent_blueprint[$key] = array_merge_recursive($parent_blueprint[$key], $value);
-        bdump($parent_blueprint[$key]);
       } elseif (is_array($parent_blueprint[$key])) {
         // Se blueprint é um array e insert não, adicionar o valor ao array do blueprint
         $parent_blueprint[$key][] = $value;

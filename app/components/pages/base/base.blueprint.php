@@ -1,4 +1,7 @@
 <?php
+
+use Quazymodo\ComponentFactory;
+
 return [
   'template' => '/pages/base/',
   'css' => 'base.css',
@@ -6,7 +9,5 @@ return [
     ASSET_JQUERY,
     'base.js',
     '/plugins/theme-selector/apply-theme.js'
-  ],
-  'inserts' => [
   ]
 ];

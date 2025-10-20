@@ -4,7 +4,7 @@ use Quazymodo\ComponentFactory;
 use Quazymodo\Csrf;
 
 return [
-  'extends' => '/pages/base/base',
+  'extends' => '/pages/base/',
   'css' => '/pages/user/login/form-login.css',
   'js' => [
     ASSET_JQUERY,

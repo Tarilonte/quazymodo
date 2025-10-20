@@ -3,10 +3,11 @@
 use Quazymodo\ComponentFactory;
 
 return [
-  'extends' => '/pages/base/base-2',
+  'extends' => '/pages/base/base',
   'inserts' => [
     'body' => [
-      ComponentFactory::Plugin('/plugins/navbar/'),   
+      ComponentFactory::Plugin('/plugins/navbar/'),
+      'OLÁ FROM BASE-2 blueprint'  
     ]
   ]
 ];
