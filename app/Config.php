@@ -33,7 +33,7 @@ const DB = [
 ];
 
 //ASSETS
-const ASSET_JQUERY = "https://code.jquery.com/jquery-4.0.0-beta.min.js";
+const ASSET_JQUERY = "https://code.jquery.com/jquery-4.0.0-rc.1.min.js";
 const ASSET_ANIMATECSS = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
 const ASSET_HTMX = "https://unpkg.com/htmx.org@2.0.0";
 
