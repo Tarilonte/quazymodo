@@ -34,66 +34,68 @@
         class="btn btn-primary"
         hx-post="/User/validateCEP"
         hx-include="#cep"
-        hx-target="#hack"
+        hx-target="#address-fields"
       >
         Validar
       </button>
     </div>
 
-    <!-- Endereço -->
-    <label class="input w-full">
-      <input
-        id="address"
-        name="address"
-        type="text"
-        placeholder="Endereço"
-        required
-      />
-    </label>
+    <div id="address-fields" class="grid gap-5 w-full">
+      <!-- Endereço -->
+      <label class="input w-full">
+        <input
+          id="address"
+          name="address"
+          type="text"
+          placeholder="Endereço"
+          required
+        />
+      </label>
 
-    <!-- Número -->
-    <label class="input w-full">
-      <input
-        id="number"
-        name="number"
-        type="text"
-        placeholder="Número"
-        required
-      />
-    </label>
+      <!-- Número -->
+      <label class="input w-full">
+        <input
+          id="number"
+          name="number"
+          type="text"
+          placeholder="Número"
+          required
+        />
+      </label>
 
-    <!-- Complemento -->
-    <label class="input w-full">
-      <input
-        id="complement"
-        name="complement"
-        type="text"
-        placeholder="Complemento"
-      />
-    </label>
+      <!-- Complemento -->
+      <label class="input w-full">
+        <input
+          id="complement"
+          name="complement"
+          type="text"
+          placeholder="Complemento"
+        />
+      </label>
 
-    <!-- Cidade -->
-    <label class="input w-full">
-      <input
-        id="city"
-        name="city"
-        type="text"
-        placeholder="Cidade"
-        required
-      />
-    </label>
+      <!-- Cidade -->
+      <label class="input w-full">
+        <input
+          id="city"
+          name="city"
+          type="text"
+          placeholder="Cidade"
+          required
+        />
+      </label>
 
-    <!-- UF -->
-    <label class="input w-full">
-      <input
-        id="uf"
-        name="uf"
-        type="text"
-        placeholder="UF"
-        maxlength="2"
-        required
-      />
-    </label>
+      <!-- UF -->
+      <label class="input w-full">
+        <input
+          id="uf"
+          name="uf"
+          type="text"
+          placeholder="UF"
+          maxlength="2"
+          required
+        />
+      </label>
+    </div>
 
     <!-- Enviar -->
     <button class="btn btn-lg btn-primary w-full">

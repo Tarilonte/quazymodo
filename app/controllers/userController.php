@@ -100,14 +100,18 @@ class userController extends AbstractController
     );
     $data = $response->toArray();
 
-    // Prepara os dados para exibição em tabela vertical
-    $verticalTable = verticalTable(
-        $data,
-        ['th-class' => 'text-purple-600']
+    $fields = componentFactory::Template(
+      "/pages/user/address/address-fields",
+      [
+        'address' => htmlspecialchars($data['logradouro'] ?? ''),
+        'number' => '',
+        'complement' => htmlspecialchars($data['complemento'] ?? ''),
+        'city' => htmlspecialchars($data['localidade'] ?? ''),
+        'uf' => htmlspecialchars($data['uf'] ?? ''),
+      ]
     );
 
-    // Retorna a tabela como resposta HTML
-    return $this->html($verticalTable);
+    return $this->html($fields);
     
   }
 }
