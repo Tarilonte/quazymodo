@@ -106,6 +106,7 @@ class userController extends AbstractController
         'address' => htmlspecialchars($data['logradouro'] ?? ''),
         'number' => '',
         'complement' => htmlspecialchars($data['complemento'] ?? ''),
+        'district' => htmlspecialchars($data['bairro'] ?? ''),
         'city' => htmlspecialchars($data['localidade'] ?? ''),
         'uf' => htmlspecialchars($data['uf'] ?? ''),
       ]
