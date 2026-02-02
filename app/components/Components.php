@@ -17,3 +17,13 @@ function verticalTable(array $data, array $css = []) : BaseComponent
     $array
   );
 }
+
+function jsComponent(string $filescript): BaseComponent
+{
+  return componentFactory::Plugin(
+    "/plugins/jsComponent/jsComponent",
+    [
+      "fileScript" => $filescript
+    ]
+  );
+}

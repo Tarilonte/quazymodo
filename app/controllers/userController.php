@@ -6,6 +6,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Quazymodo\AbstractController;
 use Quazymodo\ComponentFactory;
+use function App\Components\jsComponent;
+use function App\Components\verticalTable;
+use Symfony\Component\HttpClient\HttpClient;
 
 class userController extends AbstractController
 {
@@ -25,15 +28,18 @@ class userController extends AbstractController
     return $this->html($page);
   }
 
+  public function showAddressForm(ServerRequestInterface $request): ResponseInterface
+  {
+    $page = componentFactory::Page(
+      "/pages/user/address/address-form"
+    );
+    return $this->html($page);
+  }
+
   public function processLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     sleep(1); // Simulate a delay for the login process
-    $script = componentFactory::Plugin(
-      "/plugins/jsComponent/jsComponent",
-      [
-        "fileScript" => "/pages/user/login/login-fail.js"
-      ]
-    );
+    $script = jsComponent("/pages/user/login/login-fail.js");
     return $this->html($script);
   }
 
@@ -77,5 +83,31 @@ class userController extends AbstractController
         ]
     );
     return $this->html($page);
+  }
+
+  function validateCEP(ServerRequestInterface $request): ResponseInterface
+  {
+    // Recupera o CEP enviado via POST
+    $parsedBody = $request->getParsedBody();
+    $cep = htmlspecialchars($parsedBody['cep']) ?? null;
+    $cep = preg_replace('/\D/', '', $cep);
+
+    // Efetua a chamada à API ViaCEP
+    $client = HttpClient::create();
+    $response = $client->request(
+        'GET',
+        "https://viacep.com.br/ws/{$cep}/json/"
+    );
+    $data = $response->toArray();
+
+    // Prepara os dados para exibição em tabela vertical
+    $verticalTable = verticalTable(
+        $data,
+        ['th-class' => 'text-purple-600']
+    );
+
+    // Retorna a tabela como resposta HTML
+    return $this->html($verticalTable);
+    
   }
 }

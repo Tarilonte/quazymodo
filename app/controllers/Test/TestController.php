@@ -20,7 +20,6 @@ use Tracy\Debugger;
 use voku\helper\AntiXSS;
 
 use function App\Components\verticalTable;
-use function Quazymodo\Functions\recursiveArraySearch;
 
 class TestController extends AbstractController
 {
@@ -51,6 +50,7 @@ class TestController extends AbstractController
     // Resposta caso haja o argumento 'teste' na URL
     $query = $request->getQueryParams();
     if (isset($query['teste'])) {
+      sleep(2);
       $response = componentFactory::Plugin(
         componentName:'/pages/test-pages/htmx/salsifufu/salsifufu'
       );
@@ -58,9 +58,10 @@ class TestController extends AbstractController
     }
 
     // Resposta padrão
-      $page = componentFactory::Page(
-        "/pages/test-pages/htmx/htmx"
-      );
+    $page = componentFactory::Page(
+      "/pages/test-pages/htmx/htmx"
+    );
+
     return $this->html($page);
   }
 

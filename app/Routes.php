@@ -9,7 +9,9 @@ if(RATE_LIMIT_REQUESTS > 0){
 // map a route
 $router->map('GET', '/', 'Controller\HomeController::index');
 $router->map('GET', '/login', 'Controller\userController::showLoginForm');
+$router->map('GET', '/address', 'Controller\userController::showAddressForm');
 $router->map('POST', '/User/processLoginForm', 'Controller\userController::processLoginForm');
+$router->map('POST', '/User/validateCEP', 'Controller\userController::validateCEP');
 $router->map('GET', '/register', 'Controller\userController::showRegistrationForm');
 $router->map('POST', '/User/processRegistrationForm', 'Controller\userController::processRegistrationForm');
 

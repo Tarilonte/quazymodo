@@ -5,7 +5,7 @@
     class="grid columns-1 justify-items-center bg-base-100 gap-7 p-6 md:p-16 rounded-lg md:shadow-md" 
     hx-post="/User/processLoginForm"
     hx-target="#hack"
-    hx-sync="this:drop"
+    hx-sync="this"
     >
 
     <input type="hidden" name="csrf-token" value="{{ csrf-token }}">
@@ -19,12 +19,19 @@
 
     <label class="input">
       <span class="mdi mdi-email text-xl opacity-55"></span>
-      <input type="email" placeholder="seu e-mail" required/>
+      <input 
+        name="email"
+        type="email" 
+        placeholder="seu e-mail" 
+        required
+        />
     </label>  
 
     <label class="input"> 
       <span class="mdi mdi-key-variant text-xl opacity-55"></span>
       <input 
+        name="password"
+        class="pw-input mr-8"
         required 
         type="password" 
         placeholder="Password" 
@@ -33,10 +40,9 @@
         title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
       
       />
-      <label class="swap">
-        <input type="checkbox">
-        <span class="ti ti-eye-closed mt-2 swap-on text-xl"></span>
-        <span class="mdi mdi-eye-outline swap-off text-xl"></span>
+      <label class="pw-viewer swap text-2xl absolute right-2 cursor-pointer rounded-lg w-8 text-center">
+        <span class="ti ti-eye-closed mt-2 swap-off"></span>
+        <span class="mdi mdi-eye-outline swap-on"></span>
       </label>
     </label>
 

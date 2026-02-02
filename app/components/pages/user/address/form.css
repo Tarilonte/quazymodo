@@ -1,0 +1,5 @@
+/* hack to remove autofill background color in webkit browsers */
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-base-content) !important; /* Set your desired text color */
+  box-shadow: inset 100px 100px 0 0 var(--color-base-100) !important; /* Set your desired background color */
+}

@@ -5,12 +5,12 @@ use Quazymodo\Csrf;
 
 return [
   'extends' => '/pages/base/base',
-  'css' => 'form-login.css',
-  'js' => [ASSET_HTMX,'login-form.js'],
+  'css' => 'form.css',
+  'js' => [ASSET_HTMX],
   'inserts' => [    
-    'page-title' => 'Login',
+    'page-title' => 'Endereço',
     'body' => [
-      componentFactory::Template('/pages/user/login/login-form'),
+      componentFactory::Template('/pages/user/address/address-form'),
       componentFactory::Plugin('/plugins/modalComponent/'),
       componentFactory::Plugin('/plugins/theme-selector/',
         ['btn-themeSelector-01-css' => 'absolute top-0 right-0 m-8'],

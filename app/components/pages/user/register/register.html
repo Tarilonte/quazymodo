@@ -5,7 +5,7 @@
     class="grid columns-1 justify-items-center bg-base-100 gap-7 p-6 md:p-16 rounded-lg md:shadow-md" 
     hx-post="/User/processRegistrationForm"
     hx-target="#hack"
-    hx-sync="this:drop"
+    hx-sync="this"
     >
 
     <input type="hidden" name="csrf-token" value="{{ csrf-token }}">
