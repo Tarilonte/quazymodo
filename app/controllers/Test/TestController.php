@@ -8,8 +8,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
+use App\Services\RedBean;
 use GuzzleHttp\Client;
 use Pusher\Pusher;
+use RedBeanPHP\R as R;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 use Quazymodo\Helper;
@@ -132,6 +134,56 @@ class TestController extends AbstractController
         
     }
     exit;
+  }
+
+  public function redbean(ServerRequestInterface $request): ResponseInterface
+  {
+    $message = '';
+    $messageType = 'hidden';
+    $nameValue = '';
+    $emailValue = '';
+
+    if (strtoupper($request->getMethod()) === 'POST') {
+      $data = $request->getParsedBody() ?? [];
+      $name = trim((string) ($data['name'] ?? ''));
+      $email = trim((string) ($data['email'] ?? ''));
+
+      $nameValue = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+      $emailValue = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+
+      if ($name === '' || $email === '') {
+        $messageType = 'alert alert-error';
+        $message = 'Preencha nome e e-mail.';
+      } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $messageType = 'alert alert-error';
+        $message = 'E-mail inválido.';
+      } else {
+        RedBean::init();
+        $lead = R::dispense('contact');
+        $lead->name = $name;
+        $lead->email = $email;
+        $lead->created_at = date('Y-m-d H:i:s');
+        R::store($lead);
+
+        $messageType = 'alert alert-success';
+        $message = 'Cadastro realizado com sucesso.';
+        $nameValue = '';
+        $emailValue = '';
+      }
+    }
+
+    $page = componentFactory::Page(
+      '/pages/test-pages/redbean/',
+      [
+        'page-title' => 'Teste RedBean',
+        'message' => $message,
+        'message-type' => $messageType,
+        'name-value' => $nameValue,
+        'email-value' => $emailValue,
+      ]
+    );
+
+    return $this->html($page);
   }
 
 }

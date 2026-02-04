@@ -17,17 +17,18 @@ $router->map('POST', '/User/processRegistrationForm', 'Controller\UserController
 
 //Adminer
 $router->map('GET', '/adminer', function () {
-  require __DIR__ . '/../quazymodo/adminer.php';
+  require __DIR__ . '/../adminer.php';
   die();
 });
 
 $router->map('POST', '/adminer', function () {
-  require __DIR__ . '/../quazymodo/adminer.php';
+  require __DIR__ . '/../adminer.php';
   die();
 });
 
 // testes
 $router->map(['GET','POST'], '/test', 'Controller\Test\TestController::list');
+$router->map(['GET','POST'], '/test/redbean', 'Controller\Test\TestController::redbean');
 $router->map(['GET','POST'], '/test/{test:.*}', 'Controller\Test\TestController::index');
 
 // chat
