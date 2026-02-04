@@ -8,6 +8,9 @@ RUN apk add --no-cache \
     php84-opcache \
     php84-pdo \
     php84-pdo_mysql \
+    php84-pdo_sqlite \
+    php84-sqlite3 \
+    php84-ctype \
     php84-mbstring \
     php84-xml \
     php84-session \
@@ -37,6 +40,9 @@ RUN apk add --no-cache \
     php84-opcache \
     php84-pdo \
     php84-pdo_mysql \
+    php84-pdo_sqlite \
+    php84-sqlite3 \
+    php84-ctype \
     php84-mbstring \
     php84-xml \
     php84-session \

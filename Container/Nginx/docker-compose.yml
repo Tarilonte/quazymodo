@@ -7,7 +7,7 @@ services:
       context: ../..
       # O caminho do Dockerfile relativo à raiz do projeto
       dockerfile: Container/Nginx/Dockerfile
-    container_name: quazymodo
+    container_name: Quazymodo
     restart: unless-stopped
     ports:
       - "8080:80"  
