@@ -19,7 +19,6 @@ return [
     'salsifufu.js',
   ],
   'inserts' => [
-    'effect' => $effect,
-    'nonce' => $nonce ,
+    'effect' => $effect
   ],
 ];
