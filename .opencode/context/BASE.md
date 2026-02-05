@@ -6,9 +6,10 @@ Framework PHP próprio, simples, explícito e sob controle total.
 ## Stack
 - PHP 8.4
 - Nginx + PHP-FPM
-- RedBeanPHP (modo controlado)
+- RedBeanPHP
+- jQuery (v4)
 - HTMX (v4)
-- Alpine.js (mínimo)
+- Tailwind CSS com daisyUI
 - Podman (rootless / WSL)
 
 ## Arquitetura
