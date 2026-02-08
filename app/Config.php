@@ -39,10 +39,10 @@ const ASSET_HTMX = "https://cdn.jsdelivr.net/npm/htmx.org@4.0.0-alpha6/dist/htmx
 
 // EXTERNAL SERVICES CREDENTIALS
 // CONFIGURAÇÕES DE EMAIL
-const MAILBABY_API_KEY = "8D3ZkbB7djvEuV1AOoIGKeg7vBgZDRGvUoCeZQtrV4VyloTN74V9vedGHcyUhainkjzzJg6eNzwTSqlt7dKj9VV6534w5Z4lJvJmke4P5vL2zERsdpPLM8cf3cqMjPHt";
+const MAILBABY_API_KEY = "8D3ZkbB7djvEuV1AOoIGKeg7vBgZDRGvUoCeZQtrV4VyloTN74V9vedGHcyUhainkjzzJg6eNzwTSql";
 
 // CREDENCIAIS DO GOOGLE
-const GOOGLE_OAUTH_CLIENT_ID = "101268693338-3ji0ij09oako9tr02qcg6hhve3a3jkva.apps.googleusercontent.com";
+const GOOGLE_OAUTH_CLIENT_ID = "101268693338-3ji0ij0";
 
 
 // SESSION CONFIGURATION
