@@ -22,7 +22,7 @@ class Blueprint
       $blueprint = $this->extend_blueprint($blueprint['extends'], $blueprint, $inserts);
     }
 
-    // Caso a chave seja css ou js e o valor seja uma string, converte para array
+    // Caso a chave seja css/js e o valor seja string, converte para array
     foreach ($blueprint as $item => $value) {
       if (in_array($item, ['css', 'js']) && is_string($value) && strlen($value)>0) {
       $blueprint[$item] = [$value];
@@ -60,6 +60,14 @@ class Blueprint
   
   // Merge parent blueprint with child blueprint
   foreach ($child_blueprint as $key => $value) {
+    if (in_array($key, ['css', 'js'], true)) {
+      $parent_blueprint[$key] = $this->merge_assetLists(
+        $parent_blueprint[$key] ?? [],
+        $value
+      );
+      continue;
+    }
+
     if (isset($parent_blueprint[$key])) {
       if (is_array($parent_blueprint[$key]) && is_array($value)) {
         // Se ambos são arrays, mesclar os arrays
@@ -78,6 +86,33 @@ class Blueprint
   }
   
   return $parent_blueprint;
+  }
+
+  private function normalize_assetList($value): array
+  {
+    if ($value === null) {
+      return [];
+    }
+
+    if (is_string($value)) {
+      return strlen($value) > 0 ? [$value] : [];
+    }
+
+    if (is_array($value)) {
+      return array_is_list($value) ? $value : array_values($value);
+    }
+
+    return [$value];
+  }
+
+  private function merge_assetLists($parent, $child): array
+  {
+    $merged = array_merge(
+      $this->normalize_assetList($parent),
+      $this->normalize_assetList($child)
+    );
+
+    return array_values(array_unique($merged, SORT_REGULAR));
   }
 
   private function componentPath(string $componentName): string
