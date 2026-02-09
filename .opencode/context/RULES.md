@@ -6,6 +6,8 @@
 - Evitar overengineering
 - Sugerir soluções simples e previsíveis
 - Não refatorar grandes blocos sem pedido explícito
+- Antes de iniciar nova task/subtask, verificar se há commits pendentes (`git status`)
+- Se houver pendências, pausar e solicitar ação do usuário antes de prosseguir
 
 ## Memória
 - Quando surgir decisão nova, mudança de padrão ou convenção:
