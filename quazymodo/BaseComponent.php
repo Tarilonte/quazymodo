@@ -20,6 +20,7 @@ class BaseComponent
   public int $cacheHits = 0;
   public static array $allData = [];
   private static array $templateReadCache = [];
+  private static array $slotMapCache = [];
   private string $assetsPath = '/assets';
 
   /**
@@ -116,7 +117,16 @@ class BaseComponent
 
   private function map_slots($html) : array
   {
+    $cacheKey = md5($html);
+
+    if (array_key_exists($cacheKey, self::$slotMapCache)) {
+      $this->cacheHits++;
+      return self::$slotMapCache[$cacheKey];
+    }
+
     preg_match_all('/{{ ?([^ ]*?) ?}}/i', $html, $matches);
+    self::$slotMapCache[$cacheKey] = $matches[1];
+
     return $matches[1];
   }
 
