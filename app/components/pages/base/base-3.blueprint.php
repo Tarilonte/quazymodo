@@ -4,7 +4,7 @@ use Quazymodo\ComponentFactory;
 use function App\Components\verticalTable;
 
 return [
-  'extends' => '/pages/base/base-2',
+  'extends' => '/pages/test-pages/base-2/',
   'inserts' => [
     'body' => [
       verticalTable(
