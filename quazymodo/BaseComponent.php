@@ -35,47 +35,89 @@ class BaseComponent
     if($componentType === "page"){
       CSPManager::setNonce($componentName);
     }
-    $this->componentName = $componentName;
-    $this->componentType = $componentType; 
+    $this->initializeComponentContext($componentName, $componentType);
+
     if ($componentType === "template") {
-      $this->construct_template($componentName, $inserts);
+      $this->buildTemplateComponent($componentName, $inserts);
     } else {
-      $this->blueprint = new Blueprint($componentName, $inserts);  
-      $this->html = $this->load_template((string) $this->blueprint->get('template', ''));
-      $this->slots = $this->map_slots($this->html);
-      $this->write_componentName($componentName);
-      $blueprintInserts = $this->blueprint->get('inserts', []);
-      $this->data = new ComponentData(is_array($blueprintInserts) ? $blueprintInserts : [], $inserts);
-      $this->assertDeclaredSlotsExist();
-
-      foreach($this->data->final_data as $key => $value) {
-        self::$allData[$key] = $value;
-      }
-      $blueprintCss = $this->blueprint->get('css', []);
-      $blueprintJs = $this->blueprint->get('js', []);
-
-      is_array($blueprintCss) ? $this->add_asset('css', $blueprintCss) : '';
-      is_array($blueprintJs) ? $this->add_asset('js', $blueprintJs) : '';
-      is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
-      is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
-      $this->fill_slots();
+      $this->buildBlueprintComponent($componentName, $inserts);
     }
+
     return $this;
   }
 
-  private function construct_template($templateName, $inserts = [])
+  private function initializeComponentContext(string $componentName, string $componentType): void
+  {
+    $this->componentName = $componentName;
+    $this->componentType = $componentType;
+  }
+
+  private function buildTemplateComponent($templateName, $inserts = []): void
   {    
     $this->html = $this->load_template($templateName);
     $this->slots = $this->map_slots($this->html);    
     $this->write_componentName($templateName . '_template');
     $this->data = new ComponentData([], $inserts);
+
     $this->assertDeclaredSlotsExist();
+
+    $this->syncFinalDataToGlobalStore();
+    $this->mergeDataAssets();
+
+    $this->fill_slots();
+  }
+
+  private function buildBlueprintComponent($componentName, $inserts): void
+  {
+    $this->blueprint = new Blueprint($componentName, $inserts);
+
+    $templateName = (string) $this->blueprint->get('template', '');
+    $this->html = $this->load_template($templateName);
+    $this->slots = $this->map_slots($this->html);
+    $this->write_componentName($componentName);
+
+    $blueprintInserts = $this->blueprint->get('inserts', []);
+    $this->data = new ComponentData(is_array($blueprintInserts) ? $blueprintInserts : [], $inserts);
+
+    $this->assertDeclaredSlotsExist();
+
+    $this->syncFinalDataToGlobalStore();
+    $this->mergeBlueprintAssets();
+    $this->mergeDataAssets();
+
+    $this->fill_slots();
+  }
+
+  private function syncFinalDataToGlobalStore(): void
+  {
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
-    is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
-    is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
-    $this->fill_slots();
+  }
+
+  private function mergeBlueprintAssets(): void
+  {
+    $blueprintCss = $this->blueprint->get('css', []);
+    $blueprintJs = $this->blueprint->get('js', []);
+
+    if (is_array($blueprintCss)) {
+      $this->add_asset('css', $blueprintCss);
+    }
+
+    if (is_array($blueprintJs)) {
+      $this->add_asset('js', $blueprintJs);
+    }
+  }
+
+  private function mergeDataAssets(): void
+  {
+    if (is_array($this->data->css)) {
+      $this->add_asset('css', $this->data->css);
+    }
+
+    if (is_array($this->data->js)) {
+      $this->add_asset('js', $this->data->js);
+    }
   }
 
   public function __get($name)
@@ -138,8 +180,7 @@ class BaseComponent
   private function assertDeclaredSlotsExist() : void
   {
     $templateSlots = $this->collectValidationSlots();
-    $blueprintInputKeys = $this->collectBlueprintInputKeys($this->componentName);
-    $allowedKeys = array_values(array_unique(array_merge($templateSlots, $blueprintInputKeys)));
+    $allowedKeys = $this->collectAllowedDeclaredSlotKeys($templateSlots);
     $declaredSlots = $this->data->declared_slots;
     $invalidSlots = array_values(array_diff($declaredSlots, $allowedKeys));
 
@@ -148,6 +189,12 @@ class BaseComponent
     }
 
     throw new SlotNotFoundException($this->componentName, $invalidSlots, $templateSlots);
+  }
+
+  private function collectAllowedDeclaredSlotKeys(array $templateSlots): array
+  {
+    $blueprintInputKeys = $this->collectBlueprintInputKeys($this->componentName);
+    return array_values(array_unique(array_merge($templateSlots, $blueprintInputKeys)));
   }
 
   private function collectValidationSlots(): array
@@ -175,12 +222,8 @@ class BaseComponent
     $visited[] = $normalizedComponent;
 
     $blueprintPath = $this->resolveBlueprintPath($normalizedComponent);
-    if (!file_exists($blueprintPath)) {
-      return [];
-    }
-
-    $source = file_get_contents($blueprintPath);
-    if ($source === false) {
+    $source = $this->readFileIfExists($blueprintPath);
+    if ($source === null) {
       return [];
     }
 
@@ -203,12 +246,8 @@ class BaseComponent
   private function slotsFromComponent(string $componentName): array
   {
     $blueprintPath = $this->resolveBlueprintPath($componentName);
-    if (!file_exists($blueprintPath)) {
-      return [];
-    }
-
-    $source = file_get_contents($blueprintPath);
-    if ($source === false) {
+    $source = $this->readFileIfExists($blueprintPath);
+    if ($source === null) {
       return [];
     }
 
@@ -222,12 +261,8 @@ class BaseComponent
   private function slotsFromTemplateName(string $templateName): array
   {
     $templatePath = $this->resolveTemplatePath($templateName);
-    if (!file_exists($templatePath)) {
-      return [];
-    }
-
-    $template = file_get_contents($templatePath);
-    if ($template === false) {
+    $template = $this->readFileIfExists($templatePath);
+    if ($template === null) {
       return [];
     }
 
@@ -244,12 +279,8 @@ class BaseComponent
     }
 
     $blueprintPath = $this->resolveBlueprintPath($componentName);
-    if (!file_exists($blueprintPath)) {
-      return [];
-    }
-
-    $source = file_get_contents($blueprintPath);
-    if ($source === false) {
+    $source = $this->readFileIfExists($blueprintPath);
+    if ($source === null) {
       return [];
     }
 
@@ -280,6 +311,16 @@ class BaseComponent
     }
 
     return "../app/components/$templateName.html";
+  }
+
+  private function readFileIfExists(string $path): ?string
+  {
+    if (!file_exists($path)) {
+      return null;
+    }
+
+    $content = file_get_contents($path);
+    return $content === false ? null : $content;
   }
 
   private function write_componentName($componentName) : void
