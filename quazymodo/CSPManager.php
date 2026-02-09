@@ -2,6 +2,8 @@
 
 namespace Quazymodo;
 
+use Quazymodo\Exceptions\InvalidCspDirectiveException;
+
 class CSPManager
 {
   private static $nonce;
@@ -34,8 +36,7 @@ class CSPManager
   {
     // Verifica se a diretiva é suportada; caso contrário, ignora a adição
     if (!array_key_exists($directive, self::$directives)) {
-      echo "Diretiva {$directive} não suportada.";
-      return;
+      throw new InvalidCspDirectiveException($directive);
     }
 
     // Adiciona a origem à diretiva correspondente, evitando duplicatas
