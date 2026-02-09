@@ -3,4 +3,3 @@ node_modules/
 vendor/
 tests/
 .env
-.opencode/context/TASKS.md
