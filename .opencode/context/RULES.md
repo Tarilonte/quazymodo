@@ -8,6 +8,8 @@
 - Não refatorar grandes blocos sem pedido explícito
 - Antes de iniciar nova task/subtask, verificar se há commits pendentes (`git status`)
 - Se houver pendências, pausar e solicitar ação do usuário antes de prosseguir
+- Todo formulário deve incluir campo oculto de CSRF
+- Toda rota que recebe submissão de formulário deve validar o token CSRF
 
 ## Memória
 - Quando surgir decisão nova, mudança de padrão ou convenção:
