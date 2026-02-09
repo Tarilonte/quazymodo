@@ -35,7 +35,7 @@ class BaseComponent
     if ($componentType === "template") {
       $this->construct_template($componentName, $inserts);
     } else {
-      $this->blueprint = new Blueprint($componentName, $inserts, $componentType);  
+      $this->blueprint = new Blueprint($componentName, $inserts);  
       $this->html = $this->load_template($this->blueprint->array()['template']);
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);

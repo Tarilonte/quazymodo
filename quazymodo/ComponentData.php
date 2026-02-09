@@ -1,6 +1,6 @@
 <?php
 
-namespace quazymodo;
+namespace Quazymodo;
 
 class ComponentData
 {
