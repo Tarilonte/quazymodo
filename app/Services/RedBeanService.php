@@ -6,35 +6,87 @@ use RedBeanPHP\R as R;
 
 final class RedBeanService
 {
-  private static bool $initialized = false;
+  private static array $registeredAliases = [];
+  private static ?string $currentAlias = null;
   private static ?RedBeanProxy $proxy = null;
 
-  public static function init(?string $sqlitePath = null): void
+  public static function init(?string $sqlitePath = null, string $alias = 'default'): void
   {
-    if (self::$initialized) {
+    $path = $sqlitePath ?? self::defaultSqlitePath();
+    self::registerSqliteDatabase($alias, $path);
+  }
+
+  public static function registerSqliteDatabase(string $alias, string $sqlitePath): void
+  {
+    if (isset(self::$registeredAliases[$alias])) {
       return;
     }
 
-    $path = $sqlitePath ?? self::defaultSqlitePath();
-    R::setup('sqlite:' . $path);
+    R::addDatabase($alias, 'sqlite:' . $sqlitePath);
+    self::$registeredAliases[$alias] = true;
 
+    if (self::$currentAlias === null) {
+      self::$currentAlias = $alias;
+      R::selectDatabase($alias);
+    }
+
+    self::withDatabase($alias, function () {
+      self::applySqlitePragmas();
+    });
+
+    if (defined('APP_ENV') && APP_ENV === 'production') {
+      R::freeze(true);
+    }
+  }
+
+  public static function withDatabase(string $alias, callable $callback): mixed
+  {
+    self::ensureAliasRegistered($alias);
+
+    $previousAlias = self::$currentAlias;
+
+    if ($previousAlias !== $alias) {
+      R::selectDatabase($alias);
+      self::$currentAlias = $alias;
+    }
+
+    try {
+      return $callback();
+    } finally {
+      if ($previousAlias !== null && $previousAlias !== $alias) {
+        R::selectDatabase($previousAlias);
+        self::$currentAlias = $previousAlias;
+      }
+    }
+  }
+
+  private static function applySqlitePragmas(): void
+  {
     R::exec('PRAGMA journal_mode = WAL');
     R::exec('PRAGMA synchronous = NORMAL');
     R::exec('PRAGMA temp_store = MEMORY');
     R::exec('PRAGMA foreign_keys = ON');
     R::exec('PRAGMA cache_size = -20000');
     R::exec('PRAGMA busy_timeout = 5000');
+  }
 
-    if (defined('APP_ENV') && APP_ENV === 'production') {
-      R::freeze(true);
+  private static function ensureAliasRegistered(string $alias): void
+  {
+    if (isset(self::$registeredAliases[$alias])) {
+      return;
     }
 
-    self::$initialized = true;
+    if ($alias === 'default') {
+      self::init();
+      return;
+    }
+
+    throw new \RuntimeException("Alias de banco nao registrado: [$alias]");
   }
 
   private static function ensureInitialized(): void
   {
-    if (!self::$initialized) {
+    if (!isset(self::$registeredAliases['default'])) {
       self::init();
     }
   }

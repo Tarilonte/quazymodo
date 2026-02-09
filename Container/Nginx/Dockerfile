@@ -6,6 +6,7 @@ RUN apk add --no-cache \
     php84 \
     php84-fpm \
     php84-opcache \
+    php84-pecl-apcu \
     php84-pdo \
     php84-pdo_mysql \
     php84-pdo_sqlite \
@@ -38,6 +39,7 @@ RUN apk add --no-cache \
     php84 \
     php84-fpm \
     php84-opcache \
+    php84-pecl-apcu \
     php84-pdo \
     php84-pdo_mysql \
     php84-pdo_sqlite \

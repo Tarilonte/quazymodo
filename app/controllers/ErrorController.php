@@ -16,7 +16,6 @@ class ErrorController extends AbstractController
         $component = componentFactory::Page(
           '/pages/error/',
           [
-            'requested-uri' => $REQUEST_URI,
             'page-title' => $this->getErrorMessage($statusCode)[1],
             'error-code' => $statusCode,
             'error-icon' => $this->getErrorMessage($statusCode)[0],

@@ -2,6 +2,9 @@
 
 namespace Middleware;
 
+use App\Services\RateLimitStore;
+use Controller\ErrorController;
+use Nyholm\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -10,32 +13,119 @@ use Quazymodo\Helper;
 
 class RateLimitMiddleware implements MiddlewareInterface
 {
+    private const APCU_KEY_PREFIX = 'quazymodo_rl_';
+    private RateLimitStore $store;
+
+    public function __construct(?RateLimitStore $store = null)
+    {
+      $this->store = $store ?? new RateLimitStore();
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-      $clientIp = Helper::getClientIp($request);
+      [$limit, $period] = $this->resolvePolicy($request);
 
-      $limit = RATE_LIMIT_REQUESTS;
-      $period = RATE_LIMIT_PERIOD;
-
-      if (!isset($_SESSION['rate_limit'])) {
-        $_SESSION['rate_limit'] = [];
+      if ($limit <= 0 || $period <= 0) {
+        return $handler->handle($request);
       }
 
-      if (!isset($_SESSION['rate_limit'][$clientIp])) {
-        $_SESSION['rate_limit'][$clientIp] = [];
+      $clientKey = Helper::getClientIp($request);
+      $method = strtoupper($request->getMethod());
+      $path = $request->getUri()->getPath();
+      $rateKey = $method . '|' . $path . '|' . $clientKey;
+
+      if ($this->isApcuFastPathEnabled()) {
+        $fastPathHits = $this->incrementApcuWindowCounter($rateKey, $period);
+        $syncThreshold = $this->syncThresholdHits($limit);
+
+        if ($fastPathHits !== null && $fastPathHits < $syncThreshold) {
+          return $handler->handle($request);
+        }
       }
 
-      $time = time();
-      $_SESSION['rate_limit'][$clientIp] = array_filter($_SESSION['rate_limit'][$clientIp], function ($timestamp) use ($time, $period) {
-        return ($time - $timestamp) < $period;
-      });
+      $result = $this->store->hit($rateKey, $limit, $period);
 
-      if (count($_SESSION['rate_limit'][$clientIp]) >= $limit) {
-        throw new \Exception("", 429);
+      if (!$result['allowed']) {
+        return $this->rateLimitResponse($request, (int) $result['retry_after']);
       }
-
-      $_SESSION['rate_limit'][$clientIp][] = $time;
 
       return $handler->handle($request);
+    }
+
+    private function resolvePolicy(ServerRequestInterface $request): array
+    {
+      $method = strtoupper($request->getMethod());
+      $path = $request->getUri()->getPath();
+      $policyMap = defined('RATE_LIMIT_POLICIES') && is_array(constant('RATE_LIMIT_POLICIES'))
+        ? constant('RATE_LIMIT_POLICIES')
+        : [];
+
+      $policyKey = $method . ' ' . $path;
+      $policy = $policyMap[$policyKey] ?? null;
+
+      $defaultLimit = defined('RATE_LIMIT_REQUESTS') ? (int) RATE_LIMIT_REQUESTS : 60;
+      $defaultPeriod = defined('RATE_LIMIT_PERIOD') ? (int) RATE_LIMIT_PERIOD : 60;
+
+      if (!is_array($policy)) {
+        return [$defaultLimit, $defaultPeriod];
+      }
+
+      $limit = isset($policy['requests']) ? (int) $policy['requests'] : $defaultLimit;
+      $period = isset($policy['period']) ? (int) $policy['period'] : $defaultPeriod;
+
+      return [$limit, $period];
+    }
+
+    private function rateLimitResponse(ServerRequestInterface $request, int $retryAfter): ResponseInterface
+    {
+      $retryAfter = max(1, $retryAfter);
+      $controller = new ErrorController();
+      $response = $controller->handle($request, 429);
+      return $response->withHeader('Retry-After', (string) $retryAfter);
+    }
+
+    private function isApcuFastPathEnabled(): bool
+    {
+      if (!defined('RATE_LIMIT_APCU_ENABLED') || constant('RATE_LIMIT_APCU_ENABLED') !== true) {
+        return false;
+      }
+
+      if (!function_exists('apcu_enabled') || !function_exists('apcu_add') || !function_exists('apcu_inc')) {
+        return false;
+      }
+
+      return \apcu_enabled();
+    }
+
+    private function incrementApcuWindowCounter(string $rateKey, int $period): ?int
+    {
+      $now = time();
+      $windowStart = intdiv($now, $period) * $period;
+      $ttlGrace = defined('RATE_LIMIT_APCU_TTL_GRACE') ? max(0, (int) constant('RATE_LIMIT_APCU_TTL_GRACE')) : 5;
+      $ttl = max(1, ($windowStart + $period + $ttlGrace) - $now);
+      $cacheKey = self::APCU_KEY_PREFIX . hash('sha256', $rateKey . '|' . $windowStart);
+
+      if (\apcu_add($cacheKey, 1, $ttl)) {
+        return 1;
+      }
+
+      $success = false;
+      $hits = \apcu_inc($cacheKey, 1, $success, $ttl);
+
+      if ($success === false) {
+        return null;
+      }
+
+      return (int) $hits;
+    }
+
+    private function syncThresholdHits(int $limit): int
+    {
+      $thresholdRatio = defined('RATE_LIMIT_APCU_SYNC_THRESHOLD')
+        ? (float) constant('RATE_LIMIT_APCU_SYNC_THRESHOLD')
+        : 0.8;
+
+      $thresholdRatio = max(0.1, min(1.0, $thresholdRatio));
+      return max(1, (int) floor($limit * $thresholdRatio));
     }
 }

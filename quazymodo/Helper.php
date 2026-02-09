@@ -13,19 +13,37 @@ class Helper
   {
     $serverParams = $request->getServerParams();
 
-    $ipHeaders = [
-      'HTTP_CLIENT_IP',
-      'HTTP_X_FORWARDED_FOR',
-      'REMOTE_ADDR',
-    ];
+    $remoteAddr = (string) ($serverParams['REMOTE_ADDR'] ?? '');
+    $trustedProxies = self::trustedProxies();
 
-    foreach ($ipHeaders as $header) {
-      if (!empty($serverParams[$header])) {
-        return $serverParams[$header];
+    if (
+      $remoteAddr !== ''
+      && in_array($remoteAddr, $trustedProxies, true)
+      && !empty($serverParams['HTTP_X_FORWARDED_FOR'])
+    ) {
+      $forwarded = explode(',', (string) $serverParams['HTTP_X_FORWARDED_FOR']);
+      $clientIp = trim($forwarded[0] ?? '');
+
+      if (filter_var($clientIp, FILTER_VALIDATE_IP)) {
+        return $clientIp;
       }
     }
 
+    if (filter_var($remoteAddr, FILTER_VALIDATE_IP)) {
+      return $remoteAddr;
+    }
+
     return 'UNKNOWN';
+  }
+
+  private static function trustedProxies(): array
+  {
+    if (!defined('TRUSTED_PROXIES')) {
+      return [];
+    }
+
+    $proxies = constant('TRUSTED_PROXIES');
+    return is_array($proxies) ? $proxies : [];
   }
 
   /**
