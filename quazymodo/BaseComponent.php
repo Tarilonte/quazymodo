@@ -41,17 +41,21 @@ class BaseComponent
       $this->construct_template($componentName, $inserts);
     } else {
       $this->blueprint = new Blueprint($componentName, $inserts);  
-      $this->html = $this->load_template($this->blueprint->array()['template']);
+      $this->html = $this->load_template((string) $this->blueprint->get('template', ''));
       $this->slots = $this->map_slots($this->html);
       $this->write_componentName($componentName);
-      $this->data = new ComponentData($this->blueprint->inserts, $inserts);
+      $blueprintInserts = $this->blueprint->get('inserts', []);
+      $this->data = new ComponentData(is_array($blueprintInserts) ? $blueprintInserts : [], $inserts);
       $this->assertDeclaredSlotsExist();
 
       foreach($this->data->final_data as $key => $value) {
         self::$allData[$key] = $value;
       }
-      is_array($this->blueprint->css)? $this->add_asset('css', $this->blueprint->css) : '';
-      is_array($this->blueprint->js)? $this->add_asset('js', $this->blueprint->js) : '';
+      $blueprintCss = $this->blueprint->get('css', []);
+      $blueprintJs = $this->blueprint->get('js', []);
+
+      is_array($blueprintCss) ? $this->add_asset('css', $blueprintCss) : '';
+      is_array($blueprintJs) ? $this->add_asset('js', $blueprintJs) : '';
       is_array($this->data->css)? $this->add_asset('css', $this->data->css) : '';
       is_array($this->data->js)? $this->add_asset('js', $this->data->js) : '';
       $this->fill_slots();

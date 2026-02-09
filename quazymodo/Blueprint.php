@@ -58,7 +58,7 @@ class Blueprint
   $parent_blueprintFile = $parent_blueprint;
 
   //$parent_blueprint = $this->load_blueprint($parent_blueprint, $inserts);
-  $parent_blueprint = new Blueprint($parent_blueprintFile, $inserts)->array();
+  $parent_blueprint = new Blueprint($parent_blueprintFile, $inserts)->toArray();
   
   // Merge parent blueprint with child blueprint
   foreach ($child_blueprint as $key => $value) {
@@ -209,23 +209,19 @@ class Blueprint
     }
   }
 
-  // Getters e setters
-  public function __get($name): string|array|null
+  public function get(string $name, mixed $default = null): mixed
   {
-  if (isset($this->array[$name])) {
-    return $this->array[$name];
-  } else {
-    return null;
-  }
+    return $this->array[$name] ?? $default;
   }
 
-  public function array()
+  public function __get($name): mixed
   {
-  return $this->array;
+    return $this->get($name);
   }
 
-  public function raw()
+  public function toArray(): array
   {
-  return $this->raw;
+    return $this->array;
   }
+
 }
