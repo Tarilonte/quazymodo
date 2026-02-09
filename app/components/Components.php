@@ -18,6 +18,19 @@ function verticalTable(array $data, array $css = []) : BaseComponent
   );
 }
 
+function horizontalTable(array $rows, array $options = []) : BaseComponent
+{
+  $array = array_merge(
+    ["rows" => $rows],
+    $options
+  );
+
+  return ComponentFactory::Plugin(
+    "/plugins/tableComponent/horizontalTable/",
+    $array
+  );
+}
+
 function jsComponent(string $filescript): BaseComponent
 {
   return componentFactory::Plugin(
