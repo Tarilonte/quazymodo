@@ -6,6 +6,6 @@ class TemplateNotFoundException extends \Exception
 {
   public function __construct(string $path)
   {
-    parent::__construct("Template [$path] nao encontrado.");
+    parent::__construct("Template nao encontrado: [$path]");
   }
 }

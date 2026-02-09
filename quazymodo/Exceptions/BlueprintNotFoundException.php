@@ -6,6 +6,6 @@ class BlueprintNotFoundException extends \Exception
 {
   public function __construct(string $blueprintName)
   {
-    parent::__construct("Blueprint [$blueprintName] nao encontrado.");
+    parent::__construct("Blueprint nao encontrado: [$blueprintName]");
   }
 }

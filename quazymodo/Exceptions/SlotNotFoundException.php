@@ -10,7 +10,7 @@ class SlotNotFoundException extends \Exception
     $valid = implode(', ', $validSlots);
 
     parent::__construct(
-      "Foram declarados slots inexistentes em [$component]: [$invalid].\nSlots validos no template: [$valid]."
+      "Slots nao encontrados no componente [$component]: [$invalid].\nSlots validos: [$valid]."
     );
   }
 }
