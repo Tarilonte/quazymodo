@@ -334,28 +334,48 @@ class BaseComponent
 
   private function fill_slots()
   {
-    // Preenche os slots do html com os conteúdos definitivos
     foreach ($this->slots as $slot) {
-      if(isset(self::$allData[$slot])) {
-        $content = implode(PHP_EOL, self::$allData[$slot]);
-        $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . "{{ $slot }}", $this->html);
-        unset(self::$allData[$slot]);
-      }
+      $this->fillDeclaredSlot($slot);
     }
+  }
+
+  private function fillDeclaredSlot(string $slot): void
+  {
+    if (!isset(self::$allData[$slot])) {
+      return;
+    }
+
+    $content = implode(PHP_EOL, self::$allData[$slot]);
+    $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content . "{{ $slot }}", $this->html);
+    unset(self::$allData[$slot]);
   }
 
   public function render() : String
   {
     $this->flush_assets();
-    $void_slots = $this->map_slots($this->html);
-    foreach ($void_slots as $slot) {
-      $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "", $this->html);
-      unset(self::$allData[$slot]);
-    }
-    if ($this->map_slots($this->html)) {
+    $this->fillRemainingSlotsFromGlobalData();
+
+    if ($this->hasPendingSlotsInHtml()) {
       $this->render();
     }
+
     return $this->html;
+  }
+
+  private function fillRemainingSlotsFromGlobalData(): void
+  {
+    $voidSlots = $this->map_slots($this->html);
+
+    foreach ($voidSlots as $slot) {
+      $content = isset(self::$allData[$slot]) ? implode(PHP_EOL, self::$allData[$slot]) : "";
+      $this->html = preg_replace('/{{ ?' . $slot . ' ?}}/', $content, $this->html);
+      unset(self::$allData[$slot]);
+    }
+  }
+
+  private function hasPendingSlotsInHtml(): bool
+  {
+    return count($this->map_slots($this->html)) > 0;
   }
 
   private function flush_assets() : BaseComponent
@@ -369,9 +389,7 @@ class BaseComponent
   {
     $cssLinks = '';
     foreach ($this->css as $index => $href) {
-      if (strpos($href, 'http') === false) {
-        $href = $this->assetsPath . $href;
-      }
+      $href = $this->resolveCssHref($href);
       $cssLinks .= '<link rel="stylesheet" type="text/css" href="' . $href . '">' . PHP_EOL;
       unset($this->css[$index]);
     }
@@ -382,31 +400,45 @@ class BaseComponent
     }
   }
 
+  private function resolveCssHref(string $href): string
+  {
+    if (strpos($href, 'http') === false) {
+      return $this->assetsPath . $href;
+    }
+
+    return $href;
+  }
+
   private function flush_js() {
     $jsLinks = '';
     foreach ($this->js as $index => $file) {
-      // Check if the file is an external link (starts with 'http')
-      if (strpos($file, 'http') === 0) {
-        $href = $file;
-        CSPManager::addSource('script-src', $file);
-      } else {
-        // Otherwise, it is an internal file and add the 'assets/js/' path
-        $versionedFile = $this->versionedFile($file);
-        $href = $this->assetsPath . $versionedFile;
-      }
-      // Extract the attributes of the script - Example: [defer]
-      list($src, $attributes) = $this->get_jsAttributes($href);
-
-      // Add the script to the $jsLinks variable then remove it from the $this->js array
-      $jsLinks .= '<script src="' . $src . '" '.$attributes.'></script>' . PHP_EOL;
+      $href = $this->resolveJsHref($file);
+      $jsLinks .= $this->buildScriptTag($href);
       unset($this->js[$index]);
     }
-    // flush the scripts into the HTML
+
     if (preg_match('/{{ ?JS ?}}/i', $this->html)) {
         $this->html = preg_replace('/{{ ?JS ?}}/i', $jsLinks, $this->html);
     } else {
         $this->html .= PHP_EOL . $jsLinks;
     }
+  }
+
+  private function resolveJsHref(string $file): string
+  {
+    if (strpos($file, 'http') === 0) {
+      CSPManager::addSource('script-src', $file);
+      return $file;
+    }
+
+    $versionedFile = $this->versionedFile($file);
+    return $this->assetsPath . $versionedFile;
+  }
+
+  private function buildScriptTag(string $href): string
+  {
+    list($src, $attributes) = $this->get_jsAttributes($href);
+    return '<script src="' . $src . '" ' . $attributes . '></script>' . PHP_EOL;
   }
 
   private function get_jsAttributes(string $string): array {
