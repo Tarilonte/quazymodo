@@ -29,6 +29,7 @@ $router->map('POST', '/adminer', function () {
 // testes
 $router->map(['GET','POST'], '/test', 'Controller\Test\TestController::list');
 $router->map(['GET','POST'], '/test/redbean', 'Controller\Test\TestController::redbean');
+$router->map('GET', '/test/redbean/lista', 'Controller\Test\TestController::redbeanList');
 $router->map(['GET','POST'], '/test/{test:.*}', 'Controller\Test\TestController::index');
 
 // chat

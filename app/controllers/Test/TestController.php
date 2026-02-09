@@ -11,7 +11,6 @@ use App\Entities\UserEntity;
 use App\Services\RedBean;
 use GuzzleHttp\Client;
 use Pusher\Pusher;
-use RedBeanPHP\R as R;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 use Quazymodo\Helper;
@@ -21,6 +20,7 @@ use Throwable;
 use Tracy\Debugger;
 use voku\helper\AntiXSS;
 
+use function App\Components\horizontalTable;
 use function App\Components\verticalTable;
 
 class TestController extends AbstractController
@@ -158,12 +158,11 @@ class TestController extends AbstractController
         $messageType = 'alert alert-error';
         $message = 'E-mail inválido.';
       } else {
-        RedBean::init();
-        $lead = R::dispense('contact');
+        $lead = RedBean::dispense('contact');
         $lead->name = $name;
         $lead->email = $email;
         $lead->created_at = date('Y-m-d H:i:s');
-        R::store($lead);
+        RedBean::store($lead);
 
         $messageType = 'alert alert-success';
         $message = 'Cadastro realizado com sucesso.';
@@ -180,6 +179,44 @@ class TestController extends AbstractController
         'message-type' => $messageType,
         'name-value' => $nameValue,
         'email-value' => $emailValue,
+      ]
+    );
+
+    return $this->html($page);
+  }
+
+  public function redbeanList(): ResponseInterface
+  {
+    $contacts = RedBean::findAll('contact');
+    $contacts = RedBean::raw()->exportAll($contacts);
+    $rows = [];
+
+    foreach ($contacts as $contact) {
+      $rows[] = [
+        'id' => htmlspecialchars((string) ($contact['id'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'name' => htmlspecialchars((string) ($contact['name'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'email' => htmlspecialchars((string) ($contact['email'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'created_at' => htmlspecialchars((string) ($contact['created_at'] ?? ''), ENT_QUOTES, 'UTF-8')
+      ];
+    }
+
+    $table = horizontalTable(
+      $rows,
+      [
+        'headers' => [
+          'id' => 'ID',
+          'name' => 'Nome',
+          'email' => 'E-mail',
+          'created_at' => 'Criado em'
+        ]
+      ]
+    );
+
+    $page = componentFactory::Page(
+      '/pages/test-pages/redbean/redbean-list',
+      [
+        'table' => $table->render(),
+        'total' => count($contacts)
       ]
     );
 
