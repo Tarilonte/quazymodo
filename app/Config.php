@@ -21,9 +21,6 @@ const APP_CSP_ENABLED = 1; // CSP headers: 0 = disabled, 1 = enabled
 const RATE_LIMIT_REQUESTS = 10; // default requests per period
 const RATE_LIMIT_PERIOD = 60; // default period in seconds
 const RATE_LIMIT_DB_PATH = __DIR__ . '/writable/db/rate_limit.sqlite';
-const RATE_LIMIT_APCU_ENABLED = true;
-const RATE_LIMIT_APCU_SYNC_THRESHOLD = 0.8; // sync with store after 80% of the limit
-const RATE_LIMIT_APCU_TTL_GRACE = 5; // keep key alive a little after window end
 const TRUSTED_PROXIES = [];
 const RATE_LIMIT_POLICIES = [
   'POST /User/processLoginForm' => ['requests' => 10, 'period' => 60],

@@ -14,6 +14,8 @@ use Quazymodo\Helper;
 class RateLimitMiddleware implements MiddlewareInterface
 {
     private const APCU_KEY_PREFIX = 'quazymodo_rl_';
+    private const APCU_SYNC_THRESHOLD = 0.8;
+    private const APCU_TTL_GRACE = 5;
     private RateLimitStore $store;
 
     public function __construct(?RateLimitStore $store = null)
@@ -86,10 +88,6 @@ class RateLimitMiddleware implements MiddlewareInterface
 
     private function isApcuFastPathEnabled(): bool
     {
-      if (!defined('RATE_LIMIT_APCU_ENABLED') || constant('RATE_LIMIT_APCU_ENABLED') !== true) {
-        return false;
-      }
-
       if (!function_exists('apcu_enabled') || !function_exists('apcu_add') || !function_exists('apcu_inc')) {
         return false;
       }
@@ -101,7 +99,7 @@ class RateLimitMiddleware implements MiddlewareInterface
     {
       $now = time();
       $windowStart = intdiv($now, $period) * $period;
-      $ttlGrace = defined('RATE_LIMIT_APCU_TTL_GRACE') ? max(0, (int) constant('RATE_LIMIT_APCU_TTL_GRACE')) : 5;
+      $ttlGrace = self::APCU_TTL_GRACE;
       $ttl = max(1, ($windowStart + $period + $ttlGrace) - $now);
       $cacheKey = self::APCU_KEY_PREFIX . hash('sha256', $rateKey . '|' . $windowStart);
 
@@ -121,10 +119,7 @@ class RateLimitMiddleware implements MiddlewareInterface
 
     private function syncThresholdHits(int $limit): int
     {
-      $thresholdRatio = defined('RATE_LIMIT_APCU_SYNC_THRESHOLD')
-        ? (float) constant('RATE_LIMIT_APCU_SYNC_THRESHOLD')
-        : 0.8;
-
+      $thresholdRatio = self::APCU_SYNC_THRESHOLD;
       $thresholdRatio = max(0.1, min(1.0, $thresholdRatio));
       return max(1, (int) floor($limit * $thresholdRatio));
     }
