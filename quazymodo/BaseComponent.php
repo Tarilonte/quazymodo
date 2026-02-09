@@ -17,7 +17,9 @@ class BaseComponent
   public array $js = [];
   public array $css = [];
   public array $slots = [];
+  public int $cacheHits = 0;
   public static array $allData = [];
+  private static array $templateReadCache = [];
   private string $assetsPath = '/assets';
 
   /**
@@ -97,10 +99,18 @@ class BaseComponent
       die("Template [$path] não encontrado.");
     }
 
+    if (array_key_exists($path, self::$templateReadCache)) {
+      $this->cacheHits++;
+      return self::$templateReadCache[$path];
+    }
+
     $template = file_get_contents($path);
     
     $template = str_replace('[{', '{{', $template);
     $template = str_replace('}]', '}}', $template);
+
+    self::$templateReadCache[$path] = $template;
+
     return $template;
   }
 
