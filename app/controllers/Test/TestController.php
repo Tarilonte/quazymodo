@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
-use App\Services\RedBean;
+use App\Services\RedBeanService as RedBean;
 use GuzzleHttp\Client;
 use Pusher\Pusher;
 use Quazymodo\ComponentFactory;

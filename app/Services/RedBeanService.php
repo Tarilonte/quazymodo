@@ -4,7 +4,7 @@ namespace App\Services;
 
 use RedBeanPHP\R as R;
 
-final class RedBean
+final class RedBeanService
 {
   private static bool $initialized = false;
   private static ?RedBeanProxy $proxy = null;
