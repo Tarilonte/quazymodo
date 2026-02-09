@@ -12,3 +12,4 @@
 - [2026-02] Mensagens de commit devem ser claras e úteis para referência futura, com contexto técnico suficiente para humanos e code agents
 - [2026-02] Template de commit recomendado: título `tipo(escopo): resumo claro no imperativo`
 - [2026-02] Corpo de commit (quando necessário): `Contexto` (problema/objetivo), `Mudança` (o que foi implementado), `Impacto` (efeitos/compatibilidade)
+- [2026-02] Falhas de template/blueprint inexistente no core usam exceções de domínio (`TemplateNotFoundException`, `BlueprintNotFoundException`) no lugar de `die()`

@@ -2,6 +2,8 @@
 
 namespace Quazymodo;
 
+use Quazymodo\Exceptions\BlueprintNotFoundException;
+
 class Blueprint
 {
   private array $array;
@@ -45,7 +47,7 @@ class Blueprint
     if (file_exists("../app/components/$blueprintName.blueprint.php")) {
       return include "../app/components/$blueprintName.blueprint.php";
     }else{
-      die("Blueprint [$blueprintName] não encontrado.");
+      throw new BlueprintNotFoundException($blueprintName);
     }
   }
 

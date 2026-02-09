@@ -6,6 +6,7 @@ use Quazymodo\Blueprint;
 use Quazymodo\ComponentData;
 use Quazymodo\CSPManager;
 use Quazymodo\Exceptions\SlotNotFoundException;
+use Quazymodo\Exceptions\TemplateNotFoundException;
 
 class BaseComponent
 {
@@ -97,7 +98,7 @@ class BaseComponent
     $path = "../app/components/$templateName.html";
 
     if (!file_exists($path)) {
-      die("Template [$path] não encontrado.");
+      throw new TemplateNotFoundException($path);
     }
 
     if (array_key_exists($path, self::$templateReadCache)) {
