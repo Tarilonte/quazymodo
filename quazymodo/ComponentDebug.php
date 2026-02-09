@@ -19,7 +19,8 @@ class ComponentDebug extends BaseComponent
         self::$components[] = [
             'name' => $this->componentName,
             'time' => $executionTime,
-            'slots' => $this->slots
+            'slots' => $this->slots,
+            'cache_hits' => $this->cacheHits
         ];
         self::addPanel();
     }
@@ -68,11 +69,13 @@ class ComponentPanel implements IBarPanel
                     'name' => $name,
                     'instances' => 0,
                     'time' => 0,
-                    'slots' => $component['slots']
+                    'slots' => $component['slots'],
+                    'cache_hits' => 0
                 ];
             }
             $componentData[$name]['instances']++;
             $componentData[$name]['time'] += $component['time'];
+            $componentData[$name]['cache_hits'] += $component['cache_hits'] ?? 0;
         }
 
         ob_start();
@@ -81,12 +84,13 @@ class ComponentPanel implements IBarPanel
         echo '<div>Total execution time: ' . number_format($totalTime * 1000, 2) . ' ms</div>';
         echo '<div class="tracy-inner-container">';
         echo '<table class="tracy-sortable">';
-        echo '<tr><th>Component</th><th>Instances</th><th>Time (ms)</th><th>Slots</th></tr>';
+        echo '<tr><th>Component</th><th>Instances</th><th>Time (ms)</th><th>Cache hits</th><th>Slots</th></tr>';
         foreach ($componentData as $data) {
             echo '<tr>
                 <td style="white-space:nowrap; font-weight:bold">' . $data['name'] . '</td>
                 <td>' . $data['instances'] . '</td>
                 <td>' . number_format($data['time'] * 1000, 2) . '</td>
+                <td>' . $data['cache_hits'] . '</td>
                 <td>
                     <span style="background:#fff6; padding:1px 6px; margin:2px; display:inline-block; border:1px solid #0004;">' 
                         . implode('</span><span style="background:#fff6; padding:1px 6px; margin:2px; display:inline-block; border:1px solid #0004;">', $data['slots']). 
