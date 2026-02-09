@@ -5,6 +5,7 @@ namespace Quazymodo;
 use Quazymodo\Blueprint;
 use Quazymodo\ComponentData;
 use Quazymodo\CSPManager;
+use Quazymodo\Exceptions\ComponentCycleException;
 use Quazymodo\Exceptions\SlotNotFoundException;
 use Quazymodo\Exceptions\TemplateNotFoundException;
 
@@ -22,6 +23,9 @@ class BaseComponent
   public static array $allData = [];
   private static array $templateReadCache = [];
   private static array $slotMapCache = [];
+  private static array $activeComponentStack = [];
+  private static array $activeComponentSet = [];
+  private const MAX_COMPONENT_DEPTH = 100;
   private string $assetsPath = '/assets';
 
   /**
@@ -35,15 +39,57 @@ class BaseComponent
     if($componentType === "page"){
       CSPManager::setNonce($componentName);
     }
-    $this->initializeComponentContext($componentName, $componentType);
 
-    if ($componentType === "template") {
-      $this->buildTemplateComponent($componentName, $inserts);
-    } else {
-      $this->buildBlueprintComponent($componentName, $inserts);
+    $this->initializeComponentContext($componentName, $componentType);
+    $this->enterComponentGuard();
+
+    try {
+      if ($componentType === "template") {
+        $this->buildTemplateComponent($componentName, $inserts);
+      } else {
+        $this->buildBlueprintComponent($componentName, $inserts);
+      }
+    } finally {
+      $this->exitComponentGuard();
     }
 
     return $this;
+  }
+
+  private function enterComponentGuard(): void
+  {
+    $componentKey = $this->componentGuardKey($this->componentType, $this->componentName);
+
+    if (count(self::$activeComponentStack) >= self::MAX_COMPONENT_DEPTH) {
+      throw ComponentCycleException::depthExceeded(self::$activeComponentStack, $componentKey, self::MAX_COMPONENT_DEPTH);
+    }
+
+    if (isset(self::$activeComponentSet[$componentKey])) {
+      throw ComponentCycleException::cycleDetected(self::$activeComponentStack, $componentKey);
+    }
+
+    self::$activeComponentStack[] = $componentKey;
+    self::$activeComponentSet[$componentKey] = true;
+  }
+
+  private function exitComponentGuard(): void
+  {
+    $componentKey = array_pop(self::$activeComponentStack);
+
+    if ($componentKey === null) {
+      return;
+    }
+
+    unset(self::$activeComponentSet[$componentKey]);
+
+    if (count(self::$activeComponentStack) === 0) {
+      self::$activeComponentSet = [];
+    }
+  }
+
+  private function componentGuardKey(string $componentType, string $componentName): string
+  {
+    return $componentType . ':' . $componentName;
   }
 
   private function initializeComponentContext(string $componentName, string $componentType): void
