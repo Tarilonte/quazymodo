@@ -15,8 +15,8 @@ class ComponentData
   {
     $this->blueprintInserts = $blueprintInserts;
     $this->inserts = $inserts;
-    foreach ($this->blueprintInserts as $slot => $content) {
-      $this->merge_blueprintInserts($slot, $content);
+    foreach ($this->blueprintInserts as $rawSlot => $content) {
+      $this->merge_blueprintInserts($rawSlot, $content);
     }
     $this->merge_inserts($this->inserts);
     $this->parse_mergedData($this->merged_data);
@@ -30,9 +30,9 @@ class ComponentData
   | Processa um elemento de dados do blueprint e o armazena em $merged_data
   |
   |*/
-  private function merge_blueprintInserts($slot, $content) : void
+  private function merge_blueprintInserts($rawSlot, $content) : void
   {
-    $this->merged_data[$slot][] = $content; 
+    $this->merge_insertEntry($rawSlot, $content);
   }
 
   /*
@@ -45,17 +45,70 @@ class ComponentData
   |*/
   private function merge_inserts($inserts) : void
   {
-    foreach ($inserts as $slot => $content) {
-      if (is_array($content) && array_is_list($content)) {
-        for ($i = 0; $i < count($content); $i++) {
-          $this->merge_inserts([$slot => $content[$i]]);         
+    foreach ($inserts as $rawSlot => $content) {
+      if (in_array($rawSlot, ['css', 'js'], true)) {
+        foreach ($this->normalize_insertItems($content) as $item) {
+          $this->$rawSlot[] = $item;
         }
-      }elseif(in_array($slot, ['css', 'js'])){
-          $this->$slot[] = $content;
-      }else{
-        $this->merged_data[$slot][] = $content;
-      } 
+        continue;
+      }
+
+      $this->merge_insertEntry($rawSlot, $content);
     }
+  }
+
+  private function merge_insertEntry(string $rawSlot, $content): void
+  {
+    [$slot, $operation] = $this->parse_slotOperation($rawSlot);
+    $items = $this->normalize_insertItems($content);
+    $this->apply_insertOperation($slot, $operation, $items);
+  }
+
+  private function parse_slotOperation(string $rawSlot): array
+  {
+    $parts = explode('@', $rawSlot, 2);
+
+    if (
+      count($parts) === 2
+      && strlen($parts[0]) > 0
+      && in_array($parts[1], ['append', 'prepend', 'replace'], true)
+    ) {
+      return [$parts[0], $parts[1]];
+    }
+
+    return [$rawSlot, 'append'];
+  }
+
+  private function normalize_insertItems($content): array
+  {
+    if ($content === null) {
+      return [];
+    }
+
+    if (is_array($content) && array_is_list($content)) {
+      return $content;
+    }
+
+    return [$content];
+  }
+
+  private function apply_insertOperation(string $slot, string $operation, array $items): void
+  {
+    if (!isset($this->merged_data[$slot])) {
+      $this->merged_data[$slot] = [];
+    }
+
+    if ($operation === 'replace') {
+      $this->merged_data[$slot] = $items;
+      return;
+    }
+
+    if ($operation === 'prepend') {
+      $this->merged_data[$slot] = array_merge($items, $this->merged_data[$slot]);
+      return;
+    }
+
+    $this->merged_data[$slot] = array_merge($this->merged_data[$slot], $items);
   }
 
   private function parse_mergedData(array $merged_data) : void
