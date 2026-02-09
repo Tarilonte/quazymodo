@@ -68,10 +68,18 @@ class Blueprint
       continue;
     }
 
+    if ($key === 'inserts') {
+      $parent_blueprint[$key] = $this->merge_insertSlots(
+        $parent_blueprint[$key] ?? [],
+        $value
+      );
+      continue;
+    }
+
     if (isset($parent_blueprint[$key])) {
       if (is_array($parent_blueprint[$key]) && is_array($value)) {
-        // Se ambos são arrays, mesclar os arrays
-        $parent_blueprint[$key] = array_merge_recursive($parent_blueprint[$key], $value);
+        // Se ambos são arrays, mesclar de forma rasa e previsível
+        $parent_blueprint[$key] = array_merge($parent_blueprint[$key], $value);
       } elseif (is_array($parent_blueprint[$key])) {
         // Se blueprint é um array e insert não, adicionar o valor ao array do blueprint
         $parent_blueprint[$key][] = $value;
@@ -113,6 +121,46 @@ class Blueprint
     );
 
     return array_values(array_unique($merged, SORT_REGULAR));
+  }
+
+  private function normalize_insertContent($value): array
+  {
+    if ($value === null) {
+      return [];
+    }
+
+    if (is_array($value) && array_is_list($value)) {
+      return $value;
+    }
+
+    return [$value];
+  }
+
+  private function merge_insertSlots($parent, $child): array
+  {
+    if (!is_array($parent)) {
+      $parent = [];
+    }
+
+    if (!is_array($child)) {
+      $child = [];
+    }
+
+    $merged = $parent;
+
+    foreach ($child as $slot => $content) {
+      if (array_key_exists($slot, $merged)) {
+        $merged[$slot] = array_merge(
+          $this->normalize_insertContent($merged[$slot]),
+          $this->normalize_insertContent($content)
+        );
+        continue;
+      }
+
+      $merged[$slot] = $content;
+    }
+
+    return $merged;
   }
 
   private function componentPath(string $componentName): string
