@@ -47,7 +47,7 @@ class App{
     require dirname(__DIR__) . '/app/Routes.php';
   }
 
-  private static function getRouter(): Router
+  public static function getRouter(): Router
   {
     return self::$router;
   }
