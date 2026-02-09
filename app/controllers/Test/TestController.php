@@ -185,18 +185,39 @@ class TestController extends AbstractController
     return $this->html($page);
   }
 
-  public function redbeanList(): ResponseInterface
+  public function redbeanList(ServerRequestInterface $request): ResponseInterface
   {
+    if (strtoupper($request->getMethod()) === 'POST') {
+      $data = $request->getParsedBody() ?? [];
+      $deleteId = (int) ($data['delete_id'] ?? 0);
+
+      if ($deleteId > 0) {
+        $contact = RedBean::load('contact', $deleteId);
+
+        if ((int) ($contact->id ?? 0) > 0) {
+          RedBean::raw()->trash($contact);
+        }
+      }
+    }
+
     $contacts = RedBean::findAll('contact');
     $contacts = RedBean::raw()->exportAll($contacts);
     $rows = [];
 
     foreach ($contacts as $contact) {
+      $id = (int) ($contact['id'] ?? 0);
+
+      $deleteForm = '<form method="POST" action="/test/redbean/lista" onsubmit="return confirm(\'Deseja excluir este contato?\')">'
+        . '<input type="hidden" name="delete_id" value="' . $id . '">'
+        . '<button type="submit" class="btn btn-error btn-xs">Delete</button>'
+        . '</form>';
+
       $rows[] = [
-        'id' => htmlspecialchars((string) ($contact['id'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'id' => htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8'),
         'name' => htmlspecialchars((string) ($contact['name'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'email' => htmlspecialchars((string) ($contact['email'] ?? ''), ENT_QUOTES, 'UTF-8'),
-        'created_at' => htmlspecialchars((string) ($contact['created_at'] ?? ''), ENT_QUOTES, 'UTF-8')
+        'created_at' => htmlspecialchars((string) ($contact['created_at'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'actions' => $deleteForm
       ];
     }
 
@@ -207,7 +228,8 @@ class TestController extends AbstractController
           'id' => 'ID',
           'name' => 'Nome',
           'email' => 'E-mail',
-          'created_at' => 'Criado em'
+          'created_at' => 'Criado em',
+          'actions' => 'Acoes'
         ]
       ]
     );
