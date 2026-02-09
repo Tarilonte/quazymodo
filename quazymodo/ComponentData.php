@@ -7,6 +7,7 @@ class ComponentData
   private $blueprintInserts = [];
   private $inserts = [];
   private $merged_data = [];
+  public  $declared_slots = [];
   public  $final_data = [];
   public  $js = [];
   public  $css = [];
@@ -94,6 +95,8 @@ class ComponentData
 
   private function apply_insertOperation(string $slot, string $operation, array $items): void
   {
+    $this->track_declaredSlot($slot);
+
     if (!isset($this->merged_data[$slot])) {
       $this->merged_data[$slot] = [];
     }
@@ -109,6 +112,13 @@ class ComponentData
     }
 
     $this->merged_data[$slot] = array_merge($this->merged_data[$slot], $items);
+  }
+
+  private function track_declaredSlot(string $slot): void
+  {
+    if (!in_array($slot, $this->declared_slots, true)) {
+      $this->declared_slots[] = $slot;
+    }
   }
 
   private function parse_mergedData(array $merged_data) : void
