@@ -5,7 +5,10 @@ namespace App\Services;
 final class RateLimitStore
 {
   private const BEAN_TYPE = 'ratelimitentry';
+  private const ABUSE_TABLE = 'ratelimitabuse';
   private const DB_ALIAS = 'rate_limit';
+  private const MAX_SUSPENSION_SECONDS = 432000;
+  private const SUSPENSION_STEPS = [300, 900, 3600, 21600, 86400, 172800, 259200, 432000];
   private static bool $initialized = false;
 
   public function __construct(private ?string $sqlitePath = null)
@@ -59,6 +62,85 @@ final class RateLimitStore
     });
   }
 
+  public function getActiveSuspension(string $ip, ?int $now = null): ?array
+  {
+    $ipBinary = $this->ipToBinary($ip);
+
+    if ($ipBinary === null) {
+      return null;
+    }
+
+    $timestamp = $now ?? time();
+
+    return $this->withRateLimitDatabase(function () use ($ipBinary, $timestamp) {
+      $rows = RedBeanService::getAll(
+        'SELECT strikes, suspended_until FROM ' . self::ABUSE_TABLE . ' WHERE ip = ? LIMIT 1',
+        [$ipBinary]
+      );
+
+      if (empty($rows)) {
+        return null;
+      }
+
+      $row = $rows[0];
+      $suspendedUntil = (int) ($row['suspended_until'] ?? 0);
+
+      if ($suspendedUntil <= $timestamp) {
+        return null;
+      }
+
+      return [
+        'strikes' => (int) ($row['strikes'] ?? 0),
+        'suspended_until' => $suspendedUntil,
+        'retry_after' => max(1, $suspendedUntil - $timestamp),
+      ];
+    });
+  }
+
+  public function registerViolation(string $ip, ?int $now = null): ?array
+  {
+    $ipBinary = $this->ipToBinary($ip);
+
+    if ($ipBinary === null) {
+      return null;
+    }
+
+    $timestamp = $now ?? time();
+
+    return $this->withRateLimitDatabase(function () use ($ipBinary, $timestamp) {
+      $rows = RedBeanService::getAll(
+        'SELECT strikes, suspended_until FROM ' . self::ABUSE_TABLE . ' WHERE ip = ? LIMIT 1',
+        [$ipBinary]
+      );
+
+      $existing = $rows[0] ?? null;
+      $currentStrikes = (int) ($existing['strikes'] ?? 0);
+      $currentSuspendedUntil = (int) ($existing['suspended_until'] ?? 0);
+      $newStrikes = $currentStrikes + 1;
+      $suspensionSeconds = $this->suspensionSecondsForStrike($newStrikes);
+      $baseTimestamp = max($timestamp, $currentSuspendedUntil);
+      $newSuspendedUntil = $baseTimestamp + $suspensionSeconds;
+
+      if ($existing === null) {
+        RedBeanService::exec(
+          'INSERT INTO ' . self::ABUSE_TABLE . ' (ip, strikes, suspended_until, last_violation_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+          [$ipBinary, $newStrikes, $newSuspendedUntil, $timestamp, $timestamp]
+        );
+      } else {
+        RedBeanService::exec(
+          'UPDATE ' . self::ABUSE_TABLE . ' SET strikes = ?, suspended_until = ?, last_violation_at = ?, updated_at = ? WHERE ip = ?',
+          [$newStrikes, $newSuspendedUntil, $timestamp, $timestamp, $ipBinary]
+        );
+      }
+
+      return [
+        'strikes' => $newStrikes,
+        'suspended_until' => $newSuspendedUntil,
+        'retry_after' => max(1, $newSuspendedUntil - $timestamp),
+      ];
+    });
+  }
+
   private function initialize(): void
   {
     if (self::$initialized) {
@@ -91,6 +173,14 @@ final class RateLimitStore
 
       RedBeanService::exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_rate_limit_key_hash ON ratelimitentry (key_hash)');
       RedBeanService::exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_window_end ON ratelimitentry (window_end)');
+
+      RedBeanService::exec('CREATE TABLE IF NOT EXISTS ' . self::ABUSE_TABLE . ' (
+        ip BLOB PRIMARY KEY,
+        strikes INTEGER NOT NULL,
+        suspended_until INTEGER NOT NULL,
+        last_violation_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      )');
     });
 
     self::$initialized = true;
@@ -108,5 +198,29 @@ final class RateLimitStore
     }
 
     RedBeanService::exec('DELETE FROM ratelimitentry WHERE window_end < ?', [$timestamp]);
+  }
+
+  private function ipToBinary(string $ip): ?string
+  {
+    $normalizedIp = trim($ip);
+
+    if ($normalizedIp === '') {
+      return null;
+    }
+
+    $binary = @inet_pton($normalizedIp);
+
+    if ($binary === false) {
+      return null;
+    }
+
+    return $binary;
+  }
+
+  private function suspensionSecondsForStrike(int $strike): int
+  {
+    $normalizedStrike = max(1, $strike);
+    $index = min($normalizedStrike - 1, count(self::SUSPENSION_STEPS) - 1);
+    return min(self::MAX_SUSPENSION_SECONDS, self::SUSPENSION_STEPS[$index]);
   }
 }

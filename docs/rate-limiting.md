@@ -26,6 +26,7 @@ A implementacao padrao usa:
 - `app/Services/RateLimitStore.php`
   - persiste contadores no banco dedicado de rate limiting
   - calcula janela, hits e `retry_after`
+  - aplica blacklist progressiva por IP abusador
 
 - `app/Services/RedBeanService.php`
   - suporta multiplos bancos por alias
@@ -63,35 +64,73 @@ Beneficios:
 - manutencao independente
 - sem poluicao de tabelas de dominio
 
+### Tabelas usadas
+
+- `ratelimitentry`
+  - contador de hits por janela de tempo
+
+- `ratelimitabuse`
+  - blacklist progressiva por IP
+  - `ip` (BLOB) e a chave primaria
+  - sem campo `id`
+  - sem indices extras alem da PK
+
 ## 5) Fluxo de decisao
 
 1. Middleware usa a politica global (`RATE_LIMIT_REQUESTS` e `RATE_LIMIT_PERIOD`).
 2. Monta chave de limite:
    - metodo + path + client key
 3. Se APCu estiver disponivel, usa fast path em memoria.
-4. Valida/sincroniza no store persistente quando necessario.
-5. Se exceder limite:
-   - retorna `429`
-   - inclui `Retry-After`
-   - renderiza via `ErrorController`
-6. Se nao exceder:
-   - request segue normalmente
+4. Verifica se o IP esta suspenso na blacklist progressiva.
+5. Se estiver suspenso:
+   - registra nova violacao
+   - estende a suspensao progressivamente
+   - retorna `429` com `Retry-After` atualizado
+6. Se nao estiver suspenso, valida/sincroniza no store persistente quando necessario.
+7. Se exceder limite:
+    - retorna `429`
+    - inclui `Retry-After`
+    - registra violacao na blacklist progressiva
+    - renderiza via `ErrorController`
+8. Se nao exceder:
+    - request segue normalmente
 
-## 6) Resposta 429 (padrao)
+## 6) Blacklist progressiva
+
+Comportamento:
+- toda violacao de rate limit gera/atualiza registro de abuso por IP
+- se o IP insistir durante suspensao, a punicao aumenta imediatamente
+- nao ha decaimento automatico de strikes
+
+Escalonamento de suspensao por strike:
+- 1: 5 minutos
+- 2: 15 minutos
+- 3: 1 hora
+- 4: 6 horas
+- 5: 24 horas
+- 6: 48 horas
+- 7: 72 horas
+- 8 ou mais: 120 horas (teto)
+
+Regra de extensao:
+- `novo_suspended_until = max(agora, suspended_until_atual) + duracao_do_strike`
+- `Retry-After` sempre reflete o bloqueio atualizado
+
+## 7) Resposta 429 (padrao)
 
 Quando excede limite:
 - status: `429`
 - header: `Retry-After`
 - body: pagina de erro padrao (`/pages/error/`) via `ErrorController`
 
-## 7) Regra de IP
+## 8) Regra de IP
 
 Identificacao do cliente:
 - usa `REMOTE_ADDR` por padrao
 - ignora headers de IP (como `X-Forwarded-For`)
 - evita spoof de IP via header na aplicacao
 
-## 8) Fast path com APCu
+## 9) Fast path com APCu
 
 Quando APCu esta ativa no runtime web:
 - contador local em memoria reduz IO no store
@@ -101,13 +140,14 @@ Observacoes:
 - APCu em CLI pode estar desativada (`apc.enable_cli=Off`) e isso e normal
 - o relevante para requests HTTP e APCu no PHP-FPM
 
-## 9) Boas praticas
+## 10) Boas praticas
 
 - aplicar limites mais restritos em rotas sensiveis (login, auth, APIs publicas)
 - manter limites globais coerentes com o trafego real da aplicacao
+- monitorar crescimento da blacklist (`ratelimitabuse`) em producao
 - monitorar ocorrencias de `429` para calibrar limites reais de producao
 
-## 10) Troubleshooting
+## 11) Troubleshooting
 
 ### Nao bloqueia
 - conferir se middleware esta registrado
@@ -115,6 +155,10 @@ Observacoes:
 
 ### Bloqueia cedo
 - revisar limites globais da aplicacao
+
+### Fica bloqueado por muito tempo
+- validar historico de strikes do IP em `ratelimitabuse`
+- considerar limpeza manual do registro em caso operacional excepcional
 
 ### Erro de persistencia
 - validar permissao de escrita em `app/writable/db/`
@@ -124,19 +168,21 @@ Observacoes:
 - para medir overhead sem bloqueio, usar limite alto para evitar `429`
 - comparar cenarios equivalentes (`200` vs `200`)
 
-## 11) Checklist de validacao
+## 12) Checklist de validacao
 
 - dentro do limite: `200`
 - acima do limite: `429`
 - `Retry-After` presente em `429`
+- insistencia durante suspensao aumenta `Retry-After`
 - resposta visual de `429` via `ErrorController`
 - banco dedicado sendo usado corretamente
 
-## 12) Resumo
+## 13) Resumo
 
 Esta e a implementacao padrao de rate limiting do Quazymodo:
 - previsivel
 - global e simples
+- com blacklist progressiva para IP abusador
 - persistente em banco dedicado
 - otimizada com APCu quando disponivel
 

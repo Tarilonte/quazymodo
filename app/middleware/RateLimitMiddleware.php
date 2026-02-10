@@ -35,6 +35,14 @@ class RateLimitMiddleware implements MiddlewareInterface
       $path = $request->getUri()->getPath();
       $rateKey = $method . '|' . $path . '|' . $clientKey;
 
+      $activeSuspension = $this->store->getActiveSuspension($clientKey);
+
+      if ($activeSuspension !== null) {
+        $violation = $this->store->registerViolation($clientKey);
+        $retryAfter = (int) ($violation['retry_after'] ?? $activeSuspension['retry_after'] ?? 1);
+        return $this->rateLimitResponse($request, $retryAfter);
+      }
+
       if ($this->isApcuFastPathEnabled()) {
         $fastPathHits = $this->incrementApcuWindowCounter($rateKey, $period);
         $syncThreshold = $this->syncThresholdHits($limit);
@@ -47,7 +55,9 @@ class RateLimitMiddleware implements MiddlewareInterface
       $result = $this->store->hit($rateKey, $limit, $period);
 
       if (!$result['allowed']) {
-        return $this->rateLimitResponse($request, (int) $result['retry_after']);
+        $violation = $this->store->registerViolation($clientKey);
+        $retryAfter = (int) ($violation['retry_after'] ?? $result['retry_after'] ?? 1);
+        return $this->rateLimitResponse($request, $retryAfter);
       }
 
       return $handler->handle($request);
