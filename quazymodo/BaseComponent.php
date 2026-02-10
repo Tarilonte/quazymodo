@@ -275,6 +275,11 @@ class BaseComponent
 
     $slots = [];
 
+    $parentComponent = $this->extractExtendedComponentName($source);
+    if ($parentComponent !== null) {
+      $slots = array_merge($slots, $this->collectComposedTemplateSlots($parentComponent, $visited));
+    }
+
     preg_match_all('/componentFactory::Template\(\s*[\'"]([^\'"]+)[\'"]/i', $source, $templateMatches);
     foreach ($templateMatches[1] as $templateName) {
       $slots = array_merge($slots, $this->slotsFromTemplateName($templateName));
@@ -324,15 +329,47 @@ class BaseComponent
       return [];
     }
 
-    $blueprintPath = $this->resolveBlueprintPath($componentName);
+    $visited = [];
+
+    return $this->collectBlueprintInputKeysRecursive($componentName, $visited);
+  }
+
+  private function collectBlueprintInputKeysRecursive(string $componentName, array &$visited): array
+  {
+    $normalizedComponent = $this->normalizeComponentName($componentName);
+
+    if (in_array($normalizedComponent, $visited, true)) {
+      return [];
+    }
+
+    $visited[] = $normalizedComponent;
+
+    $blueprintPath = $this->resolveBlueprintPath($normalizedComponent);
     $source = $this->readFileIfExists($blueprintPath);
     if ($source === null) {
       return [];
     }
 
-    preg_match_all('/\$inserts\[[\'"]([^\'"]+)[\'"]\]/', $source, $inputMatches);
+    $keys = [];
 
-    return array_values(array_unique($inputMatches[1] ?? []));
+    preg_match_all('/\$inserts\[[\'\"]([^\'\"]+)[\'\"]\]/', $source, $inputMatches);
+    $keys = array_merge($keys, $inputMatches[1] ?? []);
+
+    $parentComponent = $this->extractExtendedComponentName($source);
+    if ($parentComponent !== null) {
+      $keys = array_merge($keys, $this->collectBlueprintInputKeysRecursive($parentComponent, $visited));
+    }
+
+    return array_values(array_unique($keys));
+  }
+
+  private function extractExtendedComponentName(string $source): ?string
+  {
+    if (!preg_match('/[\'\"]extends[\'\"]\s*=>\s*[\'\"]([^\'\"]+)[\'\"]/i', $source, $extendsMatch)) {
+      return null;
+    }
+
+    return $extendsMatch[1];
   }
 
   private function normalizeComponentName(string $componentName): string
