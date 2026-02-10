@@ -6,7 +6,7 @@ class AdminerController
 {
   public function index()
   {
-    require __DIR__ . '/adminer.php';
+    require __DIR__ . '/sqlite.php';
     die();
   }
 }
