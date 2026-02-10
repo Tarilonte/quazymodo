@@ -71,7 +71,7 @@ Beneficios:
 
 - `ratelimitabuse`
   - blacklist progressiva por IP
-  - `ip` (BLOB) e a chave primaria
+  - `ip` (TEXT) e a chave primaria
   - sem campo `id`
   - sem indices extras alem da PK
 

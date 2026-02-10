@@ -64,18 +64,18 @@ final class RateLimitStore
 
   public function getActiveSuspension(string $ip, ?int $now = null): ?array
   {
-    $ipBinary = $this->ipToBinary($ip);
+    $normalizedIp = $this->normalizeIp($ip);
 
-    if ($ipBinary === null) {
+    if ($normalizedIp === null) {
       return null;
     }
 
     $timestamp = $now ?? time();
 
-    return $this->withRateLimitDatabase(function () use ($ipBinary, $timestamp) {
+    return $this->withRateLimitDatabase(function () use ($normalizedIp, $timestamp) {
       $rows = RedBeanService::getAll(
         'SELECT strikes, suspended_until FROM ' . self::ABUSE_TABLE . ' WHERE ip = ? LIMIT 1',
-        [$ipBinary]
+        [$normalizedIp]
       );
 
       if (empty($rows)) {
@@ -99,18 +99,18 @@ final class RateLimitStore
 
   public function registerViolation(string $ip, ?int $now = null): ?array
   {
-    $ipBinary = $this->ipToBinary($ip);
+    $normalizedIp = $this->normalizeIp($ip);
 
-    if ($ipBinary === null) {
+    if ($normalizedIp === null) {
       return null;
     }
 
     $timestamp = $now ?? time();
 
-    return $this->withRateLimitDatabase(function () use ($ipBinary, $timestamp) {
+    return $this->withRateLimitDatabase(function () use ($normalizedIp, $timestamp) {
       $rows = RedBeanService::getAll(
         'SELECT strikes, suspended_until FROM ' . self::ABUSE_TABLE . ' WHERE ip = ? LIMIT 1',
-        [$ipBinary]
+        [$normalizedIp]
       );
 
       $existing = $rows[0] ?? null;
@@ -124,12 +124,12 @@ final class RateLimitStore
       if ($existing === null) {
         RedBeanService::exec(
           'INSERT INTO ' . self::ABUSE_TABLE . ' (ip, strikes, suspended_until, last_violation_at, updated_at) VALUES (?, ?, ?, ?, ?)',
-          [$ipBinary, $newStrikes, $newSuspendedUntil, $timestamp, $timestamp]
+          [$normalizedIp, $newStrikes, $newSuspendedUntil, $timestamp, $timestamp]
         );
       } else {
         RedBeanService::exec(
           'UPDATE ' . self::ABUSE_TABLE . ' SET strikes = ?, suspended_until = ?, last_violation_at = ?, updated_at = ? WHERE ip = ?',
-          [$newStrikes, $newSuspendedUntil, $timestamp, $timestamp, $ipBinary]
+          [$newStrikes, $newSuspendedUntil, $timestamp, $timestamp, $normalizedIp]
         );
       }
 
@@ -174,8 +174,21 @@ final class RateLimitStore
       RedBeanService::exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_rate_limit_key_hash ON ratelimitentry (key_hash)');
       RedBeanService::exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_window_end ON ratelimitentry (window_end)');
 
+      $abuseTableInfo = RedBeanService::getAll('PRAGMA table_info(' . self::ABUSE_TABLE . ')');
+      if (!empty($abuseTableInfo)) {
+        $ipColumn = array_values(array_filter(
+          $abuseTableInfo,
+          static fn(array $column): bool => ($column['name'] ?? '') === 'ip'
+        ))[0] ?? null;
+
+        $ipColumnType = strtoupper((string) ($ipColumn['type'] ?? ''));
+        if ($ipColumnType !== 'TEXT') {
+          RedBeanService::exec('DROP TABLE IF EXISTS ' . self::ABUSE_TABLE);
+        }
+      }
+
       RedBeanService::exec('CREATE TABLE IF NOT EXISTS ' . self::ABUSE_TABLE . ' (
-        ip BLOB PRIMARY KEY,
+        ip TEXT PRIMARY KEY,
         strikes INTEGER NOT NULL,
         suspended_until INTEGER NOT NULL,
         last_violation_at INTEGER NOT NULL,
@@ -200,7 +213,7 @@ final class RateLimitStore
     RedBeanService::exec('DELETE FROM ratelimitentry WHERE window_end < ?', [$timestamp]);
   }
 
-  private function ipToBinary(string $ip): ?string
+  private function normalizeIp(string $ip): ?string
   {
     $normalizedIp = trim($ip);
 
@@ -208,13 +221,11 @@ final class RateLimitStore
       return null;
     }
 
-    $binary = @inet_pton($normalizedIp);
-
-    if ($binary === false) {
+    if (filter_var($normalizedIp, FILTER_VALIDATE_IP) === false) {
       return null;
     }
 
-    return $binary;
+    return $normalizedIp;
   }
 
   private function suspensionSecondsForStrike(int $strike): int
