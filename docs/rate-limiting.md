@@ -20,7 +20,7 @@ A implementacao padrao usa:
 
 - `app/middleware/RateLimitMiddleware.php`
   - decide se a requisicao passa ou bloqueia
-  - resolve politica por rota
+  - aplica politica global da aplicacao
   - retorna `429` quando necessario
 
 - `app/Services/RateLimitStore.php`
@@ -32,7 +32,7 @@ A implementacao padrao usa:
   - usado pelo `RateLimitStore` para operar no alias `rate_limit`
 
 - `quazymodo/Helper.php`
-  - resolve IP do cliente com regra de proxy confiavel
+  - resolve IP do cliente via `REMOTE_ADDR`
 
 - `app/controllers/ErrorController.php`
   - renderiza a resposta visual de erro para `429`
@@ -50,20 +50,7 @@ Configuracoes em `app/Config.php`:
 - `RATE_LIMIT_DB_PATH`
   - caminho do SQLite dedicado ao rate limiting
 
-- `TRUSTED_PROXIES`
-  - lista de IPs de proxy confiaveis
-  - `X-Forwarded-For` so e considerado quando a origem estiver nessa lista
-
-- `RATE_LIMIT_POLICIES`
-  - override por rota
-  - formato:
-    - chave: `"METHOD /path"`
-    - valor: `['requests' => X, 'period' => Y]`
-
-Exemplo:
-- `POST /User/processLoginForm` -> `10/60`
-- `POST /User/processRegistrationForm` -> `15/60`
-- `POST /api/cep/lookup` -> `30/60`
+Nao ha configuracao de override por rota no padrao atual.
 
 ## 4) Banco dedicado
 
@@ -78,7 +65,7 @@ Beneficios:
 
 ## 5) Fluxo de decisao
 
-1. Middleware resolve politica da rota (default ou override).
+1. Middleware usa a politica global (`RATE_LIMIT_REQUESTS` e `RATE_LIMIT_PERIOD`).
 2. Monta chave de limite:
    - metodo + path + client key
 3. Se APCu estiver disponivel, usa fast path em memoria.
@@ -97,12 +84,12 @@ Quando excede limite:
 - header: `Retry-After`
 - body: pagina de erro padrao (`/pages/error/`) via `ErrorController`
 
-## 7) Regra de IP e proxy
+## 7) Regra de IP
 
 Identificacao do cliente:
 - usa `REMOTE_ADDR` por padrao
-- usa `HTTP_X_FORWARDED_FOR` apenas quando `REMOTE_ADDR` pertence a `TRUSTED_PROXIES`
-- reduz risco de spoof de headers de IP
+- ignora headers de IP (como `X-Forwarded-For`)
+- evita spoof de IP via header na aplicacao
 
 ## 8) Fast path com APCu
 
@@ -117,8 +104,7 @@ Observacoes:
 ## 9) Boas praticas
 
 - aplicar limites mais restritos em rotas sensiveis (login, auth, APIs publicas)
-- manter politicas explicitas em `RATE_LIMIT_POLICIES`
-- revisar `TRUSTED_PROXIES` em ambientes com reverse proxy
+- manter limites globais coerentes com o trafego real da aplicacao
 - monitorar ocorrencias de `429` para calibrar limites reais de producao
 
 ## 10) Troubleshooting
@@ -126,11 +112,9 @@ Observacoes:
 ### Nao bloqueia
 - conferir se middleware esta registrado
 - validar `RATE_LIMIT_REQUESTS` e `RATE_LIMIT_PERIOD` > 0
-- validar chave da policy no formato exato (`METHOD /path`)
 
 ### Bloqueia cedo
-- revisar policy da rota
-- validar identificacao de cliente (proxy confiavel)
+- revisar limites globais da aplicacao
 
 ### Erro de persistencia
 - validar permissao de escrita em `app/writable/db/`
@@ -146,14 +130,13 @@ Observacoes:
 - acima do limite: `429`
 - `Retry-After` presente em `429`
 - resposta visual de `429` via `ErrorController`
-- politicas por rota funcionando
 - banco dedicado sendo usado corretamente
 
 ## 12) Resumo
 
 Esta e a implementacao padrao de rate limiting do Quazymodo:
 - previsivel
-- configuravel por rota
+- global e simples
 - persistente em banco dedicado
 - otimizada com APCu quando disponivel
 

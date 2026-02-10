@@ -4,7 +4,6 @@ namespace Middleware;
 
 use App\Services\RateLimitStore;
 use Controller\ErrorController;
-use Nyholm\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -25,7 +24,7 @@ class RateLimitMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-      [$limit, $period] = $this->resolvePolicy($request);
+      [$limit, $period] = $this->resolvePolicy();
 
       if ($limit <= 0 || $period <= 0) {
         return $handler->handle($request);
@@ -54,28 +53,12 @@ class RateLimitMiddleware implements MiddlewareInterface
       return $handler->handle($request);
     }
 
-    private function resolvePolicy(ServerRequestInterface $request): array
+    private function resolvePolicy(): array
     {
-      $method = strtoupper($request->getMethod());
-      $path = $request->getUri()->getPath();
-      $policyMap = defined('RATE_LIMIT_POLICIES') && is_array(constant('RATE_LIMIT_POLICIES'))
-        ? constant('RATE_LIMIT_POLICIES')
-        : [];
-
-      $policyKey = $method . ' ' . $path;
-      $policy = $policyMap[$policyKey] ?? null;
-
       $defaultLimit = defined('RATE_LIMIT_REQUESTS') ? (int) RATE_LIMIT_REQUESTS : 60;
       $defaultPeriod = defined('RATE_LIMIT_PERIOD') ? (int) RATE_LIMIT_PERIOD : 60;
 
-      if (!is_array($policy)) {
-        return [$defaultLimit, $defaultPeriod];
-      }
-
-      $limit = isset($policy['requests']) ? (int) $policy['requests'] : $defaultLimit;
-      $period = isset($policy['period']) ? (int) $policy['period'] : $defaultPeriod;
-
-      return [$limit, $period];
+      return [$defaultLimit, $defaultPeriod];
     }
 
     private function rateLimitResponse(ServerRequestInterface $request, int $retryAfter): ResponseInterface

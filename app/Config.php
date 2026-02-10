@@ -21,12 +21,6 @@ const APP_CSP_ENABLED = 1; // CSP headers: 0 = disabled, 1 = enabled
 const RATE_LIMIT_REQUESTS = 10; // default requests per period
 const RATE_LIMIT_PERIOD = 60; // default period in seconds
 const RATE_LIMIT_DB_PATH = __DIR__ . '/writable/db/rate_limit.sqlite';
-const TRUSTED_PROXIES = [];
-const RATE_LIMIT_POLICIES = [
-  'POST /User/processLoginForm' => ['requests' => 10, 'period' => 60],
-  'POST /User/processRegistrationForm' => ['requests' => 15, 'period' => 60],
-  'POST /api/cep/lookup' => ['requests' => 30, 'period' => 60],
-];
 
 // BATABASE CREDENTIALS
 const DB = [

@@ -12,38 +12,13 @@ class Helper
   public static function getClientIp(ServerRequestInterface $request): string
   {
     $serverParams = $request->getServerParams();
-
     $remoteAddr = (string) ($serverParams['REMOTE_ADDR'] ?? '');
-    $trustedProxies = self::trustedProxies();
-
-    if (
-      $remoteAddr !== ''
-      && in_array($remoteAddr, $trustedProxies, true)
-      && !empty($serverParams['HTTP_X_FORWARDED_FOR'])
-    ) {
-      $forwarded = explode(',', (string) $serverParams['HTTP_X_FORWARDED_FOR']);
-      $clientIp = trim($forwarded[0] ?? '');
-
-      if (filter_var($clientIp, FILTER_VALIDATE_IP)) {
-        return $clientIp;
-      }
-    }
 
     if (filter_var($remoteAddr, FILTER_VALIDATE_IP)) {
       return $remoteAddr;
     }
 
     return 'UNKNOWN';
-  }
-
-  private static function trustedProxies(): array
-  {
-    if (!defined('TRUSTED_PROXIES')) {
-      return [];
-    }
-
-    $proxies = constant('TRUSTED_PROXIES');
-    return is_array($proxies) ? $proxies : [];
   }
 
   /**
