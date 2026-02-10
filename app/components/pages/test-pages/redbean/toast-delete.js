@@ -31,7 +31,24 @@
     return;
   }
 
-  $row.stop(true, true).slideUp(220, function () {
-    $(this).remove();
+  var fadeDuration = 500;
+  var slideDuration = 200;
+
+  $row.find('td').each(function () {
+    var $cell = $(this);
+    if ($cell.children('.row-delete-anim').length === 0) {
+      $cell.wrapInner('<div class="row-delete-anim"></div>');
+    }
+  });
+
+  var $cellContent = $row.find('.row-delete-anim');
+
+  $cellContent
+    .stop(true, true)
+    .animate({ opacity: 0 }, fadeDuration)
+    .slideUp(slideDuration);
+
+  $cellContent.promise().done(function () {
+    $row.remove();
   });
 })();

@@ -207,9 +207,14 @@ class TestController extends AbstractController
         $contact = RedBean::load('contact', $deleteId);
 
         if ((int) ($contact->id ?? 0) > 0) {
+          $contactName = trim((string) ($contact->name ?? ''));
           RedBean::raw()->trash($contact);
           if ($isHtmxRequest) {
-            return $this->htmxDeleteResponse(true, 'Contato excluido com sucesso.', 'success', $deleteId);
+            $message = $contactName === ''
+              ? 'Contato excluido com sucesso.'
+              : "$contactName excluido com sucesso.";
+
+            return $this->htmxDeleteResponse(true, $message, 'success', $deleteId);
           }
         } elseif ($isHtmxRequest) {
           return $this->htmxDeleteResponse(false, 'Contato nao encontrado.', 'warning');
