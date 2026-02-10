@@ -12,6 +12,6 @@ return [
       componentFactory::Plugin("/plugins/navbar/"),
       componentFactory::Template("/pages/test-pages/htmx/"),
     ],
-    'nonce' => CSPManager::getNonce(),
+    //'nonce' => CSPManager::getNonce(),
   ],
 ];
