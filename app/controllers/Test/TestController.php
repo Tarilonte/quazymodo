@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use Pusher\Pusher;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
+use Quazymodo\Csrf;
 use Quazymodo\Helper;
 use Reflection;
 use ReflectionClass;
@@ -187,18 +188,36 @@ class TestController extends AbstractController
 
   public function redbeanList(ServerRequestInterface $request): ResponseInterface
   {
+    $isHtmxRequest = strtolower($request->getHeaderLine('HX-Request')) === 'true';
+
     if (strtoupper($request->getMethod()) === 'POST') {
       $data = $request->getParsedBody() ?? [];
+      $csrfToken = (string) ($data['csrf-token'] ?? '');
       $deleteId = (int) ($data['delete_id'] ?? 0);
 
-      if ($deleteId > 0) {
+      if (!Csrf::verifyToken($csrfToken)) {
+        if ($isHtmxRequest) {
+          return $this->htmxDeleteResponse(false, 'Token CSRF invalido. Atualize a pagina e tente novamente.', 'error');
+        }
+      } elseif ($deleteId <= 0) {
+        if ($isHtmxRequest) {
+          return $this->htmxDeleteResponse(false, 'Contato invalido para exclusao.', 'warning');
+        }
+      } else {
         $contact = RedBean::load('contact', $deleteId);
 
         if ((int) ($contact->id ?? 0) > 0) {
           RedBean::raw()->trash($contact);
+          if ($isHtmxRequest) {
+            return $this->htmxDeleteResponse(true, 'Contato excluido com sucesso.', 'success', $deleteId);
+          }
+        } elseif ($isHtmxRequest) {
+          return $this->htmxDeleteResponse(false, 'Contato nao encontrado.', 'warning');
         }
       }
     }
+
+    $csrfToken = htmlspecialchars(Csrf::setToken(), ENT_QUOTES, 'UTF-8');
 
     $contacts = RedBean::findAll('contact');
     $contacts = RedBean::raw()->exportAll($contacts);
@@ -207,17 +226,20 @@ class TestController extends AbstractController
     foreach ($contacts as $contact) {
       $id = (int) ($contact['id'] ?? 0);
 
-      $deleteForm = '<form method="POST" action="/test/redbean/lista" onsubmit="return confirm(\'Deseja excluir este contato?\')">'
-        . '<input type="hidden" name="delete_id" value="' . $id . '">'
-        . '<button type="submit" class="btn btn-error btn-xs">Delete</button>'
-        . '</form>';
+      $deleteForm = ComponentFactory::Template(
+        '/pages/test-pages/redbean/delete-contact-form',
+        [
+          'delete-id' => (string) $id,
+          'csrf-token' => $csrfToken,
+        ]
+      );
 
       $rows[] = [
         'id' => htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8'),
         'name' => htmlspecialchars((string) ($contact['name'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'email' => htmlspecialchars((string) ($contact['email'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'created_at' => htmlspecialchars((string) ($contact['created_at'] ?? ''), ENT_QUOTES, 'UTF-8'),
-        'actions' => $deleteForm
+        'actions' => $deleteForm->render()
       ];
     }
 
@@ -243,6 +265,29 @@ class TestController extends AbstractController
     );
 
     return $this->html($page);
+  }
+
+  private function htmxDeleteResponse(bool $success, string $message, string $toastType, ?int $deletedId = null): ResponseInterface
+  {
+    $payload = [
+      'success' => $success,
+      'message' => $message,
+      'type' => $toastType,
+      'deletedId' => $deletedId,
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $inlineScript = "window.__redbeanDeletePayload = $jsonPayload;";
+
+    $response = ComponentFactory::Plugin(
+      '/plugins/jsComponent/',
+      [
+        'inlineScript' => $inlineScript,
+        'fileScript' => '/pages/test-pages/redbean/toast-delete.js',
+      ]
+    );
+
+    return $this->html($response);
   }
 
 }
