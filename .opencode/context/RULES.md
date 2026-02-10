@@ -10,6 +10,9 @@
 - Se houver pendências, pausar e solicitar ação do usuário antes de prosseguir
 - Todo formulário deve incluir campo oculto de CSRF
 - Toda rota que recebe submissão de formulário deve validar o token CSRF
+- Controllers não injetam HTML
+- Todo HTML deve estar em templates
+- Avaliar e preferir, sempre que adequado, o uso de HTMX para aprimorar a UX
 - Sempre que for programar código relativo a Rotas e Middleware, usar como referência o PHP League Route (`https://route.thephpleague.com/`)
 
 ## Memória
