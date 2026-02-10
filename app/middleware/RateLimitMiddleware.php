@@ -38,8 +38,7 @@ class RateLimitMiddleware implements MiddlewareInterface
       $activeSuspension = $this->store->getActiveSuspension($clientKey);
 
       if ($activeSuspension !== null) {
-        $violation = $this->store->registerViolation($clientKey);
-        $retryAfter = (int) ($violation['retry_after'] ?? $activeSuspension['retry_after'] ?? 1);
+        $retryAfter = (int) ($activeSuspension['retry_after'] ?? 1);
         return $this->rateLimitResponse($request, $retryAfter);
       }
 

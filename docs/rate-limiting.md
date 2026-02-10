@@ -83,9 +83,7 @@ Beneficios:
 3. Se APCu estiver disponivel, usa fast path em memoria.
 4. Verifica se o IP esta suspenso na blacklist progressiva.
 5. Se estiver suspenso:
-   - registra nova violacao
-   - estende a suspensao progressivamente
-   - retorna `429` com `Retry-After` atualizado
+   - retorna `429` com `Retry-After` restante da suspensao atual
 6. Se nao estiver suspenso, valida/sincroniza no store persistente quando necessario.
 7. Se exceder limite:
     - retorna `429`
@@ -99,7 +97,7 @@ Beneficios:
 
 Comportamento:
 - toda violacao de rate limit gera/atualiza registro de abuso por IP
-- se o IP insistir durante suspensao, a punicao aumenta imediatamente
+- durante suspensao ativa, novas tentativas nao aumentam strikes
 - nao ha decaimento automatico de strikes
 
 Escalonamento de suspensao por strike:
@@ -115,6 +113,7 @@ Escalonamento de suspensao por strike:
 Regra de extensao:
 - `novo_suspended_until = max(agora, suspended_until_atual) + duracao_do_strike`
 - `Retry-After` sempre reflete o bloqueio atualizado
+- tentativas durante suspensao nao extendem bloqueio
 
 ## 7) Resposta 429 (padrao)
 
@@ -173,7 +172,7 @@ Observacoes:
 - dentro do limite: `200`
 - acima do limite: `429`
 - `Retry-After` presente em `429`
-- insistencia durante suspensao aumenta `Retry-After`
+- durante suspensao, `Retry-After` deve apenas diminuir com o tempo
 - resposta visual de `429` via `ErrorController`
 - banco dedicado sendo usado corretamente
 
