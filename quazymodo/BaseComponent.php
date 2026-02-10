@@ -25,6 +25,8 @@ class BaseComponent
   private static array $slotMapCache = [];
   private static array $activeComponentStack = [];
   private static array $activeComponentSet = [];
+  private static array $loadedBlueprintComponents = [];
+  private static int $renderDepth = 0;
   private const MAX_COMPONENT_DEPTH = 100;
   private string $assetsPath = '/assets';
 
@@ -105,8 +107,6 @@ class BaseComponent
     $this->write_componentName($templateName . '_template');
     $this->data = new ComponentData([], $inserts);
 
-    $this->assertDeclaredSlotsExist();
-
     $this->syncFinalDataToGlobalStore();
     $this->mergeDataAssets();
 
@@ -116,6 +116,7 @@ class BaseComponent
   private function buildBlueprintComponent($componentName, $inserts): void
   {
     $this->blueprint = new Blueprint($componentName, $inserts);
+    $this->registerLoadedBlueprintComponent($componentName);
 
     $templateName = (string) $this->blueprint->get('template', '');
     $this->html = $this->load_template($templateName);
@@ -124,8 +125,6 @@ class BaseComponent
 
     $blueprintInserts = $this->blueprint->get('inserts', []);
     $this->data = new ComponentData(is_array($blueprintInserts) ? $blueprintInserts : [], $inserts);
-
-    $this->assertDeclaredSlotsExist();
 
     $this->syncFinalDataToGlobalStore();
     $this->mergeBlueprintAssets();
@@ -139,6 +138,88 @@ class BaseComponent
     foreach($this->data->final_data as $key => $value) {
       self::$allData[$key] = $value;
     }
+  }
+
+  private function registerLoadedBlueprintComponent(string $componentName): void
+  {
+    $normalizedComponent = $this->normalizeComponentName($componentName);
+    self::$loadedBlueprintComponents[$normalizedComponent] = true;
+  }
+
+  private function collectConsumedInputKeysFromLoadedBlueprints(): array
+  {
+    $keys = [];
+    $visited = [];
+
+    foreach (array_keys(self::$loadedBlueprintComponents) as $componentName) {
+      $keys = array_merge($keys, $this->collectConsumedInputKeysForComponent($componentName, $visited));
+    }
+
+    return array_values(array_unique($keys));
+  }
+
+  private function collectConsumedInputKeysForComponent(string $componentName, array &$visited): array
+  {
+    $normalizedComponent = $this->normalizeComponentName($componentName);
+
+    if (in_array($normalizedComponent, $visited, true)) {
+      return [];
+    }
+
+    $visited[] = $normalizedComponent;
+
+    $blueprintPath = $this->resolveBlueprintPath($normalizedComponent);
+    $source = $this->readFileIfExists($blueprintPath);
+
+    if ($source === null) {
+      return [];
+    }
+
+    $keys = [];
+
+    preg_match_all('/\$inserts\[[\'\"]([^\'\"]+)[\'\"]\]/', $source, $inputMatches);
+    $keys = array_merge($keys, $inputMatches[1] ?? []);
+
+    $parentComponent = $this->extractExtendedComponentName($source);
+    if ($parentComponent !== null) {
+      $keys = array_merge($keys, $this->collectConsumedInputKeysForComponent($parentComponent, $visited));
+    }
+
+    return array_values(array_unique($keys));
+  }
+
+  private function extractExtendedComponentName(string $source): ?string
+  {
+    if (!preg_match('/[\'\"]extends[\'\"]\s*=>\s*[\'\"]([^\'\"]+)[\'\"]/i', $source, $extendsMatch)) {
+      return null;
+    }
+
+    return $extendsMatch[1];
+  }
+
+  private function normalizeComponentName(string $componentName): string
+  {
+    if (substr($componentName, -1) === '/') {
+      return $componentName . basename($componentName);
+    }
+
+    return $componentName;
+  }
+
+  private function resolveBlueprintPath(string $componentName): string
+  {
+    $normalized = $this->normalizeComponentName($componentName);
+    return "../app/components/$normalized.blueprint.php";
+  }
+
+  private function readFileIfExists(string $path): ?string
+  {
+    if (!file_exists($path)) {
+      return null;
+    }
+
+    $content = file_get_contents($path);
+    return $content === false ? null : $content;
   }
 
   private function mergeBlueprintAssets(): void
@@ -223,189 +304,6 @@ class BaseComponent
     return $matches[1];
   }
 
-  private function assertDeclaredSlotsExist() : void
-  {
-    $templateSlots = $this->collectValidationSlots();
-    $allowedKeys = $this->collectAllowedDeclaredSlotKeys($templateSlots);
-    $declaredSlots = $this->data->declared_slots;
-    $invalidSlots = array_values(array_diff($declaredSlots, $allowedKeys));
-
-    if (count($invalidSlots) === 0) {
-      return;
-    }
-
-    throw new SlotNotFoundException($this->componentName, $invalidSlots, $templateSlots);
-  }
-
-  private function collectAllowedDeclaredSlotKeys(array $templateSlots): array
-  {
-    $blueprintInputKeys = $this->collectBlueprintInputKeys($this->componentName);
-    return array_values(array_unique(array_merge($templateSlots, $blueprintInputKeys)));
-  }
-
-  private function collectValidationSlots(): array
-  {
-    $slots = array_values(array_unique($this->slots));
-
-    if ($this->componentType === 'template') {
-      return $slots;
-    }
-
-    $visited = [];
-    $composedSlots = $this->collectComposedTemplateSlots($this->componentName, $visited);
-
-    return array_values(array_unique(array_merge($slots, $composedSlots)));
-  }
-
-  private function collectComposedTemplateSlots(string $componentName, array &$visited): array
-  {
-    $normalizedComponent = $this->normalizeComponentName($componentName);
-
-    if (in_array($normalizedComponent, $visited, true)) {
-      return [];
-    }
-
-    $visited[] = $normalizedComponent;
-
-    $blueprintPath = $this->resolveBlueprintPath($normalizedComponent);
-    $source = $this->readFileIfExists($blueprintPath);
-    if ($source === null) {
-      return [];
-    }
-
-    $slots = [];
-
-    $parentComponent = $this->extractExtendedComponentName($source);
-    if ($parentComponent !== null) {
-      $slots = array_merge($slots, $this->collectComposedTemplateSlots($parentComponent, $visited));
-    }
-
-    preg_match_all('/componentFactory::Template\(\s*[\'"]([^\'"]+)[\'"]/i', $source, $templateMatches);
-    foreach ($templateMatches[1] as $templateName) {
-      $slots = array_merge($slots, $this->slotsFromTemplateName($templateName));
-    }
-
-    preg_match_all('/componentFactory::(?:Plugin|Page)\(\s*[\'"]([^\'"]+)[\'"]/i', $source, $componentMatches);
-    foreach ($componentMatches[1] as $childComponent) {
-      $slots = array_merge($slots, $this->slotsFromComponent($childComponent));
-      $slots = array_merge($slots, $this->collectComposedTemplateSlots($childComponent, $visited));
-    }
-
-    return array_values(array_unique($slots));
-  }
-
-  private function slotsFromComponent(string $componentName): array
-  {
-    $blueprintPath = $this->resolveBlueprintPath($componentName);
-    $source = $this->readFileIfExists($blueprintPath);
-    if ($source === null) {
-      return [];
-    }
-
-    if (!preg_match('/[\'"]template[\'"]\s*=>\s*[\'"]([^\'"]+)[\'"]/', $source, $templateMatch)) {
-      return [];
-    }
-
-    return $this->slotsFromTemplateName($templateMatch[1]);
-  }
-
-  private function slotsFromTemplateName(string $templateName): array
-  {
-    $templatePath = $this->resolveTemplatePath($templateName);
-    $template = $this->readFileIfExists($templatePath);
-    if ($template === null) {
-      return [];
-    }
-
-    $template = str_replace('[{', '{{', $template);
-    $template = str_replace('}]', '}}', $template);
-
-    return $this->map_slots($template);
-  }
-
-  private function collectBlueprintInputKeys(string $componentName): array
-  {
-    if ($this->componentType === 'template') {
-      return [];
-    }
-
-    $visited = [];
-
-    return $this->collectBlueprintInputKeysRecursive($componentName, $visited);
-  }
-
-  private function collectBlueprintInputKeysRecursive(string $componentName, array &$visited): array
-  {
-    $normalizedComponent = $this->normalizeComponentName($componentName);
-
-    if (in_array($normalizedComponent, $visited, true)) {
-      return [];
-    }
-
-    $visited[] = $normalizedComponent;
-
-    $blueprintPath = $this->resolveBlueprintPath($normalizedComponent);
-    $source = $this->readFileIfExists($blueprintPath);
-    if ($source === null) {
-      return [];
-    }
-
-    $keys = [];
-
-    preg_match_all('/\$inserts\[[\'\"]([^\'\"]+)[\'\"]\]/', $source, $inputMatches);
-    $keys = array_merge($keys, $inputMatches[1] ?? []);
-
-    $parentComponent = $this->extractExtendedComponentName($source);
-    if ($parentComponent !== null) {
-      $keys = array_merge($keys, $this->collectBlueprintInputKeysRecursive($parentComponent, $visited));
-    }
-
-    return array_values(array_unique($keys));
-  }
-
-  private function extractExtendedComponentName(string $source): ?string
-  {
-    if (!preg_match('/[\'\"]extends[\'\"]\s*=>\s*[\'\"]([^\'\"]+)[\'\"]/i', $source, $extendsMatch)) {
-      return null;
-    }
-
-    return $extendsMatch[1];
-  }
-
-  private function normalizeComponentName(string $componentName): string
-  {
-    if (substr($componentName, -1) === '/') {
-      return $componentName . basename($componentName);
-    }
-
-    return $componentName;
-  }
-
-  private function resolveBlueprintPath(string $componentName): string
-  {
-    $normalized = $this->normalizeComponentName($componentName);
-    return "../app/components/$normalized.blueprint.php";
-  }
-
-  private function resolveTemplatePath(string $templateName): string
-  {
-    if (substr($templateName, -1) === '/') {
-      $templateName .= basename($templateName);
-    }
-
-    return "../app/components/$templateName.html";
-  }
-
-  private function readFileIfExists(string $path): ?string
-  {
-    if (!file_exists($path)) {
-      return null;
-    }
-
-    $content = file_get_contents($path);
-    return $content === false ? null : $content;
-  }
-
   private function write_componentName($componentName) : void
   {
     $insertion = ' component-name="'. $componentName . '" ';
@@ -435,14 +333,55 @@ class BaseComponent
 
   public function render() : String
   {
-    $this->flush_assets();
-    $this->fillRemainingSlotsFromGlobalData();
+    self::$renderDepth++;
 
-    if ($this->hasPendingSlotsInHtml()) {
-      $this->render();
+    $isRootRenderCall = self::$renderDepth === 1;
+    $isIsolatedNonPageRoot = $isRootRenderCall && $this->componentType !== 'page';
+    $allDataSnapshot = $isIsolatedNonPageRoot ? self::$allData : [];
+    $loadedComponentsSnapshot = $isIsolatedNonPageRoot ? self::$loadedBlueprintComponents : [];
+
+    try {
+      $this->flush_assets();
+      $this->fillRemainingSlotsFromGlobalData();
+
+      if ($this->hasPendingSlotsInHtml()) {
+        $this->render();
+      }
+
+      if (self::$renderDepth === 1 && $this->componentType === 'page') {
+        $this->assertNoUnresolvedSlots();
+      }
+
+      return $this->html;
+    } finally {
+      self::$renderDepth--;
+
+      if ($isIsolatedNonPageRoot) {
+        self::$allData = $allDataSnapshot;
+        self::$loadedBlueprintComponents = $loadedComponentsSnapshot;
+      } elseif (self::$renderDepth === 0) {
+        self::$allData = [];
+        self::$loadedBlueprintComponents = [];
+      }
+    }
+  }
+
+  private function assertNoUnresolvedSlots(): void
+  {
+    if (count(self::$allData) === 0) {
+      return;
     }
 
-    return $this->html;
+    $unresolvedSlots = array_values(array_unique(array_keys(self::$allData)));
+
+    $consumedInputKeys = $this->collectConsumedInputKeysFromLoadedBlueprints();
+    $unresolvedSlots = array_values(array_diff($unresolvedSlots, $consumedInputKeys));
+
+    if (count($unresolvedSlots) === 0) {
+      return;
+    }
+
+    throw new SlotNotFoundException($this->componentName, $unresolvedSlots);
   }
 
   private function fillRemainingSlotsFromGlobalData(): void
