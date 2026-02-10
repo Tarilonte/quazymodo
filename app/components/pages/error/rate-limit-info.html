@@ -1,0 +1,19 @@
+<div class="w-full max-w-2xl mb-4">
+    <div class="stats shadow w-full bg-base-100">
+      <div class="stat">
+        <div class="stat-figure text-warning">
+          <span class="ti ti-shield-lock text-2xl bg-warning/15 rounded-full p-2"></span>
+        </div>
+        <div class="stat-title">Strikes</div>
+        <div class="stat-value text-warning">{{ rate-limit-strikes }}</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-figure text-warning">
+          <span class="ti ti-clock-hour-4 text-2xl bg-warning/15 rounded-full p-2"></span>
+        </div>
+        <div class="stat-title">Tempo restante</div>
+        <div class="stat-value text-warning">{{ rate-limit-remaining-minutes }} min</div>
+      </div>
+  </div>
+</div>

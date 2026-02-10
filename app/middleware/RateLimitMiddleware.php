@@ -39,7 +39,8 @@ class RateLimitMiddleware implements MiddlewareInterface
 
       if ($activeSuspension !== null) {
         $retryAfter = (int) ($activeSuspension['retry_after'] ?? 1);
-        return $this->rateLimitResponse($request, $retryAfter);
+        $strikes = (int) ($activeSuspension['strikes'] ?? 0);
+        return $this->rateLimitResponse($request, $retryAfter, $strikes);
       }
 
       if ($this->isApcuFastPathEnabled()) {
@@ -56,7 +57,8 @@ class RateLimitMiddleware implements MiddlewareInterface
       if (!$result['allowed']) {
         $violation = $this->store->registerViolation($clientKey);
         $retryAfter = (int) ($violation['retry_after'] ?? $result['retry_after'] ?? 1);
-        return $this->rateLimitResponse($request, $retryAfter);
+        $strikes = (int) ($violation['strikes'] ?? 0);
+        return $this->rateLimitResponse($request, $retryAfter, $strikes);
       }
 
       return $handler->handle($request);
@@ -70,11 +72,14 @@ class RateLimitMiddleware implements MiddlewareInterface
       return [$defaultLimit, $defaultPeriod];
     }
 
-    private function rateLimitResponse(ServerRequestInterface $request, int $retryAfter): ResponseInterface
+    private function rateLimitResponse(ServerRequestInterface $request, int $retryAfter, int $strikes = 0): ResponseInterface
     {
       $retryAfter = max(1, $retryAfter);
       $controller = new ErrorController();
-      $response = $controller->handle($request, 429);
+      $response = $controller->handle($request, 429, [
+        'strikes' => max(0, $strikes),
+        'retry_after' => $retryAfter,
+      ]);
       return $response->withHeader('Retry-After', (string) $retryAfter);
     }
 

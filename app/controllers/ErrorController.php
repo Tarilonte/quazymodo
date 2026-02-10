@@ -10,18 +10,34 @@ class ErrorController extends AbstractController
 {
     public function handle(
       ServerRequestInterface $request,
-      int $statusCode
+      int $statusCode,
+      array $meta = []
     ): ResponseInterface {
         $REQUEST_URI = $request->getServerParams()['REQUEST_URI'] ?? '';
+        $errorData = $this->getErrorMessage($statusCode, $REQUEST_URI);
+
+        $rateLimitInfo = '';
+        if ($statusCode === 429) {
+          $strikes = max(0, (int) ($meta['strikes'] ?? 0));
+          $retryAfter = max(1, (int) ($meta['retry_after'] ?? 1));
+          $remainingMinutes = max(1, (int) ceil($retryAfter / 60));
+
+          $rateLimitInfo = componentFactory::Template('/pages/error/rate-limit-info', [
+            'rate-limit-strikes' => $strikes,
+            'rate-limit-remaining-minutes' => $remainingMinutes,
+          ]);
+        }
+
         $component = componentFactory::Page(
           '/pages/error/',
           [
-            'page-title' => $this->getErrorMessage($statusCode)[1],
+            'page-title' => $errorData[1],
             'error-code' => $statusCode,
-            'error-icon' => $this->getErrorMessage($statusCode)[0],
-            'error-message' => $this->getErrorMessage($statusCode)[1],
-            'error-description' => $this->getErrorMessage($statusCode, $REQUEST_URI)[2],
-            'take-me-back' => $this->getErrorMessage($statusCode)[3],
+            'error-icon' => $errorData[0],
+            'error-message' => $errorData[1],
+            'error-description' => $errorData[2],
+            'take-me-back' => $errorData[3],
+            'rate-limit-info' => $rateLimitInfo,
             ]
       );
   
