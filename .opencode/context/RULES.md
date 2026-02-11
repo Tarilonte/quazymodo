@@ -13,6 +13,7 @@
 - Controllers não injetam HTML
 - Todo HTML deve estar em templates
 - Templates não devem possuir nenhum JavaScript
+- Sempre incluir comentários no código gerado (bloco inicial breve + comentários de intenção em trechos-chave)
 - Avaliar e preferir, sempre que adequado, o uso de HTMX para aprimorar a UX
 - Sempre que for programar código relativo a Rotas e Middleware, usar como referência o PHP League Route (`https://route.thephpleague.com/`)
 
