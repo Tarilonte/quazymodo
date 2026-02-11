@@ -38,7 +38,7 @@ class App{
 
   private static function loadConfig(): void
   {
-    require dirname(__DIR__) . '/app/Config.php';
+    require dirname(__DIR__) . '/app/config/index.php';
   }
 
   private static function initRoutes(): void
