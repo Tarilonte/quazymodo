@@ -1,3 +1,18 @@
+/*
+ * Animate toast scale on hover for clearer interaction feedback.
+ */
+.toast_message {
+  transform-origin: bottom right;
+  transition: transform 180ms ease;
+  will-change: transform;
+}
+
+.toast_message:hover {
+  cursor: grab;
+  transform: scale(1.05);
+}
+
+/* Keep progress updates immediate so hover pause feels instant. */
 progress::-webkit-progress-value {
-  transition: width 2s linear;
+  transition: none;
 }

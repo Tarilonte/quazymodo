@@ -23,6 +23,7 @@ class ToastComponent {
     // Clona o template
     const $toast = this.template.clone();
     const normalizedType = this.normalizeToastType(toastType);
+    const totalDuration = Math.max(1, Number(duration) || 5000);
 
     // Estiliza o toast
 
@@ -46,27 +47,97 @@ class ToastComponent {
     
     // Adiciona ao container
     this.container.append($toast);
-    
-    // Animação da barra de progresso
-    let $progressBar = $toast.find("progress");
-      // Mantem a barra com a mesma cor do texto do toast via text-current.
-      setInterval(() => {
-        const currentValue = parseInt($progressBar.attr("value"));
-        if (currentValue > 0) {
-          $progressBar.attr("value", currentValue - 5);
-        } else {
-          clearInterval(this);
-        }
-      }, duration / 25);
-    
-    // Remove após a duração
-    setTimeout(() => {
-      this.removeToast($toast);      
-      // Fallback: Remove após 6s se a animação falhar
-      setTimeout(() => {
-        if ($toast.is(":visible")) $toast.remove();
-      }, (duration + 1000));
-    }, duration);
+
+    // Controle de vida do toast (pausa no hover e retomada precisa).
+    const $progressBar = $toast.find('progress');
+    let timeoutId = null;
+    let progressIntervalId = null;
+    let segmentStartedAt = 0;
+    let segmentDuration = totalDuration;
+    let remainingMs = totalDuration;
+    let isPaused = false;
+    let isClosed = false;
+
+    const clearTimers = () => {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
+      if (progressIntervalId !== null) {
+        clearInterval(progressIntervalId);
+        progressIntervalId = null;
+      }
+    };
+
+    const updateProgress = () => {
+      const elapsed = Date.now() - segmentStartedAt;
+      const currentRemaining = Math.max(0, segmentDuration - elapsed);
+      const progress = Math.max(0, Math.min(100, (currentRemaining / totalDuration) * 100));
+      $progressBar.attr('value', Math.round(progress));
+    };
+
+    const finalizeToast = () => {
+      if (isClosed) {
+        return;
+      }
+
+      isClosed = true;
+      clearTimers();
+      this.removeToast($toast);
+    };
+
+    const startSegment = () => {
+      if (isClosed) {
+        return;
+      }
+
+      segmentDuration = remainingMs;
+      segmentStartedAt = Date.now();
+      updateProgress();
+
+      progressIntervalId = setInterval(() => {
+        updateProgress();
+      }, 40);
+
+      timeoutId = setTimeout(() => {
+        remainingMs = 0;
+        finalizeToast();
+      }, segmentDuration);
+    };
+
+    const pauseTimers = () => {
+      if (isPaused || isClosed) {
+        return;
+      }
+
+      const elapsed = Date.now() - segmentStartedAt;
+      remainingMs = Math.max(0, segmentDuration - elapsed);
+      isPaused = true;
+      clearTimers();
+      updateProgress();
+    };
+
+    const resumeTimers = () => {
+      if (!isPaused || isClosed) {
+        return;
+      }
+
+      isPaused = false;
+
+      if (remainingMs <= 0) {
+        finalizeToast();
+        return;
+      }
+
+      startSegment();
+    };
+
+    $toast.on('mouseenter', pauseTimers);
+    $toast.on('mouseleave', resumeTimers);
+    $toast.data('toastFinalize', finalizeToast);
+
+    startSegment();
   }
 
   static normalizeToastType(toastType) {
@@ -90,5 +161,12 @@ class ToastComponent {
 
 $('#toasts_container').on('click', ".btn-close-toast", function() {
   const $toast = $(this).parent('.toast_message');
+  const finalizeToast = $toast.data('toastFinalize');
+
+  if (typeof finalizeToast === 'function') {
+    finalizeToast();
+    return;
+  }
+
   ToastComponent.removeToast($toast);
 });
