@@ -3,7 +3,7 @@
 use Quazymodo\ComponentFactory;
 
 return [
-  'extends' => '/pages/base/',
+  'extends' => '/pages/base/base-2',
   'js' => ASSET_HTMX,
   'inserts' => [
     'page-title' => 'Lista RedBean',
