@@ -1,7 +1,7 @@
 <?php
 
 use Quazymodo\ComponentFactory;
-use function App\Components\verticalTable;
+use App\Components\ComponentShortcuts;
 
 return [
   'extends' => '/pages/base/base-2',
@@ -13,7 +13,7 @@ return [
     'table' => [
       ComponentFactory::Plugin('/plugins/tableComponent/verticalTable/',['rows' => $inserts['userInfo'],'th-class' => 'text-blue-500']),
       '<hr class="m-8">',
-      verticalTable($inserts['userInfo'],['th-class' => 'text-green-700']),
+      ComponentShortcuts::verticalTable($inserts['userInfo'], ['th-class' => 'text-green-700']),
     ],
     'navbar-start' =>  'User Info',
   ]

@@ -1,13 +1,13 @@
 <?php
 
 use Quazymodo\ComponentFactory;
-use function App\Components\verticalTable;
+use App\Components\ComponentShortcuts;
 
 return [
   'extends' => '/pages/test-pages/base-2/',
   'inserts' => [
     'body' => [
-      verticalTable(
+      ComponentShortcuts::verticalTable(
         [
           'nome' => 'Tarik Tarilonte',
           'idade' => 48

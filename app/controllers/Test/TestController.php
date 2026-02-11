@@ -4,6 +4,7 @@ namespace Controller\Test;
 
 use Quazymodo\AbstractController;
 use Exception;
+use App\Components\ComponentShortcuts;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
@@ -17,9 +18,6 @@ use Reflection;
 use ReflectionClass;
 use Throwable;
 use Tracy\Debugger;
-
-use function App\Components\horizontalTable;
-use function App\Components\verticalTable;
 
 class TestController extends AbstractController
 {
@@ -248,7 +246,7 @@ class TestController extends AbstractController
       ];
     }
 
-    $table = horizontalTable(
+    $table = ComponentShortcuts::horizontalTable(
       $rows,
       [
         'headers' => [

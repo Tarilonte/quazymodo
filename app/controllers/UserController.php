@@ -4,10 +4,9 @@ namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use App\Components\ComponentShortcuts;
 use Quazymodo\AbstractController;
 use Quazymodo\ComponentFactory;
-use function App\Components\jsComponent;
-use function App\Components\verticalTable;
 
 class UserController extends AbstractController
 {
@@ -38,7 +37,7 @@ class UserController extends AbstractController
   public function processLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     sleep(1); // Simulate a delay for the login process
-    $script = jsComponent("/pages/user/login/login-fail.js");
+    $script = ComponentShortcuts::jsComponent('/pages/user/login/login-fail.js');
     return $this->html($script);
   }
 
