@@ -8,6 +8,7 @@
 - Não refatorar grandes blocos sem pedido explícito
 - Antes de iniciar nova task/subtask, verificar se há commits pendentes (`git status`)
 - Se houver pendências, pausar e solicitar ação do usuário antes de prosseguir
+- NUNCA fazer merge completo da branch `lab` para `main`; sempre selecionar commits especificos (ex.: cherry-pick)
 - Todo formulário deve incluir campo oculto de CSRF
 - Toda rota que recebe submissão de formulário deve validar o token CSRF
 - Controllers não injetam HTML
