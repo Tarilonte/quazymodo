@@ -9,8 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use App\Entities\UserEntity;
 use App\Services\RedBeanService as RedBean;
-use GuzzleHttp\Client;
-use Pusher\Pusher;
 use Quazymodo\ComponentFactory;
 use Quazymodo\CSPManager;
 use Quazymodo\Csrf;
@@ -19,7 +17,6 @@ use Reflection;
 use ReflectionClass;
 use Throwable;
 use Tracy\Debugger;
-use voku\helper\AntiXSS;
 
 use function App\Components\horizontalTable;
 use function App\Components\verticalTable;

@@ -6,15 +6,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Analog\Analog;
-use Analog\Handler\File;
 
 class RequestLoggerMiddleware implements MiddlewareInterface
 {
     public function __construct($logFile = __DIR__ . '/../writable/logs/requests.json')
     {
-        // Configure Analog para usar um arquivo de log
-        Analog::handler(File::init($logFile));
+        // Constructor kept for compatibility with middleware instantiation.
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
