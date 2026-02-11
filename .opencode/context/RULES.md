@@ -15,6 +15,9 @@
 - Templates não devem possuir nenhum JavaScript
 - Sempre incluir comentários no código gerado (bloco inicial breve + comentários de intenção em trechos-chave)
 - Sempre usar named arguments em chamadas de funções/metodos ao escrever novo código
+- Sugerir a criação de shortcuts sempre que um novo componente for criado
+- Ao sugerir shortcut, propor assinatura com typed hints e named arguments, preferindo centralizar em `App\Components\ComponentShortcuts`
+- Se optar por não criar shortcut para um componente novo, registrar justificativa curta (ex.: uso único/baixo reuso)
 - Avaliar e preferir, sempre que adequado, o uso de HTMX para aprimorar a UX
 - Sempre que for programar código relativo a Rotas e Middleware, usar como referência o PHP League Route (`https://route.thephpleague.com/`)
 
