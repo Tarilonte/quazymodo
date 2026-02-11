@@ -44,7 +44,7 @@ class App{
   private static function initRoutes(): void
   {
     self::$router = new \League\Route\Router;
-    require dirname(__DIR__) . '/app/Routes.php';
+    require dirname(__DIR__) . '/app/routes/index.php';
   }
 
   public static function getRouter(): Router
