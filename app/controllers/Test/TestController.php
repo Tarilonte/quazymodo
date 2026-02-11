@@ -224,10 +224,6 @@ class TestController extends AbstractController
 
     $csrfToken = htmlspecialchars(Csrf::setToken(), ENT_QUOTES, 'UTF-8');
 
-    /*
-     * Busca lista em array via service para manter SQL fora do controller
-     * e evitar o custo de beans + exportAll na listagem.
-     */
     $contacts = RedBean::listAsArray(
       'contact',
       ['id', 'name', 'email', 'created_at'],
