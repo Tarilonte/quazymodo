@@ -9,7 +9,7 @@ Quazymodo é uma plataforma PHP que visa simplificar o desenvolvimento web atrav
 ## Principais Características
 
 *   **Arquitetura Baseada em Componentes:** A interface do usuário é construída usando componentes reutilizáveis, cada um com seu próprio blueprint (PHP) e template (HTML). Veja `quazymodo/BaseComponent.php` e `quazymodo/ComponentFactory.php`.
-*   **Roteamento:** Utiliza a biblioteca `league/route` para um sistema de roteamento poderoso e flexível. As rotas são definidas em `app/Routes.php`.
+*   **Roteamento:** Utiliza a biblioteca `league/route` para um sistema de roteamento poderoso e flexível. As rotas são definidas em `app/routes/index.php` e organizadas em `app/routes/`.
 *   **Requisição e Resposta PSR-7:** Lida com requisições e respostas HTTP seguindo o padrão PSR-7, inicializado em `quazymodo/App.php`.
 *   **Banco de Dados com Medoo:** Integração com o micro-framework de banco de dados Medoo através da classe wrapper `Quazymodo\Database`, com suporte a debugging de queries (`Quazymodo\MedooDebug`).
 *   **Gerenciamento de Assets:** CSS e JavaScript são definidos nos blueprints dos componentes e injetados automaticamente nas páginas, com versionamento de arquivos.
@@ -21,8 +21,8 @@ Quazymodo é uma plataforma PHP que visa simplificar o desenvolvimento web atrav
 ## Estrutura de Diretórios Chave
 
 *   `app/`: Contém a lógica principal da sua aplicação.
-    *   `Config.php`: Arquivo de configuração principal da aplicação.
-    *   `Routes.php`: Definição das rotas da aplicação.
+    *   `config/index.php`: Entrypoint de configuração da aplicação (modularizado em `app/config/*.php`).
+    *   `routes/index.php`: Entrypoint de rotas da aplicação (modularizado em `app/routes/*.php`).
     *   `components/`: Onde os componentes da interface do usuário (blueprints, templates, assets específicos) são definidos.
     *   `controllers/`: Controladores que lidam com a lógica de requisição.
     *   `Entities/`: (Provavelmente) Entidades ou modelos de dados.
@@ -53,11 +53,11 @@ A classe `Quazymodo\ComponentFactory` é usada para criar instâncias de compone
 
 ## Roteamento
 
-As rotas são definidas no arquivo `app/Routes.php` usando a sintaxe da biblioteca `league/route`.
+As rotas são definidas no arquivo `app/routes/index.php` (com arquivos de contexto em `app/routes/`) usando a sintaxe da biblioteca `league/route`.
 
 Exemplo de definição de rota:
 ```php
-// filepath: app/Routes.php
+// filepath: app/routes/index.php
 // ...
 $router->map('GET', '/', 'Controller\IndexController::index');
 $router->map(['GET','POST'], '/test/{test:.*}', 'Controller\Test\TestController::index');
@@ -67,7 +67,7 @@ Isso mapeia uma requisição GET para a URL `/` para o método `index` da classe
 
 ## Configuração
 
-A configuração principal da aplicação reside em `app/Config.php`. Este arquivo define constantes globais para:
+A configuração principal da aplicação reside em `app/config/index.php`. Este entrypoint carrega arquivos modulares em `app/config/*.php` para:
 
 *   Ambiente da aplicação (`APP_ENV`)
 *   URL da aplicação (`APP_URL`)
@@ -86,7 +86,7 @@ A configuração principal da aplicação reside em `app/Config.php`. Este arqui
     ```
 2.  **Configurar o Ambiente:**
     *   Copie ou renomeie qualquer arquivo de configuração de exemplo (se houver).
-    *   Ajuste as configurações em `app/Config.php`, especialmente as credenciais do banco de dados e `APP_URL`.
+    *   Ajuste as configurações em `app/config/*.php`, especialmente as credenciais do banco de dados e `APP_URL`.
 3.  **Configurar o Servidor Web:**
     *   Aponte a raiz do seu servidor web para o diretório `public`.
     *   Certifique-se de que o `mod_rewrite` (Apache) ou configuração equivalente (Nginx) esteja habilitado para que o `public/.htaccess` (ou regras equivalentes) funcione corretamente.

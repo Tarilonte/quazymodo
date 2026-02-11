@@ -1,5 +1,10 @@
 # BASE CONTEXT — Quazymodo
 
+<!--
+Finalidade: definir a identidade tecnica e os limites estruturais do projeto.
+Este arquivo descreve o que o projeto e (stack/arquitetura) e o que ele nao sera.
+-->
+
 ## Objetivo
 Framework PHP próprio, simples, explícito e sob controle total.
 

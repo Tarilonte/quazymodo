@@ -8,8 +8,8 @@ Purpose: guidance for agentic tools working in this repo.
 - Containerized dev setup (Nginx + PHP-FPM 8.4 + Supervisor) in `Container/Nginx`.
 
 ## Key paths
-- `app/Config.php`: app configuration, bootstraps DB, Tracy, RedBean PRAGMAs.
-- `app/Routes.php`: route definitions (League Route).
+- `app/config/index.php`: app configuration entrypoint (loads modular config files).
+- `app/routes/index.php`: route definitions entrypoint (League Route).
 - `app/controllers/`: controllers extending `Quazymodo\AbstractController`.
 - `app/components/`: component blueprints/templates/assets.
 - `quazymodo/`: framework core.
@@ -51,7 +51,7 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 - Namespace per folder, aligned with `composer.json` PSR-4 autoload.
 - Classes use `PascalCase`, methods use `camelCase`.
 - Prefer explicit `ResponseInterface` return types in controllers.
-- Avoid global state; use `app/Config.php` for configuration constants.
+- Avoid global state; use `app/config/*.php` (via `app/config/index.php`) for configuration constants.
 
 ### Formatting
 - Indentation: 2 spaces (matching existing files).
@@ -82,7 +82,7 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 
 ### Database usage
 - Current codebase has Medoo + a `BaseRepository` abstraction.
-- RedBean is also installed and bootstrapped in `app/Config.php`.
+- RedBean is also installed and bootstrapped through `app/config/index.php`.
 - SQLite is stored in `app/writable/db/app.sqlite` (ignored by git).
 
 ### Components and templates
@@ -102,6 +102,6 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 
 ## When adding new code
 - Follow existing directory structure and naming.
-- Update `app/Routes.php` for new endpoints.
+- Update route files under `app/routes/` for new endpoints.
 - Prefer small, composable components over large templates.
 - Keep UI assets scoped to component directories.

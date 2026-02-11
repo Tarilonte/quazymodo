@@ -40,7 +40,7 @@ A implementacao padrao usa:
 
 ## 3) Configuracao padrao
 
-Configuracoes em `app/Config.php`:
+Configuracoes em `app/config/rate-limit.php` (carregado por `app/config/index.php`):
 
 - `RATE_LIMIT_REQUESTS`
   - limite padrao de requests por janela
