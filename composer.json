@@ -11,6 +11,7 @@
     "autoload": {
         "psr-4": {
             "Quazymodo\\": "quazymodo/",
+            "App\\Components\\": "app/components/",
             "App\\": "app/",
             "Controller\\": "app/controllers/",
             "Middleware\\": "app/middleware/",

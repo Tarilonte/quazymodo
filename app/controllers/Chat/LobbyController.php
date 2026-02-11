@@ -2,6 +2,7 @@
 
 namespace Controller\Chat;
 
+use App\Components\ComponentShortcuts as ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Quazymodo\AbstractController;
@@ -37,12 +38,9 @@ class LobbyController extends AbstractController
     $nickname = htmlspecialchars($parsedBody['nickname']) ?? null;
 
     sleep(1); // Simulate a delay for the login process
-    $response = componentFactory::Plugin(
-      "/plugins/jsComponent/jsComponent",
-      [
-        "inlineScript" => "nickname = '$nickname'",
-        "fileScript" => "/pages/chat/login-fail.js",
-      ]
+    $response = ui::jsComponent(
+      fileScript: '/pages/chat/login-fail.js',
+      inlineScript: "nickname = '$nickname'"
     );
     return $this->html($response);    
   }

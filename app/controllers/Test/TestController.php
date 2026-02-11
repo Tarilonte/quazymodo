@@ -4,7 +4,7 @@ namespace Controller\Test;
 
 use Quazymodo\AbstractController;
 use Exception;
-use App\Components\ComponentShortcuts;
+use App\Components\ComponentShortcuts as ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
@@ -246,9 +246,9 @@ class TestController extends AbstractController
       ];
     }
 
-    $table = ComponentShortcuts::horizontalTable(
-      $rows,
-      [
+    $table = ui::horizontalTable(
+      rows: $rows,
+      options: [
         'headers' => [
           'id' => 'ID',
           'name' => 'Nome',
@@ -282,12 +282,9 @@ class TestController extends AbstractController
     $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $inlineScript = "window.__redbeanDeletePayload = $jsonPayload;";
 
-    $response = ComponentFactory::Plugin(
-      '/plugins/jsComponent/',
-      [
-        'inlineScript' => $inlineScript,
-        'fileScript' => '/pages/test-pages/redbean/toast-delete.js',
-      ]
+    $response = ui::jsComponent(
+      fileScript: '/pages/test-pages/redbean/toast-delete.js',
+      inlineScript: $inlineScript
     );
 
     return $this->html($response);

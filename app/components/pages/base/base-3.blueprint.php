@@ -1,18 +1,17 @@
 <?php
 
-use Quazymodo\ComponentFactory;
-use App\Components\ComponentShortcuts;
+use App\Components\ComponentShortcuts as ui;
 
 return [
   'extends' => '/pages/test-pages/base-2/',
   'inserts' => [
     'body' => [
-      ComponentShortcuts::verticalTable(
-        [
+      ui::verticalTable(
+        rows: [
           'nome' => 'Tarik Tarilonte',
           'idade' => 48
         ],
-        ['th-class' => 'text-green-700']
+        options: ['th-class' => 'text-green-700']
       ),
     ]
   ]

@@ -10,10 +10,6 @@ use Quazymodo\ComponentFactory;
  */
 final class ComponentShortcuts
 {
-  private const VERTICAL_TABLE_PLUGIN = '/plugins/tableComponent/verticalTable/';
-  private const HORIZONTAL_TABLE_PLUGIN = '/plugins/tableComponent/horizontalTable/';
-  private const JS_COMPONENT_PLUGIN = '/plugins/jsComponent/jsComponent';
-
   /**
    * Creates a vertical table plugin component.
    */
@@ -24,7 +20,7 @@ final class ComponentShortcuts
       'rows' => $rows,
     ], $options);
 
-    return ComponentFactory::Plugin(self::VERTICAL_TABLE_PLUGIN, $payload);
+    return ComponentFactory::Plugin('/plugins/tableComponent/verticalTable/', $payload);
   }
 
   /**
@@ -37,16 +33,26 @@ final class ComponentShortcuts
       'rows' => $rows,
     ], $options);
 
-    return ComponentFactory::Plugin(self::HORIZONTAL_TABLE_PLUGIN, $payload);
+    return ComponentFactory::Plugin('/plugins/tableComponent/horizontalTable/', $payload);
   }
 
   /**
    * Creates the JavaScript plugin wrapper component.
+   * Accepts external/local script path, inline script, or both.
    */
-  public static function jsComponent(string $fileScript): BaseComponent
+  public static function jsComponent(?string $fileScript = null, ?string $inlineScript = null): BaseComponent
   {
-    return ComponentFactory::Plugin(self::JS_COMPONENT_PLUGIN, [
-      'fileScript' => $fileScript,
-    ]);
+    // Build only the keys provided by the caller.
+    $payload = [];
+
+    if ($inlineScript !== null && $inlineScript !== '') {
+      $payload['inlineScript'] = $inlineScript;
+    }
+
+    if ($fileScript !== null && $fileScript !== '') {
+      $payload['fileScript'] = $fileScript;
+    }
+
+    return ComponentFactory::Plugin('/plugins/jsComponent/jsComponent', $payload);
   }
 }

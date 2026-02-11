@@ -4,7 +4,7 @@ namespace Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Components\ComponentShortcuts;
+use App\Components\ComponentShortcuts as ui;
 use Quazymodo\AbstractController;
 use Quazymodo\ComponentFactory;
 
@@ -37,7 +37,7 @@ class UserController extends AbstractController
   public function processLoginForm(ServerRequestInterface $request): ResponseInterface
   {
     sleep(1); // Simulate a delay for the login process
-    $script = ComponentShortcuts::jsComponent('/pages/user/login/login-fail.js');
+    $script = ui::jsComponent(fileScript: '/pages/user/login/login-fail.js');
     return $this->html($script);
   }
 
@@ -58,12 +58,7 @@ class UserController extends AbstractController
 
     if (empty($name) || empty($email) || empty($password) || $password !== $passwordConfirmation) {
       // Exemplo de como retornar um erro (poderia ser um componente de toast/alerta)
-      $page = componentFactory::Plugin(
-        "/plugins/jsComponent/",
-        [
-          "fileScript" => "/pages/user/register/register-fail.js" // Criar este JS para feedback
-        ]
-      );
+      $page = ui::jsComponent(fileScript: '/pages/user/register/register-fail.js');
       return $this->html($page);
     }
 
@@ -73,13 +68,8 @@ class UserController extends AbstractController
     // Exemplo de como retornar sucesso (poderia ser um redirecionamento ou mensagem)
     // Por enquanto, vamos apenas simular um sucesso e talvez retornar um script.
     // Idealmente, redirecionar para o login ou dashboard.
-    $page = componentFactory::Plugin(
-        "/plugins/jsComponent/",
-        [
-          // Poderia ser um script que mostra uma mensagem de sucesso e redireciona
-          "fileScript" => "/pages/user/register/register-fail.js"
-        ]
-    );
+    // Poderia ser um script que mostra uma mensagem de sucesso e redireciona.
+    $page = ui::jsComponent(fileScript: '/pages/user/register/register-fail.js');
     return $this->html($page);
   }
 
