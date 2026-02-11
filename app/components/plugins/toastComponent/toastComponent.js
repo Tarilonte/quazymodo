@@ -1,7 +1,14 @@
 class ToastComponent {
 
+  // Gerencia o template de toast e aplica estilo/icone por tipo.
   static container = $('#toasts_container');
   static template = this.container.find('.toast_message.hidden');
+  static iconMap = {
+    info: 'mdi-information-outline',
+    success: 'mdi-check-circle-outline',
+    warning: 'mdi-alert-outline',
+    error: 'mdi-alert-circle-outline',
+  };
 
   /**
    * Creates and displays a new toast notification.
@@ -13,13 +20,9 @@ class ToastComponent {
    *                                      If null, no specific type class is added.
    */
   static newToast(message, duration = 5000, toastType = null) {
-    const $stoastTypes = [
-      'alert-info', 'alert-success', 'alert-warning', 'alert-error', 
-      'progress-info', 'progress-success', 'progress-warning', 'progress-error'
-    ];
-
     // Clona o template
     const $toast = this.template.clone();
+    const normalizedType = this.normalizeToastType(toastType);
 
     // Estiliza o toast
 
@@ -27,20 +30,26 @@ class ToastComponent {
       .removeClass('hidden')
       .addClass('block')
 
-    if (toastType) {
+    if (normalizedType) {
       // Adiciona a classe de toastType
-      $toast.addClass('alert-' + toastType);
+      $toast.addClass('alert-' + normalizedType);
     }
+
+    // Aplica o icone no lado esquerdo, alinhado ao centro.
+    const iconClass = this.iconMap[normalizedType] || this.iconMap.info;
+    $toast.find('.toast_icon')
+      .removeClass(Object.values(this.iconMap).join(' '))
+      .addClass(iconClass);
     
     // Define a mensagem
-    $toast.find('.toast_message').text(message);
+    $toast.find('.toast_text').text(message);
     
     // Adiciona ao container
     this.container.append($toast);
     
     // Animação da barra de progresso
     let $progressBar = $toast.find("progress");
-      $progressBar.addClass('progress-' + toastType);
+      // Mantem a barra com a mesma cor do texto do toast via text-current.
       setInterval(() => {
         const currentValue = parseInt($progressBar.attr("value"));
         if (currentValue > 0) {
@@ -58,6 +67,16 @@ class ToastComponent {
         if ($toast.is(":visible")) $toast.remove();
       }, (duration + 1000));
     }, duration);
+  }
+
+  static normalizeToastType(toastType) {
+    // Evita classes invalidas e garante fallback previsivel.
+    if (!toastType || typeof toastType !== 'string') {
+      return 'info';
+    }
+
+    const normalized = toastType.trim().toLowerCase();
+    return this.iconMap[normalized] ? normalized : 'info';
   }
 
   static removeToast(toast) {
