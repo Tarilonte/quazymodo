@@ -24,6 +24,11 @@ RUN sed -i 's/user = nobody/user = nginx/' /etc/php84/php-fpm.d/www.conf && \
     sed -i 's/;listen.owner = nobody/listen.owner = nginx/' /etc/php84/php-fpm.d/www.conf && \
     sed -i 's/;listen.group = nobody/listen.group = nginx/' /etc/php84/php-fpm.d/www.conf && \
     sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/^pm = .*/pm = dynamic/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/^pm.max_children = .*/pm.max_children = 20/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/^pm.start_servers = .*/pm.start_servers = 6/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/^pm.min_spare_servers = .*/pm.min_spare_servers = 4/' /etc/php84/php-fpm.d/www.conf && \
+    sed -i 's/^pm.max_spare_servers = .*/pm.max_spare_servers = 10/' /etc/php84/php-fpm.d/www.conf && \
     echo "clear_env = no" >> /etc/php84/php-fpm.d/www.conf
 
 # Create app directory (optional in builder if not used, but harmless)
