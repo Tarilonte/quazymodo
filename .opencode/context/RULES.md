@@ -55,3 +55,16 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - Se nao houver decisao persistivel relevante, o agente NAO DEVE exibir `Memory candidate`.
 - Ao concluir mudancas relevantes, o agente DEVE avaliar se AGENTS.md, BASE.md, RULES.md e MEMORY.md precisam de atualizacao.
 - Quando identificar necessidade, o agente DEVE SEMPRE sugerir a atualizacao ao usuario com justificativa curta (o que mudou e por que atualizar).
+
+## 9) Consulta obrigatoria de documentacao tecnica
+- Sempre que a task envolver uma tecnologia documentada em `docs/*.md`, o agente DEVE consultar o arquivo correspondente antes de codar.
+- O agente DEVE usar o indice como entrada e aprofundar apenas nos links de topicos/fontes relevantes para a task.
+- Em respostas tecnicas, o agente DEVE citar explicitamente qual arquivo `docs/*.md` foi utilizado.
+- Se houver divergencia entre suposicao do agente e o documento tecnico local, o agente DEVE priorizar `docs/*.md` e sinalizar a divergencia.
+- Mapeamento minimo de consulta:
+  - RedBean/ORM/persistencia (`R::`, repositories, migrations) -> `docs/redbean.md`
+  - HTMX (`hx-*`, interacoes parciais) -> `docs/htmx.md`
+  - Rotas/middleware/controllers com League Route -> `docs/league-route.md`
+  - Debug/log/paineis com Tracy -> `docs/tracy.md`
+  - jQuery (ajax/eventos/selectors/manipulacao) -> `docs/jquery.md`
+  - Tailwind/daisyUI (utilitarios, temas, responsivo) -> `docs/tailwind-daisyui.md`
