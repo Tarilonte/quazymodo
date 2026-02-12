@@ -1,5 +1,5 @@
 ---
-description: Atualizar main com commits de lab via cherry-pick seguro
+description: Atualizar main com commits de lab via cherry-pick seguro (ate merge final)
 ---
 Objetivo: sincronizar implementacoes de `lab` para `main` sem duplicar mudancas equivalentes e sem sobrescrever historico.
 
@@ -33,18 +33,21 @@ Execucao:
   - `git add <arquivos>`,
   - `git cherry-pick --continue`.
 
-5) Validar:
+5) Validar branch de integracao:
 - `git status --short --branch`
 - `git diff --name-status main..HEAD`
 - `npm run build`
 - Se houver falha, corrija sem reescrever historico.
 
-6) Entrega:
+6) Integrar ate o fim (obrigatorio):
+- `git switch main`
+- `git merge --ff-only <branch-de-integracao>`
+- `git branch -d <branch-de-integracao>`
+
+7) Entrega:
 - Informe claramente:
   - commits aplicados,
   - commits pulados por equivalencia,
   - conflitos e como foram resolvidos,
-  - arquivos sensiveis detectados/excluidos.
-- Forneca os comandos finais para integracao:
-  - `git switch main`
-  - `git merge --ff-only <branch-de-integracao>`
+  - arquivos sensiveis detectados/excluidos,
+  - branch de integracao removida com sucesso.
