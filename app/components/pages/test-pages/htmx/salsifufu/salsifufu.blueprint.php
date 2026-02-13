@@ -1,6 +1,6 @@
 <?php
 
-sleep(1); // Simulate a delay for testing purposes
+sleep(2); // Simulate a delay for testing purposes
 
 use Quazymodo\CSPManager;
 
