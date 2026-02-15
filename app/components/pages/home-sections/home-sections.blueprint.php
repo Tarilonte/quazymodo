@@ -9,6 +9,9 @@ use Quazymodo\ComponentFactory;
  */
 return [
   'extends' => '/pages/base/',
+  'js' => [
+    'home-sections.js',
+  ],
   'inserts' => [
     'page-title' => APP_NAME . ' - Full Sections',
     'body' => componentFactory::Template(componentName: '/pages/home-sections/'),
