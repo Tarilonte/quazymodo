@@ -28,6 +28,8 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - Controllers NAO DEVEM injetar HTML.
 - Todo HTML DEVE estar em templates.
 - Templates NUNCA DEVEM possuir JavaScript.
+- Ao criar templates HTML, os estilos DEVEM ser aplicados com classes do Tailwind CSS e do daisyUI, conforme `docs/tailwind-daisyui.md`.
+- Templates HTML NAO DEVEM usar atributo `style` inline para estilizacao visual.
 
 ## 5) Regras de codigo
 - O agente DEVE SEMPRE incluir comentarios no codigo gerado (bloco inicial breve + comentarios de intencao em trechos-chave).
