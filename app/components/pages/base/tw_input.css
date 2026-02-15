@@ -31,9 +31,9 @@
 }
 @plugin "daisyui" {
   exclude: rootscrollgutter;
-  themes: bumblebee --default, sunset --prefersdark;
+  themes: silk --default, sunset --prefersdark;
 }
 @plugin "daisyui/theme" {
-  name: "bumblebee";
+  name: "silk";
   --color-accent: purple;
 }

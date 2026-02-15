@@ -19,12 +19,13 @@
       section,
       image: section.querySelector('[data-home-section-image]'),
       content: section.querySelector('[data-home-section-content]'),
+      contentBody: section.querySelector('[data-home-section-content] > div'),
       top: 0,
       height: 0,
       lastTransform: '',
       lastLayout: '',
     }))
-    .filter((item) => item.image && item.content);
+    .filter((item) => item.image && item.content && item.contentBody);
 
   if (items.length === 0) {
     return;
@@ -50,23 +51,31 @@
 
       const isPortrait = item.section.offsetHeight > item.section.offsetWidth;
       const nextLayout = isPortrait ? 'portrait' : 'landscape';
-
-      if (item.lastLayout === nextLayout) {
-        return;
-      }
-
       item.lastLayout = nextLayout;
 
       if (isPortrait) {
+        const sectionHeight = item.section.offsetHeight;
+
         item.image.style.left = '0';
         item.image.style.top = '0';
         item.image.style.width = '100%';
-        item.image.style.height = '50%';
+        item.image.style.height = 'auto';
 
+        item.content.style.position = 'absolute';
+        item.content.style.left = '0';
+        item.content.style.right = '0';
+        item.content.style.bottom = '0';
         item.content.style.marginLeft = '0';
-        item.content.style.marginTop = 'auto';
+        item.content.style.marginTop = '0';
         item.content.style.width = '100%';
-        item.content.style.height = '50%';
+        item.content.style.height = 'auto';
+        item.contentBody.style.height = 'auto';
+
+        const contentHeight = Math.min(item.content.scrollHeight, sectionHeight);
+        const imageHeight = Math.max(sectionHeight - contentHeight, 0);
+
+        item.image.style.height = `${imageHeight}px`;
+        item.content.style.height = `${contentHeight}px`;
         return;
       }
 
@@ -75,10 +84,15 @@
       item.image.style.width = '50%';
       item.image.style.height = '100%';
 
+      item.content.style.position = 'relative';
+      item.content.style.left = '';
+      item.content.style.right = '';
+      item.content.style.bottom = '';
       item.content.style.marginLeft = 'auto';
       item.content.style.marginTop = '0';
       item.content.style.width = '50%';
       item.content.style.height = '100%';
+      item.contentBody.style.height = '100%';
     });
   };
 
@@ -150,6 +164,10 @@
   refreshMetrics();
   container.addEventListener('scroll', scheduleEffects, { passive: true });
   window.addEventListener('resize', () => {
+    refreshMetrics();
+    scheduleEffects();
+  });
+  window.addEventListener('orientationchange', () => {
     refreshMetrics();
     scheduleEffects();
   });
