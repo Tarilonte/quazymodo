@@ -4,7 +4,7 @@
  * Intencao: combinar dois comportamentos de scroll:
  * - por cima: imagem rola na metade da velocidade da secao
  * - por baixo: zoom varia ate 20%
- * - secao inteira visivel: tamanho original
+ * - secao inteira visivel: tamanho original (sem blur)
  */
 (() => {
   const container = document.querySelector('[data-home-sections-container]');
@@ -18,6 +18,9 @@
     .map((section) => ({
       section,
       image: section.querySelector('[data-home-section-image]'),
+      top: 0,
+      height: 0,
+      lastTransform: '',
     }))
     .filter((item) => item.image);
 
@@ -26,9 +29,8 @@
   }
 
   const minScale = 1;
-  const maxScale = 1.3;
+  const maxScale = 1.7;
   const topParallaxFactor = 0.5;
-  const maxBlurPx = 8;
   let rafId = 0;
 
   /*
@@ -36,54 +38,87 @@
    */
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-  const applyZoom = () => {
+  /*
+   * Atualiza metrica de layout para evitar leituras repetidas por frame.
+   */
+  const refreshMetrics = () => {
+    items.forEach((item) => {
+      item.top = item.section.offsetTop;
+      item.height = item.section.offsetHeight;
+    });
+  };
+
+  /*
+   * Aplica estilo somente quando houver mudanca real.
+   */
+  const writeVisualState = (item, transform) => {
+    if (item.lastTransform !== transform) {
+      item.image.style.transform = transform;
+      item.lastTransform = transform;
+    }
+  };
+
+  const applyEffects = () => {
     rafId = 0;
 
-    const containerRect = container.getBoundingClientRect();
+    const scrollTop = container.scrollTop;
+    const viewportHeight = container.clientHeight;
 
-    items.forEach(({ section, image }) => {
-      const sectionRect = section.getBoundingClientRect();
-      const isFullyVisible = sectionRect.top >= containerRect.top && sectionRect.bottom <= containerRect.bottom;
+    items.forEach((item) => {
+      const top = item.top - scrollTop;
+      const bottom = top + item.height;
+      const isFullyVisible = top >= 0 && bottom <= viewportHeight;
+
+      // Ignora secoes distantes para reduzir custo por frame.
+      if (bottom < -item.height || top > viewportHeight + item.height) {
+        writeVisualState(item, 'translateY(0px) scale(1)');
+        return;
+      }
 
       if (isFullyVisible) {
-        image.style.transform = 'translateY(0px) scale(1)';
-        image.style.filter = 'blur(0px)';
+        writeVisualState(item, 'translateY(0px) scale(1)');
         return;
       }
 
       /*
        * Interacao por cima: parallax 50% (metade da velocidade).
        */
-      if (sectionRect.top < containerRect.top) {
-        const topOverflow = containerRect.top - sectionRect.top;
-        const topProgress = clamp(topOverflow / sectionRect.height, 0, 1);
+      if (top < 0) {
+        const topOverflow = -top;
         const translateY = topOverflow * topParallaxFactor;
-        const blur = maxBlurPx * topProgress;
-        image.style.transform = `translateY(${translateY.toFixed(2)}px) scale(1)`;
-        image.style.filter = `blur(${blur.toFixed(2)}px)`;
+
+        writeVisualState(
+          item,
+          `translateY(${translateY.toFixed(2)}px) scale(1)`
+        );
         return;
       }
 
-      const bottomOverflow = sectionRect.bottom - containerRect.bottom;
-      const progress = clamp(bottomOverflow / sectionRect.height, 0, 1);
+      const bottomOverflow = bottom - viewportHeight;
+      const progress = clamp(bottomOverflow / item.height, 0, 1);
       const scale = minScale + ((maxScale - minScale) * progress);
-      const blur = maxBlurPx * progress;
 
-      image.style.transform = `translateY(0px) scale(${scale.toFixed(3)})`;
-      image.style.filter = `blur(${blur.toFixed(2)}px)`;
+      writeVisualState(
+        item,
+        `translateY(0px) scale(${scale.toFixed(3)})`
+      );
     });
   };
 
-  const scheduleZoom = () => {
+  const scheduleEffects = () => {
     if (rafId !== 0) {
       return;
     }
 
-    rafId = window.requestAnimationFrame(applyZoom);
+    rafId = window.requestAnimationFrame(applyEffects);
   };
 
-  container.addEventListener('scroll', scheduleZoom, { passive: true });
-  window.addEventListener('resize', scheduleZoom);
+  refreshMetrics();
+  container.addEventListener('scroll', scheduleEffects, { passive: true });
+  window.addEventListener('resize', () => {
+    refreshMetrics();
+    scheduleEffects();
+  });
 
-  scheduleZoom();
+  scheduleEffects();
 })();
