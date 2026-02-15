@@ -1,28 +1,28 @@
 <!--
   Home sections full-screen layout.
-  Intencao: cada secao ocupa 100% da viewport com fundo diferente.
+  Intencao: cada secao ocupa 100% da viewport.
+  Todas as secoes usam imagem na metade esquerda e conteudo na metade direita.
 -->
 <main class="w-full h-dvh overflow-y-auto snap-y snap-mandatory" data-home-sections-container>
   <!-- Secao 1 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden bg-red-500 text-white" data-home-section>
+  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden text-white" data-home-section>
     <img
       src="/assets/pages/home-sections/hero-1.jpg"
       alt=""
       aria-hidden="true"
       loading="lazy"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      class="pointer-events-none absolute left-0 top-0 h-full w-1/2 object-cover"
       data-home-section-image
     />
-    <div class="hero-overlay bg-black/35"></div>
-    <div class="hero-content relative w-full text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black [text-shadow:-6px_6px_0_rgba(255,255,255,0.2)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
+    <div class="hero-content relative ml-auto w-1/2 justify-center text-black">
+      <div class="max-w-3xl space-y-6 px-8 text-left">
+        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black">Arandela Nina</h1>
+        <span class="badge badge-lg bg-black border-0 text-white italic block w-fit">Collab com @jojo.farhi</span>
+        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white p-2 rounded-2xl hidden">
           Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
         </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/20 p-8 uppercase text-white text-lg sm:text-xl font-light">
+        <div class="mt-10 flex items-center justify-start">
+          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000] p-8 uppercase text-white text-lg sm:text-xl font-light">
             Conhecer / Encomendar
           </a>
         </div>
@@ -31,25 +31,24 @@
   </section>
 
   <!-- Secao 2 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden bg-orange-500 text-white" data-home-section>
+  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden text-white" data-home-section>
     <img
       src="/assets/pages/home-sections/hero-2.jpg"
       alt=""
       aria-hidden="true"
       loading="lazy"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      class="pointer-events-none absolute left-0 top-0 h-full w-1/2 object-cover"
       data-home-section-image
     />
-    <div class="hero-overlay bg-black/35"></div>
-    <div class="hero-content relative w-full justify-center text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black [text-shadow:-6px_6px_0_rgba(255,255,255,0.2)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
+    <div class="hero-content relative ml-auto w-1/2 justify-center text-black">
+      <div class="max-w-3xl space-y-6 px-8 text-left">
+        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black">Arandela Nina</h1>
+        <span class="badge badge-lg bg-black border-0 text-white italic block w-fit">Collab com @jojo.farhi</span>
+        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white p-2 rounded-2xl hidden">
           Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
         </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/20 p-8 uppercase text-white text-lg sm:text-xl font-light">
+        <div class="mt-10 flex items-center justify-start">
+          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000] p-8 uppercase text-white text-lg sm:text-xl font-light">
             Conhecer / Encomendar
           </a>
         </div>
@@ -58,25 +57,24 @@
   </section>
 
   <!-- Secao 3 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden bg-emerald-500 text-white" data-home-section>
+  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden text-white" data-home-section>
     <img
       src="/assets/pages/home-sections/hero-3.jpg"
       alt=""
       aria-hidden="true"
       loading="lazy"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      class="pointer-events-none absolute left-0 top-0 h-full w-1/2 object-cover"
       data-home-section-image
     />
-    <div class="hero-overlay bg-black/35"></div>
-    <div class="hero-content relative w-full justify-center text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black [text-shadow:-6px_6px_0_rgba(255,255,255,0.2)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
+    <div class="hero-content relative ml-auto w-1/2 justify-center text-black">
+      <div class="max-w-3xl space-y-6 px-8 text-left">
+        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black">Arandela Nina</h1>
+        <span class="badge badge-lg bg-black border-0 text-white italic block w-fit">Collab com @jojo.farhi</span>
+        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white p-2 rounded-2xl hidden">
           Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
         </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/20 p-8 uppercase text-white text-lg sm:text-xl font-light">
+        <div class="mt-10 flex items-center justify-start">
+          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000] p-8 uppercase text-white text-lg sm:text-xl font-light">
             Conhecer / Encomendar
           </a>
         </div>
@@ -85,25 +83,24 @@
   </section>
 
   <!-- Secao 4 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden bg-sky-500 text-white" data-home-section>
+  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden text-white" data-home-section>
     <img
       src="/assets/pages/home-sections/hero-4.jpg"
       alt=""
       aria-hidden="true"
       loading="lazy"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      class="pointer-events-none absolute left-0 top-0 h-full w-1/2 object-cover"
       data-home-section-image
     />
-    <div class="hero-overlay bg-black/35"></div>
-    <div class="hero-content relative w-full justify-center text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black [text-shadow:-6px_6px_0_rgba(255,255,255,0.2)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
+    <div class="hero-content relative ml-auto w-1/2 justify-center text-black">
+      <div class="max-w-3xl space-y-6 px-8 text-left">
+        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black">Arandela Nina</h1>
+        <span class="badge badge-lg bg-black border-0 text-white italic block w-fit">Collab com @jojo.farhi</span>
+        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white p-2 rounded-2xl hidden">
           Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
         </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/20 p-8 uppercase text-white text-lg sm:text-xl font-light">
+        <div class="mt-10 flex items-center justify-start">
+          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000] p-8 uppercase text-white text-lg sm:text-xl font-light">
             Conhecer / Encomendar
           </a>
         </div>
@@ -112,39 +109,25 @@
   </section>
 
   <!-- Secao 5 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden bg-rose-600 text-white" data-home-section>
+  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden text-white" data-home-section>
     <img
       src="/assets/pages/home-sections/hero-5.jpg"
       alt=""
       aria-hidden="true"
       loading="lazy"
-      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      class="pointer-events-none absolute left-0 top-0 h-full w-1/2 object-cover"
       data-home-section-image
     />
-    <div class="hero-overlay bg-black/35"></div>
-    <div class="hero-content relative w-full justify-center text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black [text-shadow:-6px_6px_0_rgba(255,255,255,0.2)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
+    <div class="hero-content relative ml-auto w-1/2 justify-center text-black">
+      <div class="max-w-3xl space-y-6 px-8 text-left">
+        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black">Arandela Nina</h1>
+        <span class="badge badge-lg bg-black border-0 text-white italic block w-fit">Collab com @jojo.farhi</span>
+        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white p-2 rounded-2xl hidden">
           Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
         </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/20 p-8 uppercase text-white text-lg sm:text-xl font-light">
+        <div class="mt-10 flex items-center justify-start">
+          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000] p-8 uppercase text-white text-lg sm:text-xl font-light">
             Conhecer / Encomendar
-          </a>
-        </div>
-      </div>
-    </div><div class="hero-content relative w-full justify-center text-center text-black">
-      <div class="max-w-3xl space-y-6 px-4 mx-auto text-center">
-        <h1 class="text-6xl sm:text-8xl font-cormorant font-normal tracking-tight text-black drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] [text-shadow:-6px_6px_0_rgba(255,255,255,0.5)]">Arandela Nina</h1>
-        <span class="badge badge-lg bg-black border-0 text-white italic opacity-50 block w-fit ml-auto">Collab com @jojo.farhi</span>
-        <p class="text-base sm:text-xl font-light leading-relaxed text-black bg-white/40 p-2 rounded-2xl hidden">
-          Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.
-        </p>
-        <div class="mt-10 flex items-center justify-end">
-          <a href="#" class="btn btn-ghost inline-flex items-center bg-[#800000]/40 p-8 uppercase text-white text-lg sm:text-xl font-light">
-            Conhecer/Encomendar
           </a>
         </div>
       </div>

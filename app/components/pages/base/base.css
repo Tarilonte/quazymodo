@@ -1943,6 +1943,9 @@
   .z-30 {
     z-index: 30;
   }
+  .z-50 {
+    z-index: 50;
+  }
   .tab-content {
     order: var(--tabcontent-order);
     display: none;
@@ -2187,6 +2190,9 @@
   }
   .mr-8 {
     margin-right: calc(var(--spacing) * 8);
+  }
+  .mr-auto {
+    margin-right: auto;
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
@@ -2684,6 +2690,9 @@
   .justify-end {
     justify-content: flex-end;
   }
+  .justify-start {
+    justify-content: flex-start;
+  }
   .justify-items-center {
     justify-items: center;
   }
@@ -2781,6 +2790,9 @@
     color: var(--color-warning-content);
     --alert-color: var(--color-warning);
   }
+  .bg-\[\#800000\] {
+    background-color: #800000;
+  }
   .bg-\[\#800000\]\/20 {
     background-color: color-mix(in oklab, #800000 20%, transparent);
   }
@@ -2868,6 +2880,9 @@
   .object-cover {
     object-fit: cover;
   }
+  .object-right {
+    object-position: right;
+  }
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
@@ -2900,11 +2915,20 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
+  .px-8 {
+    padding-inline: calc(var(--spacing) * 8);
+  }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
   }
   .text-center {
     text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-right {
+    text-align: right;
   }
   .font-cormorant {
     font-family: var(--font-cormorant);
@@ -3169,6 +3193,9 @@
   }
   .\[program\:php-fpm\] {
     program: php-fpm;
+  }
+  .\[text-shadow\:-6px_6px_0_\#fff\] {
+    text-shadow: -6px 6px 0 #fff;
   }
   .\[text-shadow\:-6px_6px_0_rgba\(255\,255\,255\,0\.2\)\] {
     text-shadow: -6px 6px 0 rgba(255,255,255,0.2);
