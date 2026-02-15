@@ -29,7 +29,7 @@
   }
 
   const minScale = 1;
-  const maxScale = 1.7;
+  const maxScale = 1.4;
   const topParallaxFactor = 0.5;
   let rafId = 0;
 
