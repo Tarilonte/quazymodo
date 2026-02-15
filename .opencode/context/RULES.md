@@ -28,7 +28,7 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - Controllers NAO DEVEM injetar HTML.
 - Todo HTML DEVE estar em templates.
 - Templates NUNCA DEVEM possuir JavaScript.
-- Ao criar templates HTML, os estilos DEVEM ser aplicados com classes do Tailwind CSS e do daisyUI, conforme `docs/tailwind-daisyui.md`.
+- Ao criar templates HTML, os estilos DEVEM ser aplicados com classes do Tailwind CSS e do daisyUI, conforme `docs/tailwindcss.md` e `docs/daisyui.md`.
 - Templates HTML NAO DEVEM usar atributo `style` inline para estilizacao visual.
 
 ## 5) Regras de codigo
@@ -69,4 +69,5 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
   - Rotas/middleware/controllers com League Route -> `docs/league-route.md`
   - Debug/log/paineis com Tracy -> `docs/tracy.md`
   - jQuery (ajax/eventos/selectors/manipulacao) -> `docs/jquery.md`
-  - Tailwind/daisyUI (utilitarios, temas, responsivo) -> `docs/tailwind-daisyui.md`
+  - Tailwind (utilitarios, temas, responsivo) -> `docs/tailwindcss.md`
+  - daisyUI (componentes, temas e docs) -> `docs/daisyui.md`
