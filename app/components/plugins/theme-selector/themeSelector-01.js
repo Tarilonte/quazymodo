@@ -2,7 +2,7 @@
 themeSelector01 = $("label#btn-themeSelector");
 
 // Define as cores do seletor de temas
-var lightTheme = "silk";
+var lightTheme = "bumblebee";
 var darkTheme = "sunset";
 
 // Captura o tema ativo

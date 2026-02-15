@@ -18,18 +18,20 @@
     .map((section) => ({
       section,
       image: section.querySelector('[data-home-section-image]'),
+      content: section.querySelector('[data-home-section-content]'),
       top: 0,
       height: 0,
       lastTransform: '',
+      lastLayout: '',
     }))
-    .filter((item) => item.image);
+    .filter((item) => item.image && item.content);
 
   if (items.length === 0) {
     return;
   }
 
-  const minScale = 1;
-  const maxScale = 1.4;
+  const finalScale = 1;
+  const StartScale = 0.8;
   const topParallaxFactor = 0.5;
   let rafId = 0;
 
@@ -45,6 +47,38 @@
     items.forEach((item) => {
       item.top = item.section.offsetTop;
       item.height = item.section.offsetHeight;
+
+      const isPortrait = item.section.offsetHeight > item.section.offsetWidth;
+      const nextLayout = isPortrait ? 'portrait' : 'landscape';
+
+      if (item.lastLayout === nextLayout) {
+        return;
+      }
+
+      item.lastLayout = nextLayout;
+
+      if (isPortrait) {
+        item.image.style.left = '0';
+        item.image.style.top = '0';
+        item.image.style.width = '100%';
+        item.image.style.height = '50%';
+
+        item.content.style.marginLeft = '0';
+        item.content.style.marginTop = 'auto';
+        item.content.style.width = '100%';
+        item.content.style.height = '50%';
+        return;
+      }
+
+      item.image.style.left = '0';
+      item.image.style.top = '0';
+      item.image.style.width = '50%';
+      item.image.style.height = '100%';
+
+      item.content.style.marginLeft = 'auto';
+      item.content.style.marginTop = '0';
+      item.content.style.width = '50%';
+      item.content.style.height = '100%';
     });
   };
 
@@ -96,7 +130,7 @@
 
       const bottomOverflow = bottom - viewportHeight;
       const progress = clamp(bottomOverflow / item.height, 0, 1);
-      const scale = minScale + ((maxScale - minScale) * progress);
+      const scale = finalScale + ((StartScale - finalScale) * progress);
 
       writeVisualState(
         item,
