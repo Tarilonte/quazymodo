@@ -14,13 +14,27 @@
     <div class="p-8 md:p-20 text-left h-full flex flex-col">
       <h1 class="text-4xl md:text-8xl font-cormorant font-normal tracking-tight">{{ title }}</h1>
       <span class="badge badge-soft badge-sm md:badge-md italic">{{ badge }}</span>
-      <p class="font-light mt-6">{{ description }}</p>
-      <div class="mt-auto pt-10 flex items-center justify-start">
-        <a href="{{ href }}" class="btn btn-outline text-lg">
+      <p class="font-light mt-6 hidden md:block">{{ description }}</p>
+
+      <a 
+        href="{{ href }}"
+        class="mt-auto flex bg-base-200 w-min rounded-3xl shadow-lg flex-row items-center justify-center p-4 md:p-8"
+      >
+        <div class="">
+          <span class="text-xs uppercase tracking-[0.16em] text-base-content/70 text-nowrap">A partir de</span>
+          <strong class="mt-1 md:text-2xl md:text-3xl font-semibold leading-none text-base-content text-nowrap">
+            R$ {{ preco }}
+          </strong>
+        </div>
+
+        <div class="divider divider-horizontal"></div>
+
+        <div class="md:text-lg text-nowrap">
           <i class="ti ti-shopping-cart"></i>
           Encomendar
-        </a>
-      </div>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
