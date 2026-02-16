@@ -67,7 +67,7 @@ $catalogoItems = [
     componentName: '/pages/catalogo/catalogoItem',
     inserts: [
       'image-src' => '/assets/pages/catalogo/images/abajur-gomos-sofia-01.jpg',
-      'title' => 'Abajur Gomos Sofia',
+      'title' => 'Abajur Sofia',
       'badge' => '',
       'description' => 'Um único gomo de porcelana que valoriza a beleza do essencial. A forma orgânica e o acabamento artesanal deixam a luz mais acolhedora e a decoração mais elegante.',
       'preco' => '2.140,00',
@@ -78,7 +78,7 @@ $catalogoItems = [
     componentName: '/pages/catalogo/catalogoItem',
     inserts: [
       'image-src' => '/assets/pages/catalogo/images/abajur-gomos-ana-01.jpg',
-      'title' => 'Abajur Gomos Ana',
+      'title' => 'Abajur Ana',
       'badge' => '',
       'description' => 'Um abajur de piso imponente, com 14 gomos de porcelana e estrutura bem definida. Eleva o ambiente com elegância e um toque artesanal de alto nível.',
       'preco' => '7.420,00',
