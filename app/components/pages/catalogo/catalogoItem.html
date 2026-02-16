@@ -1,0 +1,23 @@
+<!--
+  Catalogo item section template.
+  Intencao: centralizar o markup de cada secao do catalogo.
+-->
+<section class="hero relative min-h-dvh w-full snap-start overflow-hidden" data-catalogo-section>
+  <img
+    src="{{ image-src }}"
+    alt="{{ title }}"
+    loading="lazy"
+    class="pointer-events-none absolute object-cover"
+    data-catalogo-section-image
+  />
+  <div class="hero-content relative justify-center text-base-content bg-base-100 p-0" data-catalogo-section-content>
+    <div class="p-8 md:p-20 text-left h-full flex flex-col">
+      <h1 class="text-4xl md:text-8xl font-cormorant font-normal tracking-tight">{{ title }}</h1>
+      <span class="badge badge-soft badge-sm md:badge-md italic">{{ badge }}</span>
+      <p class="font-light mt-6">{{ description }}</p>
+      <div class="mt-auto pt-10 flex items-center justify-start">
+        {{ actions }}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,61 +1,7 @@
 <!--
   Catalogo full-screen layout.
-  Intencao: cada secao ocupa 100% da viewport.
-  Layout dinamico: paisagem = imagem esquerda / conteudo direita,
-  retrato = imagem superior / conteudo inferior.
+  Intencao: renderizar itens do catalogo em secoes full-screen.
 -->
 <main class="w-full flex-1 min-h-0 overflow-y-auto snap-y snap-proximity" data-catalogo-container>
-  <!-- Secao 1 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden" data-catalogo-section>
-    <img
-      src="/assets/pages/catalogo/images/hero-1.jpg"
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      class="pointer-events-none absolute object-cover"
-      data-catalogo-section-image
-    />
-    <div class="hero-content relative justify-center text-base-content bg-base-100 p-0" data-catalogo-section-content>
-      <div class="p-6 md:p-20 text-left h-full flex flex-col">
-        <h1 class="text-4xl md:text-8xl font-cormorant font-normal tracking-tight">Arandela Nina</h1>
-        <span class="badge badge-soft badge-sm md:badge-md italic">Collab com @jojo.farhi</span>
-        <p class="font-light mt-6">
-          Três delicadas bolas de porcelana pintadas à mão, que trazem um toque de sofisticação a qualquer ambiente, essa é a Arandela Nina. Com opções de pintura variadas – desde cores lisas e listradas até detalhes com poás de ouro – ela se adapta a diferentes estilos de decoração.
-        </p>
-        <div class="mt-auto pt-10 flex items-center justify-start">
-          <a href="#" class="btn btn-outline text-lg">
-            <i class="ti ti-shopping-cart"></i>
-            Encomendar
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Secao 2 -->
-  <section class="hero relative min-h-dvh w-full snap-start overflow-hidden" data-catalogo-section>
-    <img
-      src="/assets/pages/catalogo/images/hero-2.jpg"
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      class="pointer-events-none absolute object-cover"
-      data-catalogo-section-image
-    />
-    <div class="hero-content relative justify-center text-base-content bg-base-100 p-0" data-catalogo-section-content>
-      <div class="p-10 md:p-20 text-left h-full flex flex-col">
-        <h1 class="text-4xl md:text-8xl font-cormorant font-normal tracking-tight">Abajur Gomos Cris</h1>
-        <p class="text-base font-light leading-relaxed text-base-content mt-6">
-          O Abajur Gomos Cris, apresentado na CASACOR Rio 2025, é composto por dois gomos de porcelana pintados à mão sobre uma base de acrílico e uma elegante cúpula cilíndrica. Seu design equilibra forma e leveza, resultando em uma peça sofisticada e contemporânea. Ideal para ambientes que valorizam o trabalho artesanal e a iluminação acolhedora.
-        </p>
-        <div class="mt-auto pt-10 flex items-center justify-start">
-          <a href="#" class="btn">
-            <i class="ti ti-shopping-cart"></i>
-            Encomendar
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  {{ catalogo-items }}
 </main>
