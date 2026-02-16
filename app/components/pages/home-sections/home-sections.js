@@ -22,7 +22,8 @@
       contentBody: section.querySelector('[data-home-section-content] > div'),
       top: 0,
       height: 0,
-      lastTransform: '',
+      lastImageTransform: '',
+      lastContentTransform: '',
       lastLayout: '',
     }))
     .filter((item) => item.image && item.content && item.contentBody);
@@ -32,8 +33,8 @@
   }
 
   const finalScale = 1;
-  const StartScale = 0.8;
-  const topParallaxFactor = 0.5;
+  const StartScale = 0.6;
+  const topParallaxFactor = 0.8;
   let rafId = 0;
 
   /*
@@ -99,10 +100,15 @@
   /*
    * Aplica estilo somente quando houver mudanca real.
    */
-  const writeVisualState = (item, transform) => {
-    if (item.lastTransform !== transform) {
-      item.image.style.transform = transform;
-      item.lastTransform = transform;
+  const writeVisualState = (item, imageTransform, contentTransform) => {
+    if (item.lastImageTransform !== imageTransform) {
+      item.image.style.transform = imageTransform;
+      item.lastImageTransform = imageTransform;
+    }
+
+    if (item.lastContentTransform !== contentTransform) {
+      item.content.style.transform = contentTransform;
+      item.lastContentTransform = contentTransform;
     }
   };
 
@@ -119,12 +125,12 @@
 
       // Ignora secoes distantes para reduzir custo por frame.
       if (bottom < -item.height || top > viewportHeight + item.height) {
-        writeVisualState(item, 'translateY(0px) scale(1)');
+        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)');
         return;
       }
 
       if (isFullyVisible) {
-        writeVisualState(item, 'translateY(0px) scale(1)');
+        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)');
         return;
       }
 
@@ -137,7 +143,8 @@
 
         writeVisualState(
           item,
-          `translateY(${translateY.toFixed(2)}px) scale(1)`
+          `translateY(${translateY.toFixed(2)}px) scale(1)`,
+          'scale(1)'
         );
         return;
       }
@@ -148,7 +155,8 @@
 
       writeVisualState(
         item,
-        `translateY(0px) scale(${scale.toFixed(3)})`
+        'translateY(0px) scale(1)',
+        `scale(${scale.toFixed(3)})`
       );
     });
   };
