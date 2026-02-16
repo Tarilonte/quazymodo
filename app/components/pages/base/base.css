@@ -2187,8 +2187,14 @@
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
   }
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
   .mb-8 {
     margin-bottom: calc(var(--spacing) * 8);
+  }
+  .mb-10 {
+    margin-bottom: calc(var(--spacing) * 10);
   }
   .ml-1 {
     margin-left: calc(var(--spacing) * 1);
@@ -2668,6 +2674,9 @@
   }
   .snap-y {
     scroll-snap-type: y var(--tw-scroll-snap-strictness);
+  }
+  .snap-mandatory {
+    --tw-scroll-snap-strictness: mandatory;
   }
   .snap-proximity {
     --tw-scroll-snap-strictness: proximity;
@@ -3255,6 +3264,11 @@
         --modal-bl: var(--radius-box);
         --modal-br: var(--radius-box);
       }
+    }
+  }
+  .md\:snap-proximity {
+    @media (width >= 48rem) {
+      --tw-scroll-snap-strictness: proximity;
     }
   }
   .md\:flex-row {
