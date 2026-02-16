@@ -35,12 +35,24 @@
   const finalScale = 1;
   const StartScale = 0.6;
   const topParallaxFactor = 0.8;
+  const rightEdgeAngleDeg = 80;
   let rafId = 0;
 
   /*
    * Mantem progress em intervalo valido.
    */
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  /*
+   * Gera clip-path com lado direito inclinado em 70deg.
+   */
+  const buildRightEdgeClipPath = (width, height) => {
+    const angleRad = (rightEdgeAngleDeg * Math.PI) / 180;
+    const offset = clamp(height / Math.tan(angleRad), 0, width * 0.9);
+    const topRightX = width - offset;
+
+    return `polygon(0 0, ${topRightX.toFixed(2)}px 0, 100% 100%, 0 100%)`;
+  };
 
   /*
    * Atualiza metrica de layout para evitar leituras repetidas por frame.
@@ -77,6 +89,8 @@
 
         item.image.style.height = `${imageHeight}px`;
         item.content.style.height = `${contentHeight}px`;
+        item.image.style.clipPath = 'none';
+        item.image.style.webkitClipPath = 'none';
         return;
       }
 
@@ -84,6 +98,11 @@
       item.image.style.top = '0';
       item.image.style.width = '50%';
       item.image.style.height = '100%';
+
+      const imageWidth = item.section.offsetWidth * 0.5;
+      const clipPath = buildRightEdgeClipPath(imageWidth, item.section.offsetHeight);
+      item.image.style.clipPath = clipPath;
+      item.image.style.webkitClipPath = clipPath;
 
       item.content.style.position = 'relative';
       item.content.style.left = '';
