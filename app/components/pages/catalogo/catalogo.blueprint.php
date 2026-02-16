@@ -14,13 +14,8 @@ $catalogoItems = [
       'image-src' => '/assets/pages/catalogo/images/hero-1.jpg',
       'title' => 'Arandela Nina',
       'badge' => 'Collab com @jojo.farhi',
-      'description' => 'Tres delicadas bolas de porcelana pintadas a mao, que trazem um toque de sofisticacao a qualquer ambiente, essa e a Arandela Nina. Com opcoes de pintura variadas - desde cores lisas e listradas ate detalhes com poas de ouro - ela se adapta a diferentes estilos de decoracao.',
-      'actions' => ComponentFactory::Template(
-        componentName: '/pages/catalogo/buttonEncomendar',
-        inserts: [
-          'href' => '#',
-        ]
-      ),
+      'description' => 'Três esferas de porcelana pintadas à mão, com presença delicada e acabamento impecável. As opções de pintura permitem personalizar a peça com elegância, do minimal ao mais precioso.',
+      'href' => '#',
     ]
   ),
   ComponentFactory::Template(
@@ -29,13 +24,8 @@ $catalogoItems = [
       'image-src' => '/assets/pages/catalogo/images/abajur-cris-01.jpg',
       'title' => 'Abajur Cris',
       'badge' => 'Colecao CASACOR 2025',
-      'description' => 'O Abajur Gomos Cris, apresentado na CASACOR Rio 2025, e composto por dois gomos de porcelana pintados a mao sobre uma base de acrilico e uma elegante cupula cilindrica. Seu design equilibra forma e leveza, resultando em uma peca sofisticada e contemporanea. Ideal para ambientes que valorizam o trabalho artesanal e a iluminacao acolhedora.',
-      'actions' => ComponentFactory::Template(
-        componentName: '/pages/catalogo/buttonEncomendar',
-        inserts: [
-          'href' => '#',
-        ]
-      ),
+      'description' => 'Dois gomos de porcelana pintados à mão, com proporções contemporâneas e acabamento preciso. Uma peça de presença marcante, que cria uma luz confortável e sofisticada.',
+      'href' => '#',
     ]
   ),
   ComponentFactory::Template(
@@ -44,13 +34,28 @@ $catalogoItems = [
       'image-src' => '/assets/pages/catalogo/images/abajur-joana-01.jpg',
       'title' => 'Abajur Joana',
       'badge' => 'Collab com @jojo.farhi',
-      'description' => 'O Abajur Gomos Joana e feito com tres gomos de porcelana pintados a mao e empilhados sobre uma base de acrilico. Disponivel nas opcoes Pintura Lisa, Listrada ou Vichy, combina com diferentes estilos de decoracao, trazendo elegancia e luz suave a ambientes como quartos, salas ou escritorios.',
-      'actions' => ComponentFactory::Template(
-        componentName: '/pages/catalogo/buttonEncomendar',
-        inserts: [
-          'href' => '#',
-        ]
-      ),
+      'description' => 'Três gomos de porcelana pintados à mão, equilibrados sobre uma base de acrílico, formando uma silhueta leve e refinada. Um abajur versátil, feito para iluminar com suavidade e estilo.',
+      'href' => '#',
+    ]
+  ),
+  ComponentFactory::Template(
+    componentName: '/pages/catalogo/catalogoItem',
+    inserts: [
+      'image-src' => '/assets/pages/catalogo/images/abajur-aline-01.jpg',
+      'title' => 'Abajur Aline',
+      'badge' => '',
+      'description' => 'Quatro esferas de porcelana pintadas à mão, empilhadas com leveza sobre base de acrílico. As opções de pintura permitem um resultado delicado e elegante, perfeito para luz suave.',
+      'href' => '#',
+    ]
+  ),
+  ComponentFactory::Template(
+    componentName: '/pages/catalogo/catalogoItem',
+    inserts: [
+      'image-src' => '/assets/pages/catalogo/images/arandela-luna-01.jpg',
+      'title' => 'Arandela Luna',
+      'badge' => '',
+      'description' => 'Um contraste de volumes que traz modernidade sem perder a delicadeza. Pintada 100% à mão, cria um ponto de luz elegante e cheio de personalidade.',
+      'href' => '#',
     ]
   ),
 ];
