@@ -3,21 +3,21 @@
 use Quazymodo\ComponentFactory;
 
 /*
- * Home sections page blueprint.
+ * Catalogo page blueprint.
  *
- * Intencao: fornecer uma pagina alternativa com 5 secoes full-screen.
+ * Intencao: fornecer uma pagina alternativa com secoes full-screen.
  */
 return [
   'extends' => '/pages/base/',
   'js' => [
-    'home-sections.js',
+    'catalogo.js',
   ],
   'inserts' => [
-    'page-title' => APP_NAME . ' - Full Sections',
+    'page-title' => APP_NAME . ' - Catalogo',
     'body-class' => 'h-dvh flex flex-col overflow-hidden',
     'body' => [
       // componentFactory::Plugin(componentName: '/plugins/navbar/navbar'),
-      componentFactory::Template(componentName: '/pages/home-sections/'),
+      componentFactory::Template(componentName: '/pages/catalogo/'),
     ],
   ]
 ];

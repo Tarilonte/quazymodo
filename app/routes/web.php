@@ -7,8 +7,8 @@
 // Home page.
 $router->map(method: 'GET', path: '/', handler: 'Controller\HomeController::index');
 
-// Full-screen sections page.
-$router->map(method: 'GET', path: '/home-sections', handler: 'Controller\HomeController::sections');
+// Catalog page.
+$router->map(method: 'GET', path: '/catalogo', handler: 'Controller\HomeController::catalogo');
 
 // User auth and profile forms.
 $router->map(method: 'GET', path: '/login', handler: 'Controller\UserController::showLoginForm');

@@ -20,13 +20,13 @@ class HomeController extends AbstractController
   }
 
   /*
-   * Full sections demo action.
+   * Catalog page action.
    *
-   * Intencao: expor pagina alternativa com 5 secoes 100% viewport.
+   * Intencao: expor o catalogo em secoes 100% viewport.
    */
-  public function sections(): ResponseInterface
+  public function catalogo(): ResponseInterface
   {
-    $page = componentFactory::Page(componentName: '/pages/home-sections/');
+    $page = componentFactory::Page(componentName: '/pages/catalogo/');
     return $this->html($page);
   }
 }

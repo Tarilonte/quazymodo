@@ -1,5 +1,5 @@
 /*
- * Home sections visual behavior.
+ * Catalogo visual behavior.
  *
  * Intencao:
  * - manter parallax na imagem quando a secao sai por cima
@@ -8,8 +8,8 @@
  * - alinhar arestas entre secoes (base atual segue topo da proxima)
  */
 (() => {
-  const container = document.querySelector('[data-home-sections-container]');
-  const sections = Array.from(document.querySelectorAll('[data-home-section]'));
+  const container = document.querySelector('[data-catalogo-container]');
+  const sections = Array.from(document.querySelectorAll('[data-catalogo-section]'));
 
   if (!container || sections.length === 0) {
     return;
@@ -30,12 +30,12 @@
    * Cria frame para separar clipping (frame) de transform (imagem).
    */
   const ensureImageFrame = (image) => {
-    if (image.parentElement?.hasAttribute('data-home-section-image-frame')) {
+    if (image.parentElement?.hasAttribute('data-catalogo-section-image-frame')) {
       return image.parentElement;
     }
 
     const frame = document.createElement('div');
-    frame.setAttribute('data-home-section-image-frame', '');
+    frame.setAttribute('data-catalogo-section-image-frame', '');
     frame.className = 'pointer-events-none absolute overflow-hidden';
 
     image.parentNode.insertBefore(frame, image);
@@ -61,15 +61,15 @@
 
   const items = sections
     .map((section) => {
-      const image = section.querySelector('[data-home-section-image]');
+      const image = section.querySelector('[data-catalogo-section-image]');
       const frame = image ? ensureImageFrame(image) : null;
 
       return {
         section,
         frame,
         image,
-        content: section.querySelector('[data-home-section-content]'),
-        contentBody: section.querySelector('[data-home-section-content] > div'),
+        content: section.querySelector('[data-catalogo-section-content]'),
+        contentBody: section.querySelector('[data-catalogo-section-content] > div'),
         top: 0,
         height: 0,
         lastImageTransform: '',
