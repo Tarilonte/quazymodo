@@ -24,6 +24,7 @@
       height: 0,
       lastImageTransform: '',
       lastContentTransform: '',
+      lastClipPath: '',
       lastLayout: '',
     }))
     .filter((item) => item.image && item.content && item.contentBody);
@@ -35,7 +36,7 @@
   const finalScale = 1;
   const StartScale = 0.6;
   const topParallaxFactor = 0.8;
-  const rightEdgeAngleDeg = 80;
+  const topEdgeFinalPercentDefault = 80;
   let rafId = 0;
 
   /*
@@ -44,14 +45,11 @@
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   /*
-   * Gera clip-path com lado direito inclinado em 70deg.
+   * Gera clip-path com aresta superior controlada em percentual.
    */
-  const buildRightEdgeClipPath = (width, height) => {
-    const angleRad = (rightEdgeAngleDeg * Math.PI) / 180;
-    const offset = clamp(height / Math.tan(angleRad), 0, width * 0.9);
-    const topRightX = width - offset;
-
-    return `polygon(0 0, ${topRightX.toFixed(2)}px 0, 100% 100%, 0 100%)`;
+  const buildRightEdgeClipPathByTopPercent = (topPercent) => {
+    const normalizedTopPercent = clamp(topPercent, 1, 100);
+    return `polygon(0 0, ${normalizedTopPercent.toFixed(2)}% 0, 100% 100%, 0 100%)`;
   };
 
   /*
@@ -99,8 +97,7 @@
       item.image.style.width = '50%';
       item.image.style.height = '100%';
 
-      const imageWidth = item.section.offsetWidth * 0.5;
-      const clipPath = buildRightEdgeClipPath(imageWidth, item.section.offsetHeight);
+      const clipPath = buildRightEdgeClipPathByTopPercent(100);
       item.image.style.clipPath = clipPath;
       item.image.style.webkitClipPath = clipPath;
 
@@ -119,7 +116,7 @@
   /*
    * Aplica estilo somente quando houver mudanca real.
    */
-  const writeVisualState = (item, imageTransform, contentTransform) => {
+  const writeVisualState = (item, imageTransform, contentTransform, clipPath) => {
     if (item.lastImageTransform !== imageTransform) {
       item.image.style.transform = imageTransform;
       item.lastImageTransform = imageTransform;
@@ -128,6 +125,12 @@
     if (item.lastContentTransform !== contentTransform) {
       item.content.style.transform = contentTransform;
       item.lastContentTransform = contentTransform;
+    }
+
+    if (item.lastClipPath !== clipPath) {
+      item.image.style.clipPath = clipPath;
+      item.image.style.webkitClipPath = clipPath;
+      item.lastClipPath = clipPath;
     }
   };
 
@@ -144,12 +147,29 @@
 
       // Ignora secoes distantes para reduzir custo por frame.
       if (bottom < -item.height || top > viewportHeight + item.height) {
-        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)');
+        const clipPath = item.lastLayout === 'portrait'
+          ? 'none'
+          : buildRightEdgeClipPathByTopPercent(100);
+        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)', clipPath);
         return;
       }
 
+      let clipProgress = 0;
+      if (top < 0) {
+        clipProgress = clamp((-top) / item.height, 0, 1);
+      } else if (bottom > viewportHeight) {
+        clipProgress = clamp((bottom - viewportHeight) / item.height, 0, 1);
+      }
+
+      const invertedProgress = 1 - clipProgress;
+      const topEdgeFinalPercent = clamp(topEdgeFinalPercentDefault, 1, 100);
+      const animatedTopEdgePercent = 100 - ((100 - topEdgeFinalPercent) * invertedProgress);
+      const clipPath = item.lastLayout === 'portrait'
+        ? 'none'
+        : buildRightEdgeClipPathByTopPercent(animatedTopEdgePercent);
+
       if (isFullyVisible) {
-        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)');
+        writeVisualState(item, 'translateY(0px) scale(1)', 'scale(1)', clipPath);
         return;
       }
 
@@ -163,7 +183,8 @@
         writeVisualState(
           item,
           `translateY(${translateY.toFixed(2)}px) scale(1)`,
-          'scale(1)'
+          'scale(1)',
+          clipPath
         );
         return;
       }
@@ -175,7 +196,8 @@
       writeVisualState(
         item,
         'translateY(0px) scale(1)',
-        `scale(${scale.toFixed(3)})`
+        `scale(${scale.toFixed(3)})`,
+        clipPath
       );
     });
   };
