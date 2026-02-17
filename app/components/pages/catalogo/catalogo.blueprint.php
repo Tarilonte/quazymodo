@@ -123,11 +123,10 @@ $catalogoItems = [
 return [
   'extends' => '/pages/base/',
   'js' => [
-    'catalogo.js',
+    //'catalogo.js',
   ],
   'inserts' => [
     'page-title' => 'Catálogo',
-    'body-class' => 'h-dvh flex flex-col overflow-hidden',
     'body' => [
       // componentFactory::Plugin(componentName: '/plugins/navbar/navbar'),
       componentFactory::Template(componentName: '/pages/catalogo/'),

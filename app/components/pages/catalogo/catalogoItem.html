@@ -1,40 +1,51 @@
-<!--
-  Catalogo item section template.
-  Intencao: centralizar o markup de cada secao do catalogo.
--->
-<section class="hero relative min-h-dvh w-full snap-start overflow-hidden" data-catalogo-section>
-  <img
-    src="{{ image-src }}"
-    alt="{{ title }}"
-    loading="lazy"
-    class="pointer-events-none absolute object-cover"
-    data-catalogo-section-image
-  />
-  <div class="hero-content relative justify-center text-base-content bg-base-100 p-0" data-catalogo-section-content>
-    <div class="p-8 md:p-20 text-left h-full flex flex-col">
-      <h1 class="text-4xl md:text-8xl font-cormorant font-normal tracking-tight mb-6">{{ title }}</h1>
-      <p class="font-light mb-6">{{ description }}</p>
-      <span class="badge badge-soft badge-sm md:badge-md italic">{{ badge }}</span>
-      <div class="mb-10"></div>
-      <a 
-        href="{{ href }}"
-        class="mt-auto flex bg-base-200 w-min rounded-3xl shadow-lg flex-row items-center justify-center p-4 md:p-8"
-      >
-        <div class="">
-          <span class="text-xs uppercase tracking-[0.16em] text-base-content/70 text-nowrap">A partir de</span>
-          <strong class="mt-1 md:text-2xl md:text-3xl font-semibold leading-none text-base-content text-nowrap">
-            R$ {{ preco }}
-          </strong>
-        </div>
 
-        <div class="divider divider-horizontal"></div>
+<section 
+  produto-secao
+  class="
+    h-full w-full snap-start grid grid-cols-2 
+    "
+  >
+  <div
+  produto-imagem
+    style="background-image: url({{image-src}});"
+    class="
+      bg-center bg-no-repeat [background-size:90%] 
+    "
+  >
+  </div>
 
-        <div class="md:text-lg text-nowrap">
-          <i class="ti ti-shopping-cart"></i>
-          Encomendar
-        </div>
-      </a>
+  <div 
+    produto-descricao
+    class="
+      border-red-400 box-border border-2 border-dotted
+      p-8 md:p-20 text-left h-full flex flex-col
+      "
+  >
+    <h1 
+      class="text-6xl font-parisienne font-normal mb-6 text-shadow-lg text-shadow-accent/30"
+    >
+      {{ title }}
+    </h1>
+    <p class="font-light mb-6">{{ description }}</p>
+    <span class="badge badge-soft badge-sm md:badge-md italic">{{ badge }}</span>
+    <div class="mb-10"></div>
+    <a 
+      href="{{ href }}"
+      class="mt-auto flex bg-base-200 w-min rounded-3xl shadow-lg flex-row items-center justify-center p-4 md:p-8"
+    >
+      <div class="">
+        <span class="text-xs uppercase tracking-[0.16em] text-base-content/70 text-nowrap">A partir de</span>
+        <strong class="mt-1 md:text-3xl font-semibold leading-none text-base-content text-nowrap">
+          R$ {{ preco }}
+        </strong>
+      </div>
 
-    </div>
+      <div class="divider divider-horizontal"></div>
+
+      <div class="md:text-lg text-nowrap">
+        <i class="ti ti-shopping-bag"></i>
+        Encomendar
+      </div>
+    </a>
   </div>
 </section>
