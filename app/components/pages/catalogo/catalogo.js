@@ -9,6 +9,8 @@
 $(document).ready(function () {
   const $container = $('[catalogo-container]').first();
   const $sections = $container.find('[produto-secao]');
+  const layerInactiveClasses = 'opacity-0 translate-y-4';
+  const layerActiveClasses = 'opacity-100 translate-y-0';
 
   if ($container.length === 0 || $sections.length === 0) {
     return;
@@ -19,7 +21,15 @@ $(document).ready(function () {
    */
   const setSectionState = (sectionElement, isActive) => {
     const $section = $(sectionElement);
+    const $layers = $section.find('[produto-camada]');
+
     $section.toggleClass('is-snap-active', isActive);
+
+    if ($layers.length > 0) {
+      $layers
+        .toggleClass(layerActiveClasses, isActive)
+        .toggleClass(layerInactiveClasses, !isActive);
+    }
   };
 
   /*

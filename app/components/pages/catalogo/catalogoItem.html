@@ -31,16 +31,48 @@
       "
   >
     <h1 
-      class="text-6xl font-parisienne font-normal mb-6 text-shadow-lg text-shadow-accent/30"
+      produto-camada
+      class="
+        text-6xl font-parisienne font-normal mb-6 text-shadow-lg text-shadow-accent/30
+        opacity-0 translate-y-4
+        transition-all duration-900 delay-0 ease-[cubic-bezier(0.16,1,0.3,1)]
+        motion-reduce:transition-none motion-reduce:transform-none
+      "
     >
       {{ title }}
     </h1>
-    <p class="font-light mb-6">{{ description }}</p>
-    <span class="badge badge-soft badge-sm md:badge-md italic">{{ badge }}</span>
+    <p 
+      produto-camada
+      class="
+        font-light mb-6
+        opacity-0 translate-y-4
+        transition-all duration-900 delay-150 ease-[cubic-bezier(0.16,1,0.3,1)]
+        motion-reduce:transition-none motion-reduce:transform-none
+      "
+    >
+      {{ description }}
+    </p>
+    <span 
+      produto-camada
+      class="
+        badge badge-soft badge-sm md:badge-md italic
+        opacity-0 translate-y-4
+        transition-all duration-900 delay-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+        motion-reduce:transition-none motion-reduce:transform-none
+      "
+    >
+      {{ badge }}
+    </span>
     <div class="mb-10"></div>
     <a 
+      produto-camada
       href="{{ href }}"
-      class="mt-auto flex bg-base-200 w-min rounded-3xl shadow-lg flex-row items-center justify-center p-4 md:p-8"
+      class="
+        mt-auto flex bg-base-200 w-min rounded-3xl shadow-lg flex-row items-center justify-center p-4 md:p-8
+        opacity-0 translate-y-4
+        transition-all duration-900 delay-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+        motion-reduce:transition-none motion-reduce:transform-none
+      "
     >
       <div class="">
         <span class="text-xs uppercase tracking-[0.16em] text-base-content/70 text-nowrap">A partir de</span>
