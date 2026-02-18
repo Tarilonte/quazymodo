@@ -2,10 +2,9 @@
  * Catalogo snap state controller.
  *
  * Intencao:
- * - detectar quando uma secao fica ativa no snap
- * - animar imagem de 110% para 100% na secao ativa
- * - adicionar transicao elegante no bloco de descricao
- * - reverter estados quando a secao perde o estado ativo
+ * - detectar secao ativa pelo centro mais proximo
+ * - animar imagem continuamente de 110% para 100% durante a transicao
+ * - manter evento catalogo:snap na troca real de secao ativa
  */
 $(document).ready(function () {
   const $container = $('[catalogo-container]').first();
@@ -20,78 +19,87 @@ $(document).ready(function () {
    */
   const setSectionState = (sectionElement, isActive) => {
     const $section = $(sectionElement);
-    const $image = $section.find('[produto-imagem]').first();
-    const $description = $section.find('[produto-descricao]').first();
-
-    if ($image.length === 0) {
-      return;
-    }
-
     $section.toggleClass('is-snap-active', isActive);
+  };
 
-    $image.css({
-      transition: 'background-size 1300ms cubic-bezier(0.22, 1, 0.36, 1), filter 1300ms ease',
-      backgroundSize: isActive ? '100%' : '110%',
-      filter: isActive ? 'brightness(1) saturate(1)' : 'brightness(0.9) saturate(0.92)',
+  /*
+   * Atualiza zoom continuo da imagem e secao ativa.
+   */
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const $images = $sections.map(function () {
+    return $(this).find('[produto-imagem-fundo]').first().get(0);
+  });
+  const lastImageTransformByElement = new WeakMap();
+  let activeSection = null;
+  let rafId = 0;
+
+  const updateVisualState = () => {
+    rafId = 0;
+
+    const containerElement = $container.get(0);
+    const containerRect = containerElement.getBoundingClientRect();
+    const containerCenterY = containerRect.top + (containerRect.height / 2);
+
+    let nextActiveSection = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    $sections.each(function (index) {
+      const sectionElement = this;
+      const imageElement = $images.get(index);
+
+      if (!imageElement) {
+        return;
+      }
+
+      const sectionRect = sectionElement.getBoundingClientRect();
+      const sectionCenterY = sectionRect.top + (sectionRect.height / 2);
+      const distanceFromCenter = Math.abs(sectionCenterY - containerCenterY);
+
+      if (distanceFromCenter < nearestDistance) {
+        nearestDistance = distanceFromCenter;
+        nextActiveSection = sectionElement;
+      }
+
+      const maxDistance = (containerRect.height / 2) + (sectionRect.height / 2);
+      const progress = 1 - clamp(distanceFromCenter / maxDistance, 0, 1);
+      const scaleValue = 1.10 - (0.10 * progress);
+      const nextTransform = `scale(${scaleValue.toFixed(4)})`;
+      const previousTransform = lastImageTransformByElement.get(imageElement);
+
+      if (previousTransform !== nextTransform) {
+        imageElement.style.transform = nextTransform;
+        lastImageTransformByElement.set(imageElement, nextTransform);
+      }
     });
 
-    if ($description.length > 0) {
-      $description.css({
-        transition: 'transform 900ms cubic-bezier(0.22, 1, 0.36, 1), opacity 900ms ease',
-        transform: isActive ? 'translateY(0px)' : 'translateY(18px)',
-        opacity: isActive ? '1' : '0.72',
+    if (nextActiveSection && nextActiveSection !== activeSection) {
+      if (activeSection) {
+        setSectionState(activeSection, false);
+      }
+
+      setSectionState(nextActiveSection, true);
+      activeSection = nextActiveSection;
+
+      $container.trigger('catalogo:snap', {
+        index: $sections.index(nextActiveSection),
+        section: nextActiveSection,
       });
     }
   };
 
-  /*
-   * Estado inicial: todas as secoes inativas (110%).
-   */
+  const scheduleUpdate = () => {
+    if (rafId !== 0) {
+      return;
+    }
+
+    rafId = window.requestAnimationFrame(updateVisualState);
+  };
+
   $sections.each(function () {
     setSectionState(this, false);
   });
 
-  let activeSection = null;
-
-  if (!('IntersectionObserver' in window)) {
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      let bestCandidate = null;
-      let bestRatio = 0;
-
-      entries.forEach((entry) => {
-        const sectionElement = entry.target;
-
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.85 && entry.intersectionRatio > bestRatio) {
-          bestRatio = entry.intersectionRatio;
-          bestCandidate = sectionElement;
-        }
-      });
-
-      if (bestCandidate && bestCandidate !== activeSection) {
-        if (activeSection) {
-          setSectionState(activeSection, false);
-        }
-
-        setSectionState(bestCandidate, true);
-        activeSection = bestCandidate;
-
-        $container.trigger('catalogo:snap', {
-          index: $sections.index(bestCandidate),
-          section: bestCandidate,
-        });
-      }
-    },
-    {
-      root: $container.get(0),
-      threshold: [0.95, 1],
-    }
-  );
-
-  $sections.each(function () {
-    observer.observe(this);
-  });
+  $container.on('scroll', scheduleUpdate);
+  $(window).on('resize orientationchange', scheduleUpdate);
+  scheduleUpdate();
 });

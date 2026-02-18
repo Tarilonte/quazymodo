@@ -7,12 +7,21 @@
   >
   <div
   produto-imagem
-    style="background-image: url({{image-src}});"
     class="
-      bg-center bg-no-repeat [background-size:110%]
-      transition-[background-size] duration-10000 ease-in
+      relative overflow-hidden
     "
   >
+    <img
+      produto-imagem-fundo
+      src="{{ image-src }}"
+      alt="{{ title }}"
+      loading="lazy"
+      class="
+        h-full w-full object-cover object-center
+        origin-center will-change-transform
+        transition-transform duration-700 ease-out
+      "
+    />
   </div>
 
   <div 
