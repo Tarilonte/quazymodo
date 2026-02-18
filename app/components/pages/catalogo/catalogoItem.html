@@ -2,13 +2,15 @@
 <section 
   produto-secao
   class="
-    h-full w-full snap-start grid grid-cols-[55%_45%] 
+    h-full w-full snap-start grid
+    grid-rows-[minmax(0,1fr)_auto]
+    landscape:grid-rows-1 landscape:grid-cols-[55%_45%]
     "
   >
   <div
   produto-imagem
     class="
-      relative overflow-hidden
+      relative overflow-hidden h-full min-h-0
     "
   >
     <img
@@ -27,7 +29,7 @@
   <div 
     produto-descricao
     class="
-      p-8 md:p-20 text-left h-full flex flex-col
+      p-8 md:p-20 text-left h-auto flex flex-col landscape:h-full
       "
   >
     <h1 
