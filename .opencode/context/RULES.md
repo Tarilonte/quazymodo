@@ -36,6 +36,8 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - O agente DEVE SEMPRE usar named arguments em chamadas de funcoes/metodos ao escrever novo codigo.
 - O agente DEVE avaliar e preferir o uso de HTMX quando adequado para UX.
 - Ao implementar Rotas e Middleware, o agente DEVE usar como referencia o PHP League Route (`https://route.thephpleague.com/`).
+- Em tarefas de frontend, o agente DEVE priorizar animacoes e estados visuais em CSS e usar jQuery para manipulacao de DOM/eventos; JavaScript puro so quando necessario por API nativa.
+- O agente NUNCA DEVE editar `app/components/pages/base/tw_input.css` (tailwindcss_input.css).
 
 ## 6) Regras de componentes e shortcuts
 - Ao criar novo componente, o agente DEVE sugerir criacao de shortcut.
