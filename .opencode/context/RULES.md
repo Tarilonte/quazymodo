@@ -30,6 +30,10 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - Templates NUNCA DEVEM possuir JavaScript.
 - Ao criar templates HTML, os estilos DEVEM ser aplicados com classes do Tailwind CSS e do daisyUI, conforme `docs/tailwindcss.md` e `docs/daisyui.md`.
 - Templates HTML NAO DEVEM usar atributo `style` inline para estilizacao visual.
+- Templates HTML DEVEM usar indentacao de 2 espacos por nivel.
+- Em templates HTML, o conteudo dos elementos DEVE iniciar sempre na linha seguinte a tag de abertura e encerrar na linha anterior a tag de fechamento.
+- Em atributos `class`, as classes DEVEM ser agrupadas por contexto e cada grupo DEVE ocupar sua propria linha.
+- Ordem recomendada para grupos de classes: layout/estrutura, espacamento, tipografia, visual e estados/responsivo.
 
 ## 5) Regras de codigo
 - O agente DEVE SEMPRE incluir comentarios no codigo gerado (bloco inicial breve + comentarios de intencao em trechos-chave).
