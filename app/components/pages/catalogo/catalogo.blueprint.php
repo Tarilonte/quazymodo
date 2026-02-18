@@ -123,7 +123,7 @@ $catalogoItems = [
 return [
   'extends' => '/pages/base/',
   'js' => [
-    //'catalogo.js',
+    'catalogo.js',
   ],
   'inserts' => [
     'page-title' => 'Catálogo',
