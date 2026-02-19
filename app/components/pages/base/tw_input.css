@@ -38,7 +38,15 @@
   name: "silk";
   default: true;
   color-scheme: light;
-  --color-base-100: #FDF9F0;
-  --color-base-200: #F6EEE1;
-  --color-base-300: #EDE1CF;
+  --color-base-100: #F9F2EC;
+  --color-base-200: #F2E5D7;
+  --color-base-300: #EDD7C5;
+  --color-primary: #1D323E;
+  --color-primary-content: var(--color-base-100);
+  --color-secondary: #52757A;
+  --color-secondary-content: var(--color-base-100);
+  --color-accent: #FFA89E;
+  --color-accent-content: var(--color-primary);
+  --color-neutral: #B0AD96;
+  --color-neutral-content: var(--color-primary);
 }
