@@ -29,4 +29,26 @@ class HomeController extends AbstractController
     $page = componentFactory::Page(componentName: '/pages/catalogo/');
     return $this->html($page);
   }
+
+  /*
+   * Catalog v2 page action.
+   *
+   * Intencao: expor o novo catalogo com direcao visual editorial.
+   */
+  public function catalogoV2(): ResponseInterface
+  {
+    $page = componentFactory::Page(componentName: '/pages/catalogo/v2/');
+    return $this->html($page);
+  }
+
+  /*
+   * Theme colors page action.
+   *
+   * Intencao: exibir rapidamente as cores semanticas ativas do tema.
+   */
+  public function tema(): ResponseInterface
+  {
+    $page = componentFactory::Page(componentName: '/pages/tema/');
+    return $this->html($page);
+  }
 }

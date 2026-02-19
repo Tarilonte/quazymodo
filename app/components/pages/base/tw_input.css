@@ -33,3 +33,12 @@
   exclude: rootscrollgutter;
   themes: silk --default, sunset --prefersdark;
 }
+
+@plugin "daisyui/theme" {
+  name: "silk";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #FDF9F0;
+  --color-base-200: #F6EEE1;
+  --color-base-300: #EDE1CF;
+}
