@@ -77,7 +77,7 @@ $catalogoItems = [
   ComponentFactory::Template(
     componentName: '/pages/catalogo/catalogoItem',
     inserts: [
-      'image-src' => '/assets/pages/catalogo/images/abajur-gomos-ana-01.jpg',
+      'image-src' => '/assets/pages/catalogo/images/abajur-gomos-ana-01.png',
       'title' => 'Abajur Ana',
       'badge' => '',
       'description' => 'Um abajur de piso imponente, com 14 gomos de porcelana e estrutura bem definida. Eleva o ambiente com elegância e um toque artesanal de alto nível.',
@@ -127,10 +127,13 @@ return [
   ],
   'inserts' => [
     'page-title' => 'Catálogo',
+    'body-class' => 'h-dvh flex flex-col overflow-hidden',
     'body' => [
-      // componentFactory::Plugin(componentName: '/plugins/navbar/navbar'),
+      componentFactory::Plugin(componentName: '/plugins/navbar/navbar'),
       componentFactory::Template(componentName: '/pages/catalogo/'),
     ],
     'catalogo-items' => $catalogoItems,
+    'navbar-container-class' => ' shadow-lg',
+    'navbar-class' => ' md:h-[80px]',
   ]
 ];
