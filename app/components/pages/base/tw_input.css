@@ -24,10 +24,13 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
 
 @import "tailwindcss";
 @theme {
   --font-parisienne: "Parisienne", cursive;
+  --font-libre-baskerville: "Libre Baskerville", serif;
 }
 @plugin "daisyui" {
   exclude: rootscrollgutter;
