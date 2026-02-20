@@ -1,0 +1,167 @@
+<!-- Card de exemplo isolado da verticalTable -->
+<article
+  id="exemplo-vertical-table"
+  class="
+    w-full max-w-5xl mx-auto
+  "
+>
+  <div
+    class="
+      collapse collapse-arrow
+      border border-base-300 bg-base-100 shadow-sm
+    "
+  >
+    <input type="checkbox" data-accordion-toggle />
+
+    <div
+      class="
+        collapse-title
+      "
+    >
+      <h2
+        class="
+          text-xl font-semibold
+          text-base-content
+        "
+      >
+        verticalTable
+      </h2>
+
+      <p
+        class="
+          mt-2 text-sm leading-relaxed
+          text-base-content/75
+        "
+      >
+        Organiza pares chave-valor com leitura rapida. Bom para config, estado e inspecao de payloads.
+      </p>
+    </div>
+
+    <div
+      class="
+        collapse-content
+      "
+    >
+      <div
+        class="
+          flex flex-col gap-4
+          pt-2
+        "
+      >
+
+    <div
+      class="
+        flex flex-col gap-3
+        text-sm text-base-content/80
+      "
+    >
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Instalacao
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Inclua o shortcut no blueprint:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">use App\Components\ComponentShortcuts as UI;</code></pre>
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">UI::verticalTable(rows: $dados, options: ['th-class' =&gt; 'text-primary'])</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Como usar
+      </h3>
+
+      <ul
+        class="
+          list-disc pl-5
+          space-y-1
+        "
+      >
+        <li>
+          Passe os dados como array associativo em rows.
+        </li>
+        <li>
+          Ajuste th-class e td-class para estilo.
+        </li>
+        <li>
+          Prefira para metadados e payloads de depuracao.
+        </li>
+      </ul>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Metodos
+      </h3>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">UI::verticalTable(rows: array, options: array = [])</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Exemplo
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Codigo usado neste card:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">'vertical-table-demo' =&gt; UI::verticalTable(</code></pre>
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">  rows: ['status' =&gt; 'ativo', 'dependencias' =&gt; 'Tailwind + daisyUI'],</code></pre>
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">  options: ['table-class' =&gt; 'table-zebra bg-base-100 rounded-box']</code></pre>
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">)</code></pre>
+      </div>
+    </div>
+
+      <div
+        class="
+          overflow-x-auto
+        "
+      >
+        {{ vertical-table-demo }}
+      </div>
+    </div>
+  </div>
+</article>

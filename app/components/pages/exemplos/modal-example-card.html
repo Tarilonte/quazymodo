@@ -1,0 +1,185 @@
+<!-- Card de exemplo isolado do modalComponent -->
+<article
+  id="exemplo-modal"
+  class="
+    w-full max-w-5xl mx-auto
+  "
+>
+  <div
+    class="
+      collapse collapse-arrow
+      border border-base-300 bg-base-100 shadow-sm
+    "
+  >
+    <input type="checkbox" data-accordion-toggle checked="checked" />
+
+    <div
+      class="
+        collapse-title
+      "
+    >
+      <h2
+        class="
+          text-xl font-semibold
+          text-base-content
+        "
+      >
+        modalComponent
+      </h2>
+
+      <p
+        class="
+          mt-2 text-sm leading-relaxed
+          text-base-content/75
+        "
+      >
+        Use quando a pessoa precisa tomar uma decisao clara ou confirmar uma acao importante sem distracoes.
+      </p>
+    </div>
+
+    <div
+      class="
+        collapse-content
+      "
+    >
+      <div
+        class="
+          flex flex-col gap-4
+          pt-2
+        "
+      >
+
+    <div
+      class="
+        flex flex-col gap-3
+        text-sm text-base-content/80
+      "
+    >
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Instalacao
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Inclua o plugin no blueprint da pagina:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">ComponentFactory::Plugin(componentName: '/plugins/modalComponent/')</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Como usar
+      </h3>
+
+      <ul
+        class="
+          list-disc pl-5
+          space-y-1
+        "
+      >
+        <li>
+          Renderize o plugin uma unica vez na pagina.
+        </li>
+        <li>
+          Abra o modal com titulo e mensagem de contexto.
+        </li>
+        <li>
+          Use o modo travado em fluxos criticos temporarios.
+        </li>
+      </ul>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Metodos
+      </h3>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">modal_show(header, message, addClass, locked)</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">modal_close()</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">modal_lock()</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">modal_unlock()</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Exemplo
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Codigo usado neste card:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="HTML"><code class="code code-block text-xs md:text-sm">&lt;button id="btn-exemplo-modal" class="btn btn-primary"&gt;Abrir modal&lt;/button&gt;</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">$('#btn-exemplo-modal').on('click', function () {</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">  modal_show('Confirmacao orientada', 'Use modal para acao focada.', false, false);</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">});</code></pre>
+      </div>
+    </div>
+
+      <div
+        class="
+          join
+        "
+      >
+        <button
+          id="btn-exemplo-modal"
+          class="
+            btn btn-primary join-item
+          "
+        >
+          Abrir modal
+        </button>
+
+        <button
+          id="btn-exemplo-modal-locked"
+          class="
+            btn btn-outline join-item
+          "
+        >
+          Abrir modal travado
+        </button>
+      </div>
+    </div>
+  </div>
+</article>

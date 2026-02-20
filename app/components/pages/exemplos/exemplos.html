@@ -1,0 +1,103 @@
+<main
+  class="
+    relative overflow-hidden
+    px-0 py-0
+  "
+>
+  <div
+    class="
+      pointer-events-none absolute inset-0 -z-10
+      bg-[radial-gradient(circle_at_top_right,_color-mix(in_oklab,_var(--color-primary)_14%,_transparent),_transparent_40%),radial-gradient(circle_at_20%_80%,_color-mix(in_oklab,_var(--color-secondary)_18%,_transparent),_transparent_45%)]
+    "
+  >
+  </div>
+
+  <section
+    class="
+      flex flex-col gap-6
+      p-6 md:p-10
+      bg-base-100/90
+    "
+  >
+    <div
+      class="
+        flex flex-col gap-3
+      "
+    >
+      <p
+        class="
+          text-xs uppercase tracking-[0.2em]
+          text-primary/80
+        "
+      >
+        Area de desenvolvimento
+      </p>
+
+      <h1
+        class="
+          text-3xl md:text-5xl font-bold
+          text-base-content
+        "
+      >
+        Exemplos de componentes reutilizaveis
+      </h1>
+
+      <p
+        class="
+          max-w-3xl
+          text-base md:text-lg
+          text-base-content/80
+        "
+      >
+        Esta pagina mostra comportamento real de componentes do Quazymodo com foco em UX: modal para acao focada, toast para feedback nao bloqueante e tabela vertical para leitura de metadados.
+      </p>
+
+      <!-- Atalhos para abrir cada bloco do accordion -->
+      <div
+        class="
+          flex flex-wrap gap-2
+        "
+      >
+        <a
+          href="#exemplo-modal"
+          data-accordion-link
+          class="
+            btn btn-sm btn-outline
+          "
+        >
+          modalComponent
+        </a>
+
+        <a
+          href="#exemplo-toast"
+          data-accordion-link
+          class="
+            btn btn-sm btn-outline
+          "
+        >
+          toastComponent
+        </a>
+
+        <a
+          href="#exemplo-vertical-table"
+          data-accordion-link
+          class="
+            btn btn-sm btn-outline
+          "
+        >
+          verticalTable
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="
+        grid grid-cols-1 gap-4
+      "
+    >
+      {{ modal-example-card }}
+      {{ toast-example-card }}
+      {{ vertical-table-example-card }}
+    </div>
+  </section>
+</main>

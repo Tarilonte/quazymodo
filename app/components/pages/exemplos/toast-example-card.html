@@ -1,0 +1,201 @@
+<!-- Card de exemplo isolado do toastComponent -->
+<article
+  id="exemplo-toast"
+  class="
+    w-full max-w-5xl mx-auto
+  "
+>
+  <div
+    class="
+      collapse collapse-arrow
+      border border-base-300 bg-base-100 shadow-sm
+    "
+  >
+    <input type="checkbox" data-accordion-toggle />
+
+    <div
+      class="
+        collapse-title
+      "
+    >
+      <h2
+        class="
+          text-xl font-semibold
+          text-base-content
+        "
+      >
+        toastComponent
+      </h2>
+
+      <p
+        class="
+          mt-2 text-sm leading-relaxed
+          text-base-content/75
+        "
+      >
+        Ideal para respostas rapidas: sucesso, aviso ou erro sem bloquear o fluxo principal da pagina.
+      </p>
+    </div>
+
+    <div
+      class="
+        collapse-content
+      "
+    >
+      <div
+        class="
+          flex flex-col gap-4
+          pt-2
+        "
+      >
+
+    <div
+      class="
+        flex flex-col gap-3
+        text-sm text-base-content/80
+      "
+    >
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Instalacao
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Inclua o plugin no blueprint da pagina:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="PHP"><code class="code code-block text-xs md:text-sm">ComponentFactory::Plugin(componentName: '/plugins/toastComponent/')</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Como usar
+      </h3>
+
+      <ul
+        class="
+          list-disc pl-5
+          space-y-1
+        "
+      >
+        <li>
+          Renderize o plugin uma unica vez no layout.
+        </li>
+        <li>
+          Defina uma mensagem curta e tipo semantico.
+        </li>
+        <li>
+          Ajuste duracao conforme urgencia do feedback.
+        </li>
+      </ul>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Metodos
+      </h3>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">ToastComponent.newToast(message, duration, toastType)</code></pre>
+      </div>
+
+      <h3
+        class="
+          text-sm font-semibold uppercase tracking-[0.14em]
+          text-primary
+        "
+      >
+        Exemplo
+      </h3>
+
+      <p
+        class="
+          text-sm font-medium
+          text-base-content/85
+        "
+      >
+        Codigo usado neste card:
+      </p>
+
+      <div
+        class="
+          mockup-code text-xs md:text-sm
+        "
+      >
+        <pre data-prefix="HTML"><code class="code code-block text-xs md:text-sm">&lt;button data-toast-type="success" class="btn btn-sm btn-success"&gt;Success&lt;/button&gt;</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">$('[data-toast-type]').on('click', function () {</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">  const toastType = $(this).data('toast-type');</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">  ToastComponent.newToast('Feedback rapido e nao bloqueante.', 4200, toastType);</code></pre>
+        <pre data-prefix="JS"><code class="code code-block text-xs md:text-sm">});</code></pre>
+      </div>
+    </div>
+
+      <div
+        class="
+          flex flex-wrap gap-2
+        "
+      >
+        <button
+          data-toast-type="info"
+          class="
+            btn btn-sm btn-info
+          "
+        >
+          Info
+        </button>
+
+        <button
+          data-toast-type="success"
+          class="
+            btn btn-sm btn-success
+          "
+        >
+          Success
+        </button>
+
+        <button
+          data-toast-type="warning"
+          class="
+            btn btn-sm btn-warning
+          "
+        >
+          Warning
+        </button>
+
+        <button
+          data-toast-type="error"
+          class="
+            btn btn-sm btn-error
+          "
+        >
+          Error
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
