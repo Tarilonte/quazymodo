@@ -29,6 +29,7 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - Todo HTML DEVE estar em templates.
 - Templates NUNCA DEVEM possuir JavaScript.
 - Ao criar templates HTML, os estilos DEVEM ser aplicados com classes do Tailwind CSS e do daisyUI, conforme `docs/tailwindcss.md` e `docs/daisyui.md`.
+- Para todo e qualquer elemento de UI, o agente DEVE verificar se existe componente equivalente no daisyUI e, quando existir, DEVE usa-lo preferencialmente.
 - Templates HTML NAO DEVEM usar atributo `style` inline para estilizacao visual.
 - Templates HTML DEVEM usar indentacao de 2 espacos por nivel.
 - Em templates HTML, o conteudo dos elementos DEVE iniciar sempre na linha seguinte a tag de abertura e encerrar na linha anterior a tag de fechamento.
