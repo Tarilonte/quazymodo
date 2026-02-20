@@ -51,4 +51,15 @@ class HomeController extends AbstractController
     $page = componentFactory::Page(componentName: '/pages/tema/');
     return $this->html($page);
   }
+
+  /*
+   * Product page action for Arandela Nina.
+   *
+   * Intencao: exibir a pagina dedicada de produto com o mesmo tom visual do catalogo.
+   */
+  public function produtoArandelaNina(): ResponseInterface
+  {
+    $page = componentFactory::Page(componentName: '/pages/produto/arandela-nina/');
+    return $this->html($page);
+  }
 }

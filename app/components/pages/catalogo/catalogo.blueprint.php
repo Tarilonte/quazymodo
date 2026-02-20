@@ -37,7 +37,7 @@ $catalogoItems = [
       'badges' => $makeBadges('Porcelana', 'Pintado à mão', 'Collab com @jojo.farhi'),
       'description' => 'Três esferas de porcelana com presença delicada e acabamento impecável. As opções de pintura permitem personalizar a peça com elegância, do minimal ao mais precioso.',
       'preco' => '2.140,00',
-      'href' => '#',
+      'href' => '/produto/arandela-nina',
     ]
   ),
   CP::Template(

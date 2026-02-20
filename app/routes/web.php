@@ -16,6 +16,9 @@ $router->map(method: 'GET', path: '/catalogo/v2', handler: 'Controller\HomeContr
 // Theme color preview page.
 $router->map(method: 'GET', path: '/tema', handler: 'Controller\HomeController::tema');
 
+// Product page.
+$router->map(method: 'GET', path: '/produto/arandela-nina', handler: 'Controller\HomeController::produtoArandelaNina');
+
 // User auth and profile forms.
 $router->map(method: 'GET', path: '/login', handler: 'Controller\UserController::showLoginForm');
 $router->map(method: 'GET', path: '/register', handler: 'Controller\UserController::showRegistrationForm');
