@@ -55,4 +55,39 @@ final class ComponentShortcuts
 
     return ComponentFactory::Plugin('/plugins/jsComponent/jsComponent', $payload);
   }
+
+  /**
+   * Creates a reusable product option card plugin component.
+   */
+  public static function produtoOpcaoCard(
+    string $optionName,
+    string $optionTitle,
+    string $optionPriceDisplay,
+    int $optionPriceNumber,
+    string $optionImage,
+    string $optionAlt,
+    string $optionValue,
+    string $optionDescription,
+    string $optionRadioName = 'nina-pintura'
+  ): BaseComponent
+  {
+    /*
+     * Mantem o payload explicito para permitir reutilizacao em outras paginas
+     * de produto sem duplicar markup.
+     */
+    return ComponentFactory::Plugin(
+      componentName: '/plugins/produtoOpcaoCard/',
+      inserts: [
+        'option-name' => $optionName,
+        'option-title' => $optionTitle,
+        'option-price-display' => $optionPriceDisplay,
+        'option-price-number' => (string) $optionPriceNumber,
+        'option-image' => $optionImage,
+        'option-alt' => $optionAlt,
+        'option-value' => $optionValue,
+        'option-description' => $optionDescription,
+        'option-radio-name' => $optionRadioName,
+      ]
+    );
+  }
 }
