@@ -45,6 +45,7 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 - O agente NUNCA DEVE editar `app/components/pages/base/tw_input.css` (tailwindcss_input.css).
 
 ## 6) Regras de componentes e shortcuts
+- O agente NUNCA DEVE alterar arquivos em `app/components/plugins/**`, exceto quando a task tiver escopo explicito de implementacao, correcao ou refatoracao do proprio plugin.
 - Ao criar novo componente, o agente DEVE sugerir criacao de shortcut.
 - Ao sugerir shortcut, o agente DEVE propor assinatura com typed hints e named arguments.
 - O agente DEVE preferir centralizar shortcuts em `App\Components\ComponentShortcuts`.
