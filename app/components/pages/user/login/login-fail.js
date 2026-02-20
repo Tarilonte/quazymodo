@@ -1,1 +1,0 @@
-modal_show('E agora?', 'Tem alguma coisa errada aí.' );
