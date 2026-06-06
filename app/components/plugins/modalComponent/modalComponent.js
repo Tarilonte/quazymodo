@@ -51,12 +51,22 @@ function modal_close() {
 }
 
 function modal_refresh(header, message) {
-  Modal
-    .find(".modal-header, .modal-message")
-    .slideUp(200,function() {
+  const animationDuration = 400;
+  const $box = Modal.find('#modal-box');
+
+  /*
+   * Hide the whole modal box before swapping content so any size change
+   * happens off-screen, then bring it back with a single slide.
+   */
+  $box
+    .stop(true, true)
+    .slideUp(animationDuration)
+    .promise()
+    .done(function() {
       modal_setHeader(header);
       modal_setMessage(message);
-      $(this).slideDown(200);
+
+      $box.slideDown(animationDuration);
     });
 }
 
