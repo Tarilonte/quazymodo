@@ -36,7 +36,7 @@ Execucao:
 5) Validar branch de integracao:
 - `git status --short --branch`
 - `git diff --name-status main..HEAD`
-- `npm run build`
+- Rode a validacao disponivel para os arquivos alterados (`php -l` nos PHP afetados e checagens locais aplicaveis ao escopo)
 - Se houver falha, corrija sem reescrever historico.
 
 6) Integrar ate o fim (obrigatorio):

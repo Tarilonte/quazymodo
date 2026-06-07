@@ -1,0 +1,95 @@
+/*
+ * Project-specific CSS that replaces the removed Tailwind build output.
+ * It keeps the custom theme, font helpers, and compatibility utilities.
+ */
+
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Cutive&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --font-parisienne: "Parisienne", cursive;
+  --font-libre-baskerville: "Libre Baskerville", serif;
+}
+
+html,
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.fill-primary { fill: var(--color-primary); }
+
+.font-zilla,
+.font-heading {
+  font-family: "Zilla Slab", serif;
+}
+
+.font-parisienne {
+  font-family: var(--font-parisienne);
+}
+
+.font-libre-baskerville {
+  font-family: var(--font-libre-baskerville);
+}
+
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+/* Recreate the small subset of typography styles currently used in pages. */
+.prose {
+  color: var(--color-base-content, currentColor);
+  max-width: 70ch;
+}
+
+.prose :where(h1, h2, h3, h4, h5, h6) {
+  color: var(--color-base-content, currentColor);
+  font-family: "Zilla Slab", serif;
+  font-weight: 600;
+}
+
+.prose :where(p, ul, ol, blockquote, pre, table) {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose :where(ul, ol) {
+  padding-left: 1.5rem;
+}
+
+.prose :where(ul) {
+  list-style-type: disc;
+}
+
+.prose :where(ol) {
+  list-style-type: decimal;
+}
+
+.prose :where(a) {
+  color: var(--color-base-content, currentColor);
+  text-decoration: underline;
+}
+
+.prose :where(blockquote) {
+  border-left: 3px solid color-mix(in oklab, var(--color-base-content, currentColor) 20%, transparent);
+  padding-left: 1rem;
+}
+
+.prose :where(code) {
+  font-size: 0.875em;
+}
+
+.prose :where(pre) {
+  background: var(--color-neutral, rgba(0, 0, 0, 0.08));
+  color: var(--color-neutral-content, currentColor);
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.prose :where(hr) {
+  border-color: color-mix(in oklab, var(--color-base-content, currentColor) 20%, transparent);
+}

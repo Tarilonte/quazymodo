@@ -4,7 +4,7 @@ Purpose: guidance for agentic tools working in this repo.
 
 ## Project overview
 - PHP app using the Quazymodo framework (component-based UI, PSR-7, League Route).
-- Frontend styling via Tailwind CLI (`app/components/pages/base/tw_input.css`).
+- Frontend styling via Tailwind browser CDN + daisyUI CDN, with local component CSS when needed.
 - Containerized dev setup (Nginx + PHP-FPM 8.4 + Supervisor) in `Container/Nginx`.
 
 ## Key paths
@@ -19,17 +19,6 @@ Purpose: guidance for agentic tools working in this repo.
 ### PHP dependencies
 ```bash
 composer install
-```
-
-### Frontend build
-```bash
-npm install
-npm run build
-```
-
-### Frontend dev (watch)
-```bash
-npm run dev
 ```
 
 ### Tests
@@ -92,8 +81,8 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 - Use `ComponentFactory::Page` for page components.
 
 ### Frontend assets
-- Tailwind CLI generates `app/components/pages/base/base.css` from `tw_input.css`.
-- Use `npm run build` for production minification.
+- Base pages load Tailwind from `@tailwindcss/browser@4` and daisyUI from jsDelivr CDN.
+- Project-specific frontend CSS lives in local component stylesheets such as `app/components/pages/base/base-cdn.css`.
 
 ## Repo-specific notes
 - No Cursor or Copilot instruction files detected.

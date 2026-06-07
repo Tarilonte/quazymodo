@@ -90,15 +90,9 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 3.  **Configurar o Servidor Web:**
     *   Aponte a raiz do seu servidor web para o diretório `public`.
     *   Certifique-se de que o `mod_rewrite` (Apache) ou configuração equivalente (Nginx) esteja habilitado para que o `public/.htaccess` (ou regras equivalentes) funcione corretamente.
-4.  **Frontend Assets (se aplicável):**
-    *   Se estiver usando TailwindCSS ou outras ferramentas de frontend gerenciadas por Node.js (sugerido pela presença de `package.json` e `tailwind.config.js`), instale as dependências:
-        ```bash
-        npm install
-        ```
-    *   Execute o processo de build do frontend:
-        ```bash
-        npm run build # ou similar, dependendo dos scripts em package.json
-        ```
+4.  **Frontend Assets:**
+    *   O frontend base carrega Tailwind CSS e daisyUI via CDN em runtime.
+    *   Os ajustes visuais especificos do projeto ficam em arquivos CSS locais dos componentes, como `app/components/pages/base/base-cdn.css`.
 
 ## Tecnologias Utilizadas (Principais)
 
@@ -107,6 +101,6 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 *   **Nyholm PSR-7:** Implementação de PSR-7 para requisições e respostas HTTP.
 *   **Medoo:** Micro-framework para interações com banco de dados.
 *   **HTMX (sugerido):** Para interatividade no frontend.
-*   **TailwindCSS (sugerido):** Para estilização CSS.
+*   **Tailwind CSS + daisyUI via CDN:** Para estilização CSS e componentes visuais.
 
 Este README fornece uma visão geral do Quazymodo com base na estrutura e nos arquivos do projeto.

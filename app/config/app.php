@@ -15,6 +15,8 @@ const APP_CSP_ENABLED = 1; // CSP headers: 0 = disabled, 1 = enabled
 const ASSET_JQUERY = 'https://code.jquery.com/jquery-4.0.0.min.js';
 const ASSET_ANIMATECSS = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
 const ASSET_HTMX = 'https://cdn.jsdelivr.net/npm/htmx.org@4.0.0-alpha6/dist/htmx.min.js';
+const ASSET_TAILWIND_BROWSER = 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4';
+const ASSET_DAISYUI = 'https://cdn.jsdelivr.net/npm/daisyui@5';
 
 // Configure process locale and timezone for date/format consistency.
 date_default_timezone_set(APP_TIMEZONE);
