@@ -32,6 +32,53 @@ class ToastComponent {
     });
   }
 
+  static captureToastPositions() {
+    return new Map(
+      this.container
+        .find('.toast_message:not(.hidden)')
+        .toArray()
+        .map((element) => [element, element.getBoundingClientRect()])
+    );
+  }
+
+  // Aplica FLIP simples para suavizar o reposicionamento da pilha.
+  static animateToastStackShift({ previousPositions }) {
+    this.container
+      .find('.toast_message:not(.hidden)')
+      .toArray()
+      .forEach((element) => {
+        const previousRect = previousPositions.get(element);
+
+        if (!previousRect) {
+          return;
+        }
+
+        const nextRect = element.getBoundingClientRect();
+        const deltaY = previousRect.top - nextRect.top;
+
+        if (deltaY === 0) {
+          return;
+        }
+
+        // Forca o estado invertido sem transicao antes de animar de volta.
+        element.style.transition = 'none';
+        element.style.setProperty('--toast-shift-y', `${deltaY}px`);
+        element.getBoundingClientRect();
+
+        requestAnimationFrame(() => {
+          element.style.transition = '';
+          element.style.setProperty('--toast-shift-y', '0px');
+
+          const clearShiftStyles = () => {
+            element.style.removeProperty('transition');
+            element.style.removeProperty('--toast-shift-y');
+          };
+
+          element.addEventListener('transitionend', clearShiftStyles, { once: true });
+        });
+      });
+  }
+
   /**
    * Creates and displays a new toast notification.
    *
@@ -43,6 +90,7 @@ class ToastComponent {
    */
   static newToast(message, duration = 5000, toastType = null) {
     // Clona o template
+    const previousPositions = this.captureToastPositions();
     const $toast = this.template.clone();
     const normalizedType = this.normalizeToastType(toastType);
     const totalDuration = Math.max(1, Number(duration) || 5000);
@@ -69,6 +117,7 @@ class ToastComponent {
     
     // Adiciona ao container
     this.container.append($toast);
+    this.animateToastStackShift({ previousPositions });
 
     // Controle de vida do toast (pausa no hover e retomada precisa).
     const $progressBar = $toast.find('progress');
@@ -79,9 +128,7 @@ class ToastComponent {
     let remainingMs = totalDuration;
     let isPaused = false;
     let isHoverPaused = false;
-    let isButtonPaused = false;
     let isClosed = false;
-    const $pauseButton = $toast.find('.btn-toggle-toast-pause');
 
     // Cancela a animacao ativa para evitar loops concorrentes.
     const clearAnimationFrame = () => {
@@ -111,14 +158,6 @@ class ToastComponent {
       clearAnimationFrame();
       ToastComponent.unregisterToastController({ controller: toastController });
       this.removeToast($toast);
-    };
-
-    // Reflete no botao se o pause atual veio do clique manual.
-    const syncPauseButton = () => {
-      $pauseButton
-        .toggleClass('ti-player-pause', !isButtonPaused)
-        .toggleClass('ti-player-play', isButtonPaused)
-        .attr('aria-label', isButtonPaused ? 'Retomar toast' : 'Pausar toast');
     };
 
     // Usa um unico loop RAF para manter barra e expiracao sincronizadas.
@@ -168,11 +207,6 @@ class ToastComponent {
         isHoverPaused = true;
       }
 
-      if (pauseSource === 'button') {
-        isButtonPaused = true;
-        syncPauseButton();
-      }
-
       if (isPaused || isClosed) {
         return;
       }
@@ -200,29 +234,11 @@ class ToastComponent {
         isHoverPaused = false;
       }
 
-      if (pauseSource === 'button') {
-        isButtonPaused = false;
-        syncPauseButton();
-      }
-
-      if (isClosed || isHoverPaused || isButtonPaused) {
+      if (isClosed || isHoverPaused) {
         return;
       }
 
       resumeTimers();
-    };
-
-    const toggleButtonPause = () => {
-      if (isClosed) {
-        return;
-      }
-
-      if (isButtonPaused) {
-        resumeToast({ pauseSource: 'button' });
-        return;
-      }
-
-      pauseToast({ pauseSource: 'button' });
     };
 
     const toastController = {
@@ -232,8 +248,6 @@ class ToastComponent {
 
     ToastComponent.registerToastController({ controller: toastController });
     $toast.data('toastFinalize', finalizeToast);
-    $toast.data('toastTogglePause', toggleButtonPause);
-    syncPauseButton();
 
     startSegment();
   }
@@ -267,15 +281,6 @@ $('#toasts_container').on('click', ".btn-close-toast", function() {
   }
 
   ToastComponent.removeToast($toast);
-});
-
-$('#toasts_container').on('click', '.btn-toggle-toast-pause', function() {
-  const $toast = $(this).closest('.toast_message');
-  const togglePause = $toast.data('toastTogglePause');
-
-  if (typeof togglePause === 'function') {
-    togglePause();
-  }
 });
 
 $('#toasts_container').on('mouseenter', function() {
