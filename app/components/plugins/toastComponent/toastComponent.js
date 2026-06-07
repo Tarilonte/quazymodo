@@ -3,19 +3,41 @@ class ToastComponent {
   // Gerencia o template de toast e aplica estilo/icone por tipo.
   static container = $('#toasts_container');
   static template = this.container.find('.toast_message.hidden');
+  static activeToastControllers = new Set();
   static iconMap = {
-    info: 'mdi-information-outline',
-    success: 'mdi-check-circle-outline',
-    warning: 'mdi-alert-outline',
-    error: 'mdi-alert-circle-outline',
+    info: 'mdi-information-variant-circle',
+    success: 'mdi-check-bold',
+    warning: 'mdi-alert',
+    error: 'mdi-close-circle',
   };
+
+  // Registra o controller do toast para comandos globais de hover.
+  static registerToastController({ controller }) {
+    this.activeToastControllers.add(controller);
+  }
+
+  static unregisterToastController({ controller }) {
+    this.activeToastControllers.delete(controller);
+  }
+
+  static pauseAllVisibleToasts() {
+    this.activeToastControllers.forEach((controller) => {
+      controller.pauseToast({ pauseSource: 'hover' });
+    });
+  }
+
+  static resumeAllVisibleToasts() {
+    this.activeToastControllers.forEach((controller) => {
+      controller.resumeToast({ pauseSource: 'hover' });
+    });
+  }
 
   /**
    * Creates and displays a new toast notification.
    *
    * @param {string} message The message to be displayed in the toast.
    * @param {number} [duration=5000] The duration in milliseconds for which the toast will be visible.
-   * @param {string|null} [toastType=null] The type of the toast, which determines its styling.
+   * @param {string|null} [toastType=null] The type   of the toast, which determines its styling.
    *                                      Accepted values can be 'info', 'success', 'warning', 'error'.
    *                                      If null, no specific type class is added.
    */
@@ -50,31 +72,34 @@ class ToastComponent {
 
     // Controle de vida do toast (pausa no hover e retomada precisa).
     const $progressBar = $toast.find('progress');
-    let timeoutId = null;
-    let progressIntervalId = null;
+    const progressBarElement = $progressBar.get(0);
+    let animationFrameId = null;
     let segmentStartedAt = 0;
     let segmentDuration = totalDuration;
     let remainingMs = totalDuration;
     let isPaused = false;
+    let isHoverPaused = false;
+    let isButtonPaused = false;
     let isClosed = false;
+    const $pauseButton = $toast.find('.btn-toggle-toast-pause');
 
-    const clearTimers = () => {
-      if (timeoutId !== null) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-      }
-
-      if (progressIntervalId !== null) {
-        clearInterval(progressIntervalId);
-        progressIntervalId = null;
+    // Cancela a animacao ativa para evitar loops concorrentes.
+    const clearAnimationFrame = () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
       }
     };
 
-    const updateProgress = () => {
-      const elapsed = Date.now() - segmentStartedAt;
+    const updateProgress = (now) => {
+      const elapsed = now - segmentStartedAt;
       const currentRemaining = Math.max(0, segmentDuration - elapsed);
       const progress = Math.max(0, Math.min(100, (currentRemaining / totalDuration) * 100));
-      $progressBar.attr('value', Math.round(progress));
+
+      // Mantem valores fracionarios para reduzir o efeito de degraus no native progress.
+      progressBarElement.value = progress;
+
+      return currentRemaining;
     };
 
     const finalizeToast = () => {
@@ -83,8 +108,34 @@ class ToastComponent {
       }
 
       isClosed = true;
-      clearTimers();
+      clearAnimationFrame();
+      ToastComponent.unregisterToastController({ controller: toastController });
       this.removeToast($toast);
+    };
+
+    // Reflete no botao se o pause atual veio do clique manual.
+    const syncPauseButton = () => {
+      $pauseButton
+        .toggleClass('ti-player-pause', !isButtonPaused)
+        .toggleClass('ti-player-play', isButtonPaused)
+        .attr('aria-label', isButtonPaused ? 'Retomar toast' : 'Pausar toast');
+    };
+
+    // Usa um unico loop RAF para manter barra e expiracao sincronizadas.
+    const tickProgress = (now) => {
+      if (isClosed || isPaused) {
+        animationFrameId = null;
+        return;
+      }
+
+      remainingMs = updateProgress(now);
+
+      if (remainingMs <= 0) {
+        finalizeToast();
+        return;
+      }
+
+      animationFrameId = requestAnimationFrame(tickProgress);
     };
 
     const startSegment = () => {
@@ -93,17 +144,10 @@ class ToastComponent {
       }
 
       segmentDuration = remainingMs;
-      segmentStartedAt = Date.now();
-      updateProgress();
-
-      progressIntervalId = setInterval(() => {
-        updateProgress();
-      }, 40);
-
-      timeoutId = setTimeout(() => {
-        remainingMs = 0;
-        finalizeToast();
-      }, segmentDuration);
+      segmentStartedAt = performance.now();
+      updateProgress(segmentStartedAt);
+      clearAnimationFrame();
+      animationFrameId = requestAnimationFrame(tickProgress);
     };
 
     const pauseTimers = () => {
@@ -111,11 +155,29 @@ class ToastComponent {
         return;
       }
 
-      const elapsed = Date.now() - segmentStartedAt;
+      const now = performance.now();
+      const elapsed = now - segmentStartedAt;
       remainingMs = Math.max(0, segmentDuration - elapsed);
       isPaused = true;
-      clearTimers();
-      updateProgress();
+      clearAnimationFrame();
+      updateProgress(now);
+    };
+
+    const pauseToast = ({ pauseSource }) => {
+      if (pauseSource === 'hover') {
+        isHoverPaused = true;
+      }
+
+      if (pauseSource === 'button') {
+        isButtonPaused = true;
+        syncPauseButton();
+      }
+
+      if (isPaused || isClosed) {
+        return;
+      }
+
+      pauseTimers();
     };
 
     const resumeTimers = () => {
@@ -133,9 +195,45 @@ class ToastComponent {
       startSegment();
     };
 
-    $toast.on('mouseenter', pauseTimers);
-    $toast.on('mouseleave', resumeTimers);
+    const resumeToast = ({ pauseSource }) => {
+      if (pauseSource === 'hover') {
+        isHoverPaused = false;
+      }
+
+      if (pauseSource === 'button') {
+        isButtonPaused = false;
+        syncPauseButton();
+      }
+
+      if (isClosed || isHoverPaused || isButtonPaused) {
+        return;
+      }
+
+      resumeTimers();
+    };
+
+    const toggleButtonPause = () => {
+      if (isClosed) {
+        return;
+      }
+
+      if (isButtonPaused) {
+        resumeToast({ pauseSource: 'button' });
+        return;
+      }
+
+      pauseToast({ pauseSource: 'button' });
+    };
+
+    const toastController = {
+      pauseToast,
+      resumeToast,
+    };
+
+    ToastComponent.registerToastController({ controller: toastController });
     $toast.data('toastFinalize', finalizeToast);
+    $toast.data('toastTogglePause', toggleButtonPause);
+    syncPauseButton();
 
     startSegment();
   }
@@ -160,7 +258,7 @@ class ToastComponent {
 }
 
 $('#toasts_container').on('click', ".btn-close-toast", function() {
-  const $toast = $(this).parent('.toast_message');
+  const $toast = $(this).closest('.toast_message');
   const finalizeToast = $toast.data('toastFinalize');
 
   if (typeof finalizeToast === 'function') {
@@ -169,4 +267,21 @@ $('#toasts_container').on('click', ".btn-close-toast", function() {
   }
 
   ToastComponent.removeToast($toast);
+});
+
+$('#toasts_container').on('click', '.btn-toggle-toast-pause', function() {
+  const $toast = $(this).closest('.toast_message');
+  const togglePause = $toast.data('toastTogglePause');
+
+  if (typeof togglePause === 'function') {
+    togglePause();
+  }
+});
+
+$('#toasts_container').on('mouseenter', function() {
+  ToastComponent.pauseAllVisibleToasts();
+});
+
+$('#toasts_container').on('mouseleave', function() {
+  ToastComponent.resumeAllVisibleToasts();
 });

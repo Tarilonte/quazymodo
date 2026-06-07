@@ -12,6 +12,22 @@
   transform: scale(1.05);
 }
 
+/* Keep the action icons compact and readable over every alert variant. */
+.toast_action {
+  background: transparent;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  font-size: 1.125rem;
+  line-height: 1;
+  opacity: 0.85;
+  padding: 0;
+}
+
+.toast_action:hover {
+  opacity: 1;
+}
+
 /* Keep progress updates immediate so hover pause feels instant. */
 progress::-webkit-progress-value {
   transition: none;

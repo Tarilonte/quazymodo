@@ -90,7 +90,7 @@ $(document).ready(function () {
     const toastType = $(this).data('toast-type');
     const toastMessage = `Exemplo de toast ${toastType}: feedback rapido e nao bloqueante.`;
 
-    ToastComponent.newToast(toastMessage, 4200, toastType);
+    ToastComponent.newToast(toastMessage, 8000, toastType);
   });
 
   // Sincroniza links de ancora com a abertura do accordion.
