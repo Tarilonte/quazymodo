@@ -60,7 +60,7 @@ $(document).ready(function () {
     window.modal_show(
       'Processando',
       'Este exemplo abre o modal no modo locked para impedir fechamento acidental durante um fluxo critico.',
-      'bg-primary text-primary-content',
+      false,
       true,
     );
 
