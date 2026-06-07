@@ -1,0 +1,1 @@
+ - O `toastComponent` aplica variantes `alert-*` em runtime via JavaScript; quando essas classes nao estiverem no build do Tailwind/daisyUI, o componente deve definir localmente `--alert-color` e `color` em `toastComponent.css` para manter o contrato visual do `alert`.

@@ -16,3 +16,27 @@
 progress::-webkit-progress-value {
   transition: none;
 }
+
+/*
+ * Mirror the daisyUI alert color variants locally because this component
+ * applies them at runtime instead of through static template classes.
+ */
+.toast_message.alert-info {
+  --alert-color: var(--color-info);
+  color: var(--color-info-content);
+}
+
+.toast_message.alert-success {
+  --alert-color: var(--color-success);
+  color: var(--color-success-content);
+}
+
+.toast_message.alert-warning {
+  --alert-color: var(--color-warning);
+  color: var(--color-warning-content);
+}
+
+.toast_message.alert-error {
+  --alert-color: var(--color-error);
+  color: var(--color-error-content);
+}
