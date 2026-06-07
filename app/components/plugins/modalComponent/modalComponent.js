@@ -1,7 +1,5 @@
 const Modal = $("dialog#modal");
-var Modal_header = '';
-var Modal_message = '';
-var Modal_action = '';
+const Modal_element = Modal.get(0);
 
 /*
  * Sequenced modal animations: blur/fade the backdrop first, then reveal
@@ -11,6 +9,14 @@ const Modal_animation = {
   backdropDuration: 300,
   revealDuration: 400
 };
+
+function modal_isOpen() {
+  return Modal_element?.open === true;
+}
+
+function modal_isLocked() {
+  return Modal.hasClass("modal-locked");
+}
 
 function modal_setHeader(header) {
   Modal.find(".modal-header").html(header);
@@ -38,6 +44,23 @@ function modal_revealBox() {
     });
 }
 
+function modal_resetState() {
+  /*
+   * Centraliza a limpeza visual para manter o estado consistente tanto no
+   * fechamento animado quanto em fechamentos nativos disparados pelo dialog.
+   */
+  Modal
+    .find(".modal-box")
+    .removeClass('bg-warning text-warning-content');
+
+  Modal
+    .find(".modal-backdrop")
+    .stop(true, true)
+    .css('opacity', '0');
+
+  modal_prepareBoxForReveal();
+}
+
 /**
  * Shows a modal with the specified header and message.
  * @param {string} header - The header text for the modal.
@@ -49,7 +72,7 @@ function modal_show(header='', message='', addClass=false, locked=false) {
   locked ? modal_lock() : modal_unlock();
   addClass ? modal_addClass(addClass) : false;
   
-  if (Modal.hasClass("modal-open")) {
+  if (modal_isOpen()) {
     modal_refresh(header, message);
   } else {
     modal_open(header, message, addClass);
@@ -64,8 +87,11 @@ function modal_open(header='', message='') {
 
   modal_prepareBoxForReveal();
 
-  Modal
-    .addClass("modal-open");
+  $backdrop
+    .stop(true, true)
+    .css('opacity', '0');
+
+  Modal_element.showModal();
 
   $backdrop
     .stop(true, true)
@@ -77,20 +103,16 @@ function modal_open(header='', message='') {
 
 function modal_close() {
   const $box = Modal.find("#modal-box");
-  const $backdrop = Modal.find(".modal-backdrop");
+
+  if (!modal_isOpen()) {
+    return;
+  }
 
   $box
     .stop(true, true)
     .slideUp(Modal_animation.revealDuration, function() {
-      Modal
-        .removeClass("modal-open")
-        .find(".modal-box").removeClass('bg-warning text-warning-content');
-
-      $backdrop
-        .stop(true, true)
-        .css('opacity', '0');
-
-      modal_prepareBoxForReveal();
+      modal_resetState();
+      Modal_element.close();
     });
 }
 
@@ -132,12 +154,27 @@ function modal_unlock() {
   $("#modal-close-btn").show();
 }
 
-$("div.modal-backdrop, button.modal-close").click(function() {
-  modal_close();
+$("div.modal-backdrop, button.modal-close").click(function(event) {
+  event.preventDefault();
+
+  if (!modal_isLocked()) {
+    modal_close();
+  }
 });
 
-Modal.keyup(function(e) {
-  if (e.key === "Escape" && !Modal.hasClass("modal-locked")) {
-    modal_close()
+Modal.on('cancel', function(event) {
+  /*
+   * Intercepta o fechamento nativo por Escape para preservar a animacao atual
+   * e respeitar o estado locked do componente.
+   */
+  event.preventDefault();
+
+  if (!modal_isLocked()) {
+    modal_close();
   }
+});
+
+Modal.on('close', function() {
+  modal_unlock();
+  modal_resetState();
 });

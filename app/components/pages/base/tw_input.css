@@ -33,7 +33,6 @@
   --font-libre-baskerville: "Libre Baskerville", serif;
 }
 @plugin "daisyui" {
-  exclude: rootscrollgutter;
   themes: silk --default, sunset --prefersdark;
 }
 
