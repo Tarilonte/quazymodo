@@ -13,7 +13,7 @@ return [
   ],
   'js' => [
     ASSET_JQUERY,
-    ASSET_TAILWIND_BROWSER,
+    ASSET_TAILWIND,
     'base.js',
     '/plugins/theme-selector/apply-theme.js'
   ]
