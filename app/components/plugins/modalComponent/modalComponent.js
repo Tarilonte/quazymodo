@@ -3,12 +3,39 @@ var Modal_header = '';
 var Modal_message = '';
 var Modal_action = '';
 
+/*
+ * Sequenced modal animations: blur/fade the backdrop first, then reveal
+ * the modal box with a jQuery slide.
+ */
+const Modal_animation = {
+  backdropDuration: 300,
+  revealDuration: 400
+};
+
 function modal_setHeader(header) {
   Modal.find(".modal-header").html(header);
 }
 
 function modal_setMessage(message) {
   Modal.find(".modal-message").html(message);
+}
+
+function modal_prepareBoxForReveal() {
+  Modal
+    .find("#modal-box")
+    .stop(true, true)
+    .hide();
+}
+
+function modal_revealBox() {
+  const $box = Modal.find("#modal-box");
+
+  $box
+    .slideDown(Modal_animation.revealDuration, function() {
+      Modal
+        .focus()
+        .css('outline', 'none');
+    });
 }
 
 /**
@@ -30,24 +57,41 @@ function modal_show(header='', message='', addClass=false, locked=false) {
 }
 
 function modal_open(header='', message='') {
+  const $backdrop = Modal.find(".modal-backdrop");
+
   modal_setHeader(header);
   modal_setMessage(message);
+
+  modal_prepareBoxForReveal();
+
   Modal
-    .addClass("modal-open")
-    .find(".modal-backdrop")
-      .css('opacity', '0')
-      .animate({opacity: "1"},800);
-  setTimeout(function() {
-    Modal
-      .focus()
-      .css('outline', 'none');
-  }, 200);
+    .addClass("modal-open");
+
+  $backdrop
+    .stop(true, true)
+    .css('opacity', '0')
+    .animate({opacity: "1"}, Modal_animation.backdropDuration, function() {
+      modal_revealBox();
+    });
 }
 
 function modal_close() {
-  Modal
-  .removeClass("modal-open")
-  .find(".modal-box").removeClass('bg-warning text-warning-content');
+  const $box = Modal.find("#modal-box");
+  const $backdrop = Modal.find(".modal-backdrop");
+
+  $box
+    .stop(true, true)
+    .slideUp(Modal_animation.revealDuration, function() {
+      Modal
+        .removeClass("modal-open")
+        .find(".modal-box").removeClass('bg-warning text-warning-content');
+
+      $backdrop
+        .stop(true, true)
+        .css('opacity', '0');
+
+      modal_prepareBoxForReveal();
+    });
 }
 
 function modal_refresh(header, message) {

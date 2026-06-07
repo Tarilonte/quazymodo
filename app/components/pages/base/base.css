@@ -51,8 +51,6 @@
     --leading-relaxed: 1.625;
     --radius-sm: 0.25rem;
     --blur-xs: 4px;
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
   }
@@ -802,9 +800,6 @@
   }
   .collapse {
     visibility: collapse;
-  }
-  .visible {
-    visibility: visible;
   }
   .list {
     display: flex;
