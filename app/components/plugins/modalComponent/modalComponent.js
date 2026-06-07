@@ -92,6 +92,7 @@ function modal_open(header='', message='') {
     .css('opacity', '0');
 
   Modal_element.showModal();
+  $("html").css("scrollbar-gutter", "stable");
 
   $backdrop
     .stop(true, true)
@@ -175,6 +176,7 @@ Modal.on('cancel', function(event) {
 });
 
 Modal.on('close', function() {
+  $("html").css("scrollbar-gutter", "");
   modal_unlock();
   modal_resetState();
 });
