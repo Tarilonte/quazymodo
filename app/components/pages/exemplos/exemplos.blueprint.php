@@ -41,7 +41,7 @@ return [
                   'status' => 'ativo',
                 ],
                 options: [
-                  'table-class' => 'table-zebra bg-base-100 rounded-box',
+                  'table-class' => 'table-zebra bg-base-100 border border-primary',
                   'th-class' => 'w-44 text-primary font-semibold',
                   'td-class' => 'text-base-content',
                 ],
