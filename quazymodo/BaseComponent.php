@@ -319,7 +319,14 @@ class BaseComponent
   {
     $this->prefilledSlots = [];
 
-    // Slots pre-preenchidos viram inserts iniciais; o HTML segue com slots simples.
+    // Blocos pre-preenchidos criam o componente default com inserts internos declarados.
+    $this->html = $this->parsePrefilledSlotBlocks(
+      html: $this->html,
+      inserts: $this->prefilledSlots,
+      keepSlotMarker: true
+    );
+
+    // Slots pre-preenchidos simples viram inserts iniciais; o HTML segue com slots simples.
     $this->html = preg_replace_callback(
       '/{{\s*([^{}=]*?)\s*=\s*([^{}]*?)\s*}}/s',
       function (array $matches): string {
@@ -352,12 +359,89 @@ class BaseComponent
     ) ?? $this->html;
   }
 
-  private function resolvePrefilledSlotContent(string $componentType, string $componentName): BaseComponent
+  private function parsePrefilledSlotBlocks(string $html, array &$inserts, bool $keepSlotMarker): string
+  {
+    return preg_replace_callback(
+      '/{{\s*([^{}=\/]*?)\s*=\s*(plugin|template):([^{}]*?)\s*}}(.*?){{\s*\/\s*\1\s*}}/s',
+      function (array $matches) use (&$inserts, $keepSlotMarker): string {
+        $slotName = trim($matches[1]);
+        $componentType = trim($matches[2]);
+        $componentName = trim($matches[3]);
+        $blockContent = $matches[4];
+
+        if ($slotName === '') {
+          throw new \InvalidArgumentException('Declaracao de slot pre-preenchido em bloco sem nome.');
+        }
+
+        if ($componentName === '') {
+          throw new \InvalidArgumentException("Declaracao de slot pre-preenchido em bloco sem componente: [$componentType]");
+        }
+
+        $inserts[$slotName][] = $this->resolvePrefilledSlotContent(
+          componentType: $componentType,
+          componentName: $componentName,
+          inserts: $this->parsePrefilledBlockInserts(content: $blockContent)
+        );
+
+        return $keepSlotMarker ? '{{ ' . $slotName . ' }}' : '';
+      },
+      $html
+    ) ?? $html;
+  }
+
+  private function parsePrefilledBlockInserts(string $content): array
+  {
+    $inserts = [];
+
+    // Blocos internos pertencem ao componente declarado no bloco atual.
+    $content = $this->parsePrefilledSlotBlocks(html: $content, inserts: $inserts, keepSlotMarker: false);
+
+    $content = preg_replace_callback(
+      '/{{\s*([^{}=\/]*?)\s*=\s*([^{}]*?)\s*}}/s',
+      function (array $matches) use (&$inserts): string {
+        $slotName = trim($matches[1]);
+        $value = trim($matches[2]);
+
+        if ($slotName === '') {
+          throw new \InvalidArgumentException('Insert de slot pre-preenchido sem nome.');
+        }
+
+        $inserts[$slotName][] = $this->parsePrefilledInsertValue(value: $value);
+
+        return '';
+      },
+      $content
+    ) ?? $content;
+
+    if (trim($content) !== '') {
+      throw new \InvalidArgumentException('Conteudo em bloco pre-preenchido deve declarar um slot de destino.');
+    }
+
+    return $inserts;
+  }
+
+  private function parsePrefilledInsertValue(string $value): mixed
+  {
+    if (preg_match('/^(plugin|template):(.+)$/', $value, $componentMatches)) {
+      return $this->resolvePrefilledSlotContent(
+        componentType: $componentMatches[1],
+        componentName: trim($componentMatches[2])
+      );
+    }
+
+    if (preg_match('/^([\'\"])(.*)\1$/s', $value, $stringMatches)) {
+      return stripcslashes($stringMatches[2]);
+    }
+
+    throw new \InvalidArgumentException("Valor de insert pre-preenchido invalido: [$value]");
+  }
+
+  private function resolvePrefilledSlotContent(string $componentType, string $componentName, array $inserts = []): BaseComponent
   {
     // O componentName segue exatamente as regras atuais de ComponentFactory.
     return match ($componentType) {
-      'plugin' => ComponentFactory::Plugin(componentName: $componentName),
-      'template' => ComponentFactory::Template(componentName: $componentName),
+      'plugin' => ComponentFactory::Plugin(componentName: $componentName, inserts: $inserts),
+      'template' => ComponentFactory::Template(componentName: $componentName, inserts: $inserts),
     };
   }
 

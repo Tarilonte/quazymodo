@@ -51,6 +51,48 @@ Um componente geralmente consiste em:
 
 A classe `Quazymodo\ComponentFactory` é usada para criar instâncias de componentes (`Page`, `Plugin`, `Template`), que são então processados pela `Quazymodo\BaseComponent` para renderizar o HTML final.
 
+### Slots pré-preenchidos
+
+Templates podem declarar conteúdo padrão diretamente em um slot. O conteúdo declarado no template entra como preenchimento inicial, com prioridade menor que os inserts do blueprint e os inserts passados em runtime.
+
+Exemplo simples:
+
+```html
+{{ navbar-logo = template:/plugins/logo/ }}
+```
+
+Durante a preparação do componente, o HTML é normalizado em memória para:
+
+```html
+{{ navbar-logo }}
+```
+
+E o valor padrão é armazenado em `prefilledSlots`, seguindo o mesmo fluxo de preenchimento de `ComponentData`.
+
+Também é possível declarar inserts internos para o componente padrão usando bloco:
+
+```html
+{{ navbar-logo = template:/plugins/logo/ }}
+  {{ logo-class = 'w-8 fill-primary' }}
+{{ /navbar-logo }}
+```
+
+Nesse caso, `navbar-logo` recebe o componente `template:/plugins/logo/`, e `logo-class` é enviado como insert para esse componente.
+
+Valores internos aceitos no bloco:
+
+```html
+{{ title = 'Texto com aspas simples' }}
+{{ subtitle = "Texto com aspas duplas" }}
+{{ icon = template:/plugins/icon/ }}
+{{ actions = plugin:/plugins/actions/ }}
+{{ title@append = ' extra' }}
+```
+
+As declarações usam o mesmo `componentName` aceito por `ComponentFactory::Plugin()` e `ComponentFactory::Template()`. Não há shorthand de caminho: use caminhos como `/plugins/logo/` quando esse for o nome do componente.
+
+Todo conteúdo dentro de um bloco pré-preenchido deve declarar explicitamente o slot de destino. Conteúdo solto dentro do bloco é inválido.
+
 ## Roteamento
 
 As rotas são definidas no arquivo `app/routes/index.php` (com arquivos de contexto em `app/routes/`) usando a sintaxe da biblioteca `league/route`.
