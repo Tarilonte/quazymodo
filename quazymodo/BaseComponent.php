@@ -19,6 +19,7 @@ class BaseComponent
   public array $js = [];
   public array $css = [];
   public array $slots = [];
+  public array $prefilledSlots = [];
   public int $cacheHits = 0;
   public static array $allData = [];
   private static array $templateReadCache = [];
@@ -103,9 +104,14 @@ class BaseComponent
   private function buildTemplateComponent($templateName, $inserts = []): void
   {    
     $this->html = $this->load_template($templateName);
+    $this->parsePrefilledSlots();
     $this->slots = $this->map_slots($this->html);    
     $this->write_componentName($templateName . '_template');
-    $this->data = new ComponentData([], $inserts);
+    $this->data = new ComponentData(
+      blueprintInserts: [],
+      inserts: $inserts,
+      prefilledSlots: $this->prefilledSlots
+    );
 
     $this->syncFinalDataToGlobalStore();
     $this->mergeDataAssets();
@@ -120,11 +126,16 @@ class BaseComponent
 
     $templateName = (string) $this->blueprint->get('template', '');
     $this->html = $this->load_template($templateName);
+    $this->parsePrefilledSlots();
     $this->slots = $this->map_slots($this->html);
     $this->write_componentName($componentName);
 
     $blueprintInserts = $this->blueprint->get('inserts', []);
-    $this->data = new ComponentData(is_array($blueprintInserts) ? $blueprintInserts : [], $inserts);
+    $this->data = new ComponentData(
+      blueprintInserts: is_array($blueprintInserts) ? $blueprintInserts : [],
+      inserts: $inserts,
+      prefilledSlots: $this->prefilledSlots
+    );
 
     $this->syncFinalDataToGlobalStore();
     $this->mergeBlueprintAssets();
@@ -302,6 +313,52 @@ class BaseComponent
     self::$slotMapCache[$cacheKey] = $matches[1];
 
     return $matches[1];
+  }
+
+  private function parsePrefilledSlots(): void
+  {
+    $this->prefilledSlots = [];
+
+    // Slots pre-preenchidos viram inserts iniciais; o HTML segue com slots simples.
+    $this->html = preg_replace_callback(
+      '/{{\s*([^{}=]*?)\s*=\s*([^{}]*?)\s*}}/s',
+      function (array $matches): string {
+        $slotName = trim($matches[1]);
+        $componentDeclaration = trim($matches[2]);
+
+        if ($slotName === '') {
+          throw new \InvalidArgumentException('Declaracao de slot pre-preenchido sem nome.');
+        }
+
+        if (!preg_match('/^(plugin|template):(.+)$/', $componentDeclaration, $componentMatches)) {
+          throw new \InvalidArgumentException("Declaracao de slot pre-preenchido invalida: [$componentDeclaration]");
+        }
+
+        $componentType = $componentMatches[1];
+        $componentName = trim($componentMatches[2]);
+
+        if ($componentName === '') {
+          throw new \InvalidArgumentException("Declaracao de slot pre-preenchido sem componente: [$componentDeclaration]");
+        }
+
+        $this->prefilledSlots[$slotName][] = $this->resolvePrefilledSlotContent(
+          componentType: $componentType,
+          componentName: $componentName
+        );
+
+        return '{{ ' . $slotName . ' }}';
+      },
+      $this->html
+    ) ?? $this->html;
+  }
+
+  private function resolvePrefilledSlotContent(string $componentType, string $componentName): BaseComponent
+  {
+    // O componentName segue exatamente as regras atuais de ComponentFactory.
+    return match ($componentType) {
+      'plugin' => ComponentFactory::Plugin(componentName: $componentName),
+      'template' => ComponentFactory::Template(componentName: $componentName),
+    };
   }
 
   private function write_componentName($componentName) : void

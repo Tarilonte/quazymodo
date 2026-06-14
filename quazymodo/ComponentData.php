@@ -4,6 +4,7 @@ namespace Quazymodo;
 
 class ComponentData
 {
+  private $prefilledSlots = [];
   private $blueprintInserts = [];
   private $inserts = [];
   private $merged_data = [];
@@ -12,10 +13,17 @@ class ComponentData
   public  $js = [];
   public  $css = [];
 
-  public function __construct(array $blueprintInserts = [], array $inserts = [])
+  public function __construct(array $blueprintInserts = [], array $inserts = [], array $prefilledSlots = [])
   {
+    $this->prefilledSlots = $prefilledSlots;
     $this->blueprintInserts = $blueprintInserts;
     $this->inserts = $inserts;
+
+    // Preenchimentos vindos do template entram primeiro e têm menor prioridade.
+    foreach ($this->prefilledSlots as $rawSlot => $content) {
+      $this->merge_insertEntry($rawSlot, $content);
+    }
+
     foreach ($this->blueprintInserts as $rawSlot => $content) {
       $this->merge_blueprintInserts($rawSlot, $content);
     }

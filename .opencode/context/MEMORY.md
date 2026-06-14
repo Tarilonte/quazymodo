@@ -1,1 +1,4 @@
  - O `toastComponent` aplica variantes `alert-*` em runtime via JavaScript; quando essas classes nao estiverem no build do Tailwind/daisyUI, o componente deve definir localmente `--alert-color` e `color` em `toastComponent.css` para manter o contrato visual do `alert`.
+ - Slots pre-preenchidos sao processados por `BaseComponent::parsePrefilledSlots()`, que normaliza o HTML em memoria para slots simples e armazena os defaults em `$prefilledSlots`.
+ - `ComponentData` preserva a precedencia processando `prefilledSlots` antes de inserts do blueprint e inserts de runtime.
+ - Declaracoes de slots pre-preenchidos usam o mesmo `componentName` aceito pelas factories, sem shorthand de caminho.
