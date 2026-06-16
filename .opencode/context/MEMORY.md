@@ -5,3 +5,4 @@
  - Slots pre-preenchidos em bloco sao processados antes dos slots simples; o bloco inteiro e normalizado no HTML do pai para `{{ slot }}`.
  - O conteudo interno de um bloco pre-preenchido e convertido em inserts do componente declarado no slot externo.
  - Dentro de blocos pre-preenchidos, todo conteudo deve declarar um slot de destino; conteudo sem slot e invalido.
+ - O Quazymodo usa SDD em `docs/sdd/` para mudancas relevantes, tratando o projeto como brownfield e exigindo spec antes de alteracoes em core, seguranca, componentes, HTTP, DB ou CLI.
