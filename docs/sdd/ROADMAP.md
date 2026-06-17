@@ -8,7 +8,7 @@ proximo recorte esperado.
 
 ### 1. Core hardening
 
-Status: `draft`
+Status: `accepted`
 Prioridade: `alta`
 Spec: `QMD-SDD-0001-core-hardening.md`
 
@@ -20,6 +20,10 @@ Recortes previstos:
 - corrigir compatibilidade PHP 8.4 nos construtores de componentes;
 - padronizar mapeamento de excecao para HTTP status;
 - garantir logging explicito de excecoes capturadas em producao;
+- preservar o comportamento atual das paginas existentes.
+
+Recortes adiados para specs futuras:
+
 - criar politica de escape para inserts textuais;
 - criar excecoes de dominio para contrato de componente;
 - criar validacao declarativa minima de inserts obrigatorios;
@@ -75,5 +79,5 @@ Spec: `QMD-SDD-0001-core-hardening.md`
 Objetivo original: padronizar excecoes e mensagens por contexto para diagnostico
 rapido e comportamento consistente em dev/prod.
 
-Motivo: o tema ja faz parte do hardening do core, especialmente nos contratos de
-excecoes HTTP, logging e excecoes de dominio para componentes.
+Motivo: o tema ja faz parte do hardening do core nos contratos de excecoes HTTP
+e logging. Excecoes de dominio para componentes foram adiadas para spec futura.

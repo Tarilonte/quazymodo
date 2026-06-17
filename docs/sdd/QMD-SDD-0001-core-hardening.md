@@ -1,8 +1,8 @@
 # QMD-SDD-0001 — Core Hardening
 
-Status: `draft`
+Status: `accepted`
 Prioridade: `alta`
-Area: `core|seguranca|componentes|http`
+Area: `core|http|observabilidade`
 
 ## Contexto
 
@@ -10,14 +10,13 @@ O Quazymodo ja possui um core funcional de componentes, rotas PSR-7 via League
 Route, paginas base, plugins, rate limiting, Tracy em desenvolvimento e uma
 estrategia inicial de excecoes de dominio.
 
-Como projeto brownfield, a prioridade nao e reescrever o framework. A prioridade
-e endurecer os pontos de maior risco sem quebrar a simplicidade atual:
+Como projeto brownfield, a prioridade nao e reescrever o framework. A primeira
+entrega desta spec deve endurecer os pontos de runtime de maior risco sem
+quebrar a simplicidade atual:
 
 - diagnostico de erros;
-- escape seguro de saida;
-- contratos de componentes;
 - compatibilidade PHP 8.4;
-- validacao de formularios/CSRF;
+- respostas HTTP previsiveis;
 - observabilidade minima em producao.
 
 ## Estado atual brownfield
@@ -49,16 +48,16 @@ Riscos ja observados:
 
 - excecoes capturadas em producao podem perder contexto diagnostico;
 - `getCode()` de excecao pode virar status HTTP invalido;
-- inserts textuais parecem entrar no HTML sem politica formal de escape;
-- parsing de slots pre-preenchidos usa `InvalidArgumentException` generica;
 - PHP 8.4 emite deprecations por parametro opcional antes de obrigatorio em
   construtores do componente;
-- CSRF existe como helper, mas ainda nao ha contrato padrao de formulario.
+- temas de escape, contratos de componente e CSRF existem como riscos futuros,
+  mas ficam fora desta primeira entrega.
 
 ## Objetivo
 
-Definir e implementar uma base segura e diagnosticavel para o core, sem alterar
-o modelo arquitetural do Quazymodo.
+Definir e implementar uma base mais previsivel para runtime do core, focando em
+compatibilidade PHP 8.4, status HTTP seguros e logging de excecoes em producao,
+sem alterar o modelo arquitetural do Quazymodo.
 
 ## Fora de escopo
 
@@ -68,7 +67,11 @@ o modelo arquitetural do Quazymodo.
 - reescrever o motor de componentes;
 - implementar ORM novo;
 - criar sistema completo de testes nesta spec;
-- criar HTMX parcial nesta spec.
+- criar HTMX parcial nesta spec;
+- criar politica de escape para inserts textuais;
+- criar excecoes de dominio para contratos de componente;
+- criar validacao declarativa de inserts obrigatorios;
+- formalizar helper/component ou fluxo padrao de CSRF para formularios.
 
 ## Proposta
 
@@ -77,10 +80,7 @@ Implementar em recortes pequenos, nesta ordem:
 1. corrigir compatibilidade PHP 8.4 nos construtores de componentes;
 2. padronizar mapeamento de excecao para HTTP status;
 3. garantir logging explicito de excecoes capturadas em producao;
-4. criar politica de escape para inserts textuais;
-5. criar excecoes de dominio para contrato de componente;
-6. criar validacao declarativa minima de inserts obrigatorios;
-7. formalizar helper/component de CSRF para formularios.
+4. preservar o comportamento atual das paginas existentes.
 
 ## Contratos
 
@@ -100,48 +100,32 @@ Regras:
 Em producao, toda excecao capturada pelo app deve ser registrada antes da pagina
 amigavel ser renderizada.
 
-### Escape
+### Compatibilidade
 
-O framework deve distinguir:
-
-- texto comum escapado;
-- HTML/component seguro;
-- atributo HTML;
-- URL.
-
-O comportamento legado pode ser preservado por migracao, mas qualquer novo
-contrato deve favorecer escape seguro por padrao.
-
-### Componentes
-
-Componentes devem poder declarar, no minimo:
-
-- inserts obrigatorios;
-- inserts opcionais;
-- tipo esperado simples (`string`, `array`, `component`, `list`);
-- mensagem de erro com nome do componente e chave invalida.
+As correcoes devem preservar o contrato publico atual de controllers,
+componentes, rotas e paginas existentes.
 
 ## Criterios de aceite
 
 - [ ] PHP 8.4 nao emite deprecation nos construtores de `BaseComponent` e
   `ComponentDebug`.
-- [ ] excecoes sem status HTTP valido resultam em `500`.
-- [ ] excecoes capturadas em producao sao logadas.
-- [ ] existe politica documentada de escape para inserts.
-- [ ] existe mecanismo inicial para validar inserts obrigatorios em componente.
-- [ ] erros de contrato de componente citam componente, chave e expectativa.
-- [ ] CSRF possui fluxo padrao documentado para formularios.
-- [ ] comportamento atual de paginas existentes continua renderizando.
+- [ ] Excecoes sem status HTTP valido resultam em resposta `500`.
+- [ ] Excecoes HTTP conhecidas, especialmente `404` e `405`, preservam o status
+  correto.
+- [ ] Excecoes capturadas em producao sao logadas antes da pagina amigavel ser
+  renderizada.
+- [ ] Falha de logging nao quebra a resposta final ao usuario.
+- [ ] Paginas existentes continuam renderizando sem mudanca de contrato publico.
+- [ ] A spec registra explicitamente que escape, contratos de componente e CSRF
+  foram adiados para specs futuras.
 
 ## Plano de migracao
 
 1. Corrigir assinaturas sem alterar chamadas existentes.
 2. Adicionar helper interno de status HTTP valido.
 3. Adicionar logging no catch de producao.
-4. Documentar escape antes de alterar comportamento global.
-5. Implementar contratos de componente de forma opt-in.
-6. Migrar componentes novos para contratos opt-in.
-7. Avaliar migracao gradual de componentes antigos.
+4. Garantir fallback seguro quando o logging falhar.
+5. Validar que as paginas existentes continuam renderizando.
 
 ## Validacao
 
@@ -151,34 +135,47 @@ Comandos minimos:
 php -l quazymodo/App.php
 php -l quazymodo/BaseComponent.php
 php -l quazymodo/ComponentDebug.php
-php -l quazymodo/ComponentData.php
-php -l quazymodo/Blueprint.php
+php -l quazymodo/Exceptions/*.php
 ```
+
+Arquivos alterados que nao estejam na lista acima tambem devem passar por
+`php -l`.
 
 Smoke tests manuais:
 
 - renderizar `/` em development;
 - renderizar rota inexistente e confirmar `404`;
-- forcar excecao em development e confirmar Tracy;
-- forcar excecao em production e confirmar pagina `500` + log;
-- renderizar componente com insert obrigatorio ausente e confirmar mensagem.
+- forcar excecao comum e confirmar resposta final `500`, sem usar codigo
+  arbitrario da excecao como HTTP status;
+- forcar excecao em production e confirmar pagina amigavel `500` + log;
+- confirmar que falha de logging nao impede a resposta amigavel.
+
+Validacao assistida recomendada:
+
+- usar Playwright para acompanhar renderizacao da pagina inicial;
+- usar Playwright para acompanhar rota inexistente e pagina `404`;
+- usar Playwright para acompanhar erro comum como `500`;
+- usar Playwright para confirmar que a pagina amigavel de production nao expoe
+  stack trace.
+
+A validacao com Playwright e recomendada para acompanhamento visual e funcional,
+mas nao bloqueia a conclusao da spec enquanto nao houver suite automatizada
+formal.
 
 ## Riscos
-
-- Risco: escape seguro quebrar componentes que hoje passam HTML cru.
-- Mitigacao: introduzir escape como contrato opt-in primeiro e documentar
-  mecanismo explicito para HTML confiavel.
-
-- Risco: validacao de contrato gerar falso positivo em componentes montadores.
-- Mitigacao: iniciar com declaracao opt-in por componente, sem inferencia global.
 
 - Risco: logging em producao falhar por permissao de escrita.
 - Mitigacao: validar `app/writable/` e fallback seguro sem quebrar resposta.
 
+- Risco: mapeamento de status HTTP alterar comportamento de excecoes existentes.
+- Mitigacao: preservar `404` e `405` do router e transformar apenas status
+  invalido em `500`.
+
 ## Decisoes
 
 - O core deve evoluir por endurecimento incremental, nao por reescrita.
-- Contratos novos devem ser opt-in ate haver migracao dos componentes antigos.
+- Esta primeira entrega da spec foca em runtime: PHP 8.4, status HTTP e logging.
+- Escape, contratos de componente e CSRF ficam adiados para specs futuras.
 - Templates continuam passivos; loops e regras de composicao permanecem em PHP.
 
 ## Notas de implementacao
@@ -188,4 +185,5 @@ Smoke tests manuais:
   escopo da subtask.
 - Consultar `docs/tracy.md` para logging/diagnostico.
 - Consultar `docs/league-route.md` para comportamento de rotas/HTTP.
-- Consultar `docs/componentes.md` antes de alterar contratos de componente.
+- Consultar `docs/componentes.md` antes de alterar assinaturas ou comportamento
+  publico de componentes.

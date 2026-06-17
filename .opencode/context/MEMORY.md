@@ -7,3 +7,6 @@
  - Dentro de blocos pre-preenchidos, todo conteudo deve declarar um slot de destino; conteudo sem slot e invalido.
  - O Quazymodo usa SDD em `docs/sdd/` para mudancas relevantes, tratando o projeto como brownfield e exigindo spec antes de alteracoes em core, seguranca, componentes, HTTP, DB ou CLI.
  - `docs/sdd/` e a pasta oficial de gerenciamento do projeto; `.opencode/` deve ficar restrito a regras e contexto dos agentes, sem backlog operacional.
+ - A spec `QMD-SDD-0001-core-hardening.md` foi aceita com escopo reduzido: PHP 8.4, HTTP status seguro, logging em producao e preservacao das paginas atuais.
+ - Escape de inserts, contratos de componente e fluxo padrao de CSRF foram adiados para specs futuras.
+ - Playwright pode ser usado como validacao assistida recomendada e nao bloqueante para acompanhar renderizacao, `404` e `500`.

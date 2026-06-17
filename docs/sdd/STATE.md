@@ -46,8 +46,25 @@ Proximo passo: criar uma spec propria para CLI v0.1 antes de implementar.
 
 ### Core hardening
 
-Status: `draft`
+Status: `accepted`
 
 Spec ativa: `QMD-SDD-0001-core-hardening.md`.
 
-Proximo passo: aceitar ou ajustar a spec antes de executar o primeiro recorte.
+Escopo aceito:
+
+- corrigir compatibilidade PHP 8.4 nos construtores de componentes;
+- padronizar mapeamento de excecao para HTTP status;
+- garantir logging explicito de excecoes capturadas em producao;
+- preservar o comportamento atual das paginas existentes.
+
+Escopo adiado para specs futuras:
+
+- politica de escape para inserts textuais;
+- excecoes de dominio para contratos de componente;
+- validacao declarativa minima de inserts obrigatorios;
+- helper/component ou fluxo padrao de CSRF para formularios.
+
+Validacao: Playwright pode ser usado como acompanhamento recomendado e nao
+bloqueante para renderizacao, `404` e `500`.
+
+Proximo passo: executar o primeiro recorte da spec aceita.
