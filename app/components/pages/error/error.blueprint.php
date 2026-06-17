@@ -7,6 +7,6 @@ return [
   'css' => "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css",
   'inserts' => [
     'body' => componentFactory::Template('/pages/error/'),
-    'body-class' => 'flex justify-center items-center p-10',
+    'body-class' => '',
   ]
 ];
