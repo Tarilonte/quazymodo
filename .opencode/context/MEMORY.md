@@ -6,3 +6,4 @@
  - O conteudo interno de um bloco pre-preenchido e convertido em inserts do componente declarado no slot externo.
  - Dentro de blocos pre-preenchidos, todo conteudo deve declarar um slot de destino; conteudo sem slot e invalido.
  - O Quazymodo usa SDD em `docs/sdd/` para mudancas relevantes, tratando o projeto como brownfield e exigindo spec antes de alteracoes em core, seguranca, componentes, HTTP, DB ou CLI.
+ - `docs/sdd/` e a pasta oficial de gerenciamento do projeto; `.opencode/` deve ficar restrito a regras e contexto dos agentes, sem backlog operacional.

@@ -6,9 +6,10 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 -->
 
 ## 1) Hierarquia e escopo
-- O agente DEVE tratar `BASE.md` e `MEMORY.md` como fonte primaria de contexto do projeto.
-- O agente DEVE usar todo o contexto do projeto sob `.opencode/`.
+- O agente DEVE tratar `BASE.md`, `MEMORY.md` e `docs/sdd/` como fontes primarias de contexto do projeto.
+- O agente DEVE usar `.opencode/` para regras/contexto de agente e `docs/sdd/` para gerenciamento do projeto.
 - O agente NAO DEVE contradizer decisoes ja registradas em `BASE.md` e `MEMORY.md`.
+- O agente NAO DEVE criar ou manter backlog, roadmap, estado de execucao ou tasks de projeto em `.opencode/`.
 
 ## 2) Principios de implementacao
 - O agente DEVE sugerir solucoes simples e previsiveis.
@@ -61,9 +62,11 @@ Este arquivo usa linguagem normativa (DEVE, NAO DEVE, SEMPRE, NUNCA).
 ## 8) Memoria operacional
 - Quando surgir decisao nova, mudanca de padrao ou convencao, o agente DEVE emitir bloco final chamado `Memory candidate`.
 - O bloco `Memory candidate` DEVE ter de 1 a 5 bullets e estar pronto para colar.
-- O agente NUNCA DEVE alterar automaticamente os arquivos de memoria (`BASE.md`, `RULES.md`, `MEMORY.md`, `TASKS.md`) sem pedido explicito.
+- O agente NUNCA DEVE alterar automaticamente os arquivos de memoria (`BASE.md`, `RULES.md`, `MEMORY.md`) sem pedido explicito.
+- O agente DEVE manter specs, roadmap, estado e progresso operacional em `docs/sdd/`.
+- O agente NAO DEVE recriar arquivo de tasks ou backlog em `.opencode/context/`; se houver necessidade de registrar andamento, DEVE atualizar `docs/sdd/ROADMAP.md`, `docs/sdd/STATE.md` ou a spec correspondente.
 - Se nao houver decisao persistivel relevante, o agente NAO DEVE exibir `Memory candidate`.
-- Ao concluir mudancas relevantes, o agente DEVE avaliar se AGENTS.md, BASE.md, RULES.md e MEMORY.md precisam de atualizacao.
+- Ao concluir mudancas relevantes, o agente DEVE avaliar se AGENTS.md, BASE.md, RULES.md, MEMORY.md e `docs/sdd/` precisam de atualizacao.
 - Quando identificar necessidade, o agente DEVE SEMPRE sugerir a atualizacao ao usuario com justificativa curta (o que mudou e por que atualizar).
 
 ## 9) Consulta obrigatoria de documentacao tecnica

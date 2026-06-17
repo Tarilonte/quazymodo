@@ -14,6 +14,7 @@ Purpose: guidance for agentic tools working in this repo.
 - `app/components/`: component blueprints/templates/assets.
 - `quazymodo/`: framework core.
 - `public/`: web root / front controller.
+- `docs/sdd/`: official project management area for specs, roadmap, state, and progress.
 
 ## Build / lint / test
 ### PHP dependencies
@@ -88,6 +89,7 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 - No Cursor or Copilot instruction files detected.
 - `app/writable/` is ignored by git (logs, cache, sqlite db).
 - Container image uses Alpine and PHP 8.4; ensure required extensions are installed.
+- Keep project management in `docs/sdd/`; `.opencode/` is only for agent rules/context.
 
 ## When adding new code
 - Follow existing directory structure and naming.

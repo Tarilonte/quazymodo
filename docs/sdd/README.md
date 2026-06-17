@@ -5,18 +5,35 @@
 Este diretorio define o fluxo de SDD (Specification Driven Development) do
 Quazymodo.
 
+`docs/sdd/` e a pasta oficial de gerenciamento do projeto. Specs, roadmap,
+estado e progresso operacional devem viver aqui para evitar duplicacao com o
+contexto dos agentes.
+
 O projeto e brownfield: ja existe codigo em producao de desenvolvimento,
 decisoes arquiteturais registradas e componentes funcionando. Por isso, toda
 spec deve preservar compatibilidade operacional ou explicitar a migracao.
 
 ## Fontes primarias
 
+- `docs/sdd/ROADMAP.md`
+- `docs/sdd/STATE.md`
 - `.opencode/context/BASE.md`
 - `.opencode/context/MEMORY.md`
-- `.opencode/context/TASKS.md`
 - `AGENTS.md`
 - `docs/*.md`
 - codigo existente em `quazymodo/` e `app/`
+
+## Estrutura oficial
+
+- `README.md`: regras do fluxo SDD;
+- `ROADMAP.md`: prioridades e proximos recortes;
+- `STATE.md`: decisoes operacionais, andamento e pendencias globais;
+- `TEMPLATE.md`: modelo para novas specs;
+- `QMD-SDD-*.md`: specs formais, com criterios e validacao proprios.
+
+`.opencode/` deve conter apenas regras e contexto para agentes. Backlog,
+roadmap, estado de execucao e tarefas de projeto nao devem ser mantidos em
+`.opencode/`.
 
 ## Regra central
 
@@ -69,11 +86,7 @@ Estados:
 
 ## Ordem de prioridade inicial
 
-1. `QMD-SDD-0001-core-hardening.md`
-2. contratos formais de componentes;
-3. CLI v0.1;
-4. testes minimos do core;
-5. HTMX para interacoes parciais.
+A ordem atual de prioridades deve ser mantida em `ROADMAP.md`.
 
 ## Politica brownfield
 
