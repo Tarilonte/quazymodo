@@ -18,5 +18,6 @@ return [
     'production-checked' => APP_ENV === 'production' ? 'checked' : '',
     'environment-label' => APP_ENV === 'production' ? 'PROD' : 'DEV',
     'environment-badge-class' => APP_ENV === 'production' ? 'badge-warning' : 'badge-info',
+    'environment-badge-form-class' => APP_ENV === 'production' ? 'bg-warning' : 'bg-info',
   ],
 ];

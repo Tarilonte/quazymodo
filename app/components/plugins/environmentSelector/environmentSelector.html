@@ -1,9 +1,8 @@
 <form
   class="
     flex items-center
-    gap-2
-    bg-base-content/10
-    p-2
+    {{ environment-badge-form-class }}
+    p-1
     rounded-full
   "
   hx-post="/environment"
@@ -23,7 +22,6 @@
   <label
     class="
       flex items-center
-      gap-2
       text-xs font-semibold uppercase tracking-wide
     "
     for="environmentSelector-toggle"
@@ -38,7 +36,7 @@
     <input
       id="environmentSelector-toggle"
       class="
-        toggle toggle-warning toggle-xs
+        toggle toggle-warning toggle-sm
       "
       type="checkbox"
       name="environment"
