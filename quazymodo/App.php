@@ -68,11 +68,28 @@ class App{
     if (APP_ENV === 'development') {
       throw $e; // Deixa o Tracy ou outro handler capturar
     }
-    $statusCode = method_exists($e, 'getStatusCode')
-      ? $e->getStatusCode()
-      : (is_int($e->getCode()) && $e->getCode() !== 0 ? $e->getCode() : 500);
+    $statusCode = self::resolveExceptionStatusCode(exception: $e);
     $controller = new ErrorController();
     self::$response = $controller->handle(self::$request, $statusCode);
+  }
+
+  private static function resolveExceptionStatusCode(Throwable $exception): int
+  {
+    // Only explicit HTTP exceptions may define the response status.
+    if (method_exists($exception, 'getStatusCode')) {
+      $statusCode = $exception->getStatusCode();
+
+      if (self::isErrorStatusCode(statusCode: $statusCode)) {
+        return $statusCode;
+      }
+    }
+
+    return 500;
+  }
+
+  private static function isErrorStatusCode(int $statusCode): bool
+  {
+    return $statusCode >= 400 && $statusCode <= 599;
   }
 
   private static function emit(): void

@@ -11,10 +11,15 @@ class ComponentDebug extends BaseComponent
     private static $panelAdded = false;
     private $startTime;
 
-    public function __construct($componentName, $inserts = [], $componentType)
+    public function __construct($componentName, $inserts = [], $componentType = 'plugin')
     {
         $this->startTime = microtime(true);
-        parent::__construct($componentName, $inserts, $componentType);
+        // Keep constructor calls compatible while avoiding PHP 8.4 parameter deprecations.
+        parent::__construct(
+            componentName: $componentName,
+            inserts: $inserts,
+            componentType: $componentType
+        );
         $executionTime = microtime(true) - $this->startTime;
         self::$components[] = [
             'name' => $this->componentName,

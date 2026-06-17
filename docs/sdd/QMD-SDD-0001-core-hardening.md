@@ -107,10 +107,10 @@ componentes, rotas e paginas existentes.
 
 ## Criterios de aceite
 
-- [ ] PHP 8.4 nao emite deprecation nos construtores de `BaseComponent` e
+- [x] PHP 8.4 nao emite deprecation nos construtores de `BaseComponent` e
   `ComponentDebug`.
-- [ ] Excecoes sem status HTTP valido resultam em resposta `500`.
-- [ ] Excecoes HTTP conhecidas, especialmente `404` e `405`, preservam o status
+- [x] Excecoes sem status HTTP valido resultam em resposta `500`.
+- [x] Excecoes HTTP conhecidas, especialmente `404` e `405`, preservam o status
   correto.
 - [ ] Excecoes capturadas em producao sao logadas antes da pagina amigavel ser
   renderizada.

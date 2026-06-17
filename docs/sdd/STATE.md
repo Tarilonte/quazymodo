@@ -50,6 +50,13 @@ Status: `accepted`
 
 Spec ativa: `QMD-SDD-0001-core-hardening.md`.
 
+Andamento:
+
+- Recorte 1 concluido: compatibilidade PHP 8.4 nos construtores de
+  `BaseComponent` e `ComponentDebug`.
+- Recorte 2 concluido: mapeamento seguro de excecao para HTTP status, com
+  fallback `500` para status invalido e preservacao de `404`/`405` do router.
+
 Escopo aceito:
 
 - corrigir compatibilidade PHP 8.4 nos construtores de componentes;
@@ -67,4 +74,5 @@ Escopo adiado para specs futuras:
 Validacao: Playwright pode ser usado como acompanhamento recomendado e nao
 bloqueante para renderizacao, `404` e `500`.
 
-Proximo passo: executar o primeiro recorte da spec aceita.
+Proximo passo: executar o terceiro recorte da spec aceita, garantindo logging
+explicito de excecoes capturadas em producao.

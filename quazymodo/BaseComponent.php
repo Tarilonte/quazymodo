@@ -37,7 +37,7 @@ class BaseComponent
    * @param string $componentType
    * @return $this 
    */
-  public function __construct($componentName, $inserts = [], $componentType)
+  public function __construct($componentName, $inserts = [], $componentType = 'plugin')
   {
     if($componentType === "page"){
       CSPManager::setNonce($componentName);
