@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use League\Route\Router;
 use Controller\ErrorController;
+use Tracy\Debugger;
 use Throwable;
 
 class App{
@@ -69,8 +70,21 @@ class App{
       throw $e; // Deixa o Tracy ou outro handler capturar
     }
     $statusCode = self::resolveExceptionStatusCode(exception: $e);
+    self::logProductionException(exception: $e);
     $controller = new ErrorController();
     self::$response = $controller->handle(self::$request, $statusCode);
+  }
+
+  private static function logProductionException(Throwable $exception): void
+  {
+    // Logging must never prevent the friendly error response from being rendered.
+    try {
+      Debugger::log(
+        message: $exception,
+        level: Debugger::EXCEPTION
+      );
+    } catch (Throwable) {
+    }
   }
 
   private static function resolveExceptionStatusCode(Throwable $exception): int

@@ -56,6 +56,10 @@ Andamento:
   `BaseComponent` e `ComponentDebug`.
 - Recorte 2 concluido: mapeamento seguro de excecao para HTTP status, com
   fallback `500` para status invalido e preservacao de `404`/`405` do router.
+- Recorte 3 concluido: excecoes capturadas em producao sao logadas
+  explicitamente via Tracy antes da pagina amigavel, com fallback seguro se o
+  logging falhar. O logger padrao do Tracy em arquivo foi mantido; SQLite foi
+  descartado para esta entrega.
 
 Escopo aceito:
 
@@ -74,5 +78,5 @@ Escopo adiado para specs futuras:
 Validacao: Playwright pode ser usado como acompanhamento recomendado e nao
 bloqueante para renderizacao, `404` e `500`.
 
-Proximo passo: executar o terceiro recorte da spec aceita, garantindo logging
-explicito de excecoes capturadas em producao.
+Proximo passo: validar que as paginas existentes continuam renderizando e
+concluir os criterios restantes da spec aceita.

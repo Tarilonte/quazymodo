@@ -112,9 +112,9 @@ componentes, rotas e paginas existentes.
 - [x] Excecoes sem status HTTP valido resultam em resposta `500`.
 - [x] Excecoes HTTP conhecidas, especialmente `404` e `405`, preservam o status
   correto.
-- [ ] Excecoes capturadas em producao sao logadas antes da pagina amigavel ser
+- [x] Excecoes capturadas em producao sao logadas antes da pagina amigavel ser
   renderizada.
-- [ ] Falha de logging nao quebra a resposta final ao usuario.
+- [x] Falha de logging nao quebra a resposta final ao usuario.
 - [ ] Paginas existentes continuam renderizando sem mudanca de contrato publico.
 - [ ] A spec registra explicitamente que escape, contratos de componente e CSRF
   foram adiados para specs futuras.
@@ -175,6 +175,7 @@ formal.
 
 - O core deve evoluir por endurecimento incremental, nao por reescrita.
 - Esta primeira entrega da spec foca em runtime: PHP 8.4, status HTTP e logging.
+- O logging desta entrega usa o logger padrao do Tracy em arquivo, sem SQLite.
 - Escape, contratos de componente e CSRF ficam adiados para specs futuras.
 - Templates continuam passivos; loops e regras de composicao permanecem em PHP.
 

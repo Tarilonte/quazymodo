@@ -10,3 +10,5 @@
  - A spec `QMD-SDD-0001-core-hardening.md` foi aceita com escopo reduzido: PHP 8.4, HTTP status seguro, logging em producao e preservacao das paginas atuais.
  - Escape de inserts, contratos de componente e fluxo padrao de CSRF foram adiados para specs futuras.
  - Playwright pode ser usado como validacao assistida recomendada e nao bloqueante para acompanhar renderizacao, `404` e `500`.
+ - O logging de excecoes em producao no Core Hardening usa o logger padrao do Tracy em arquivo.
+ - Excecoes capturadas em producao devem ser enviadas explicitamente para `Tracy\\Debugger::log()` antes da pagina amigavel, com fallback seguro se o logging falhar.
