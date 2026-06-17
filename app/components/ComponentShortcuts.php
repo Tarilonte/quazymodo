@@ -55,13 +55,4 @@ final class ComponentShortcuts
 
     return ComponentFactory::Plugin('/plugins/jsComponent/jsComponent', $payload);
   }
-
-  /**
-   * Creates the temporary environment selector plugin component.
-   */
-  public static function environmentSelector(): BaseComponent
-  {
-    // Keep navbar usage explicit while still offering a reusable shortcut.
-    return ComponentFactory::Plugin(componentName: '/plugins/environmentSelector/');
-  }
 }

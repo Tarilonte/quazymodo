@@ -80,26 +80,3 @@ bloqueante para renderizacao, `404` e `500`.
 
 Proximo passo: validar que as paginas existentes continuam renderizando e
 concluir os criterios restantes da spec aceita.
-
-### Environment Selector
-
-Status: `implemented-pending-smoke`
-
-Spec registrada: `QMD-SDD-0002-environment-selector.md`.
-
-Objetivo: implementar um plugin no navbar para alternancia temporaria por sessao
-entre `development` e `production`, usando toggle do daisyUI, HTMX, validacao
-CSRF e reload apos sucesso.
-
-Andamento:
-
-- override temporario por sessao resolvido em `app/config/environment.php`, apos
-  `session.php` e antes de servicos/Tracy;
-- rota `POST /environment` criada com validacao CSRF e lista fechada de ambientes;
-- plugin `environmentSelector` criado com toggle do daisyUI e HTMX;
-- navbar passou a incluir o plugin por slot pre-preenchido;
-- shortcut `environmentSelector()` criado em `App\Components\ComponentShortcuts`.
-
-Pendencias:
-
-- executar smoke visual no navegador para alternancia nos dois sentidos e rejeicoes.
