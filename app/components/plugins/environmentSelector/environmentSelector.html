@@ -1,0 +1,50 @@
+<form
+  class="
+    flex items-center
+    gap-2
+    bg-base-content/10
+    p-2
+    rounded-full
+  "
+  hx-post="/environment"
+  hx-trigger="change from:#environmentSelector-toggle"
+  hx-swap="none"
+>
+  <input
+    type="hidden"
+    name="csrf-token"
+    value="{{ csrf-token }}"
+  >
+  <input
+    type="hidden"
+    name="environment"
+    value="development"
+  >
+  <label
+    class="
+      flex items-center
+      gap-2
+      text-xs font-semibold uppercase tracking-wide
+    "
+    for="environmentSelector-toggle"
+  >
+    <span
+      class="
+        badge badge-xs {{ environment-badge-class }}
+      "
+    >
+      {{ environment-label }}
+    </span>
+    <input
+      id="environmentSelector-toggle"
+      class="
+        toggle toggle-warning toggle-xs
+      "
+      type="checkbox"
+      name="environment"
+      value="production"
+      aria-label="Alternar ambiente da sessao"
+      {{ production-checked }}
+    >
+  </label>
+</form>

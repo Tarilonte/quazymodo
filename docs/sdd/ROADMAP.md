@@ -29,7 +29,25 @@ Recortes adiados para specs futuras:
 - criar validacao declarativa minima de inserts obrigatorios;
 - formalizar helper/component de CSRF para formularios.
 
-### 2. CLI Quazymodo v0.1
+### 2. Environment Selector
+
+Status: `implemented-pending-smoke`
+Prioridade: `media`
+Spec: `QMD-SDD-0002-environment-selector.md`
+
+Objetivo: criar um plugin no navbar para alternancia temporaria por sessao entre
+`development` e `production`, usando toggle do daisyUI, HTMX, CSRF e reload apos
+sucesso.
+
+Recortes previstos:
+
+- override temporario antes da definicao do ambiente efetivo implementado;
+- plugin `environmentSelector` com toggle do daisyUI implementado;
+- componente incluido no navbar por slot pre-preenchido;
+- rota HTMX com validacao CSRF implementada;
+- smoke visual no navegador ainda recomendado.
+
+### 3. CLI Quazymodo v0.1
 
 Status: `pending-spec`
 Prioridade: `alta`
@@ -54,7 +72,7 @@ Recortes previstos:
 - implementar `check` com escopo inicial definido;
 - validar execucao local e ajustar mensagens de erro.
 
-### 3. Roadmap de releases v0.x
+### 4. Roadmap de releases v0.x
 
 Status: `pending-spec`
 Prioridade: `baixa`
