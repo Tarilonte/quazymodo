@@ -54,7 +54,23 @@ Recortes previstos:
 - implementar `check` com escopo inicial definido;
 - validar execucao local e ajustar mensagens de erro.
 
-### 3. Roadmap de releases v0.x
+### 3. Change Runtime Endpoint
+
+Status: `accepted`
+Prioridade: `media`
+Spec: `QMD-SDD-0003-change-runtime-endpoint.md`
+
+Objetivo: criar endpoint local `/changeRuntime` para alternar persistentemente
+`APP_ENV` em `app/config/app.php` entre `development` e `production`.
+
+Recortes previstos:
+
+- criar rota `GET /changeRuntime`;
+- validar host local antes de alterar arquivo;
+- alternar `APP_ENV` diretamente em `app/config/app.php`;
+- responder com `HX-Refresh: true` para recarregar a pagina apos sucesso.
+
+### 4. Roadmap de releases v0.x
 
 Status: `pending-spec`
 Prioridade: `baixa`

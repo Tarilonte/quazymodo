@@ -1,0 +1,16 @@
+<button
+  class="
+    btn btn-xs
+    relative
+    {{ aes-button-class }}
+  "
+  hx-get="/changeRuntime"
+  hx-swap="none"
+  hx-indicator=".htmx-indicator"
+>
+  {{ app-enviromnent }}
+  <span 
+    class="htmx-indicator absolute top-0.5 bg-inherit w-[90%] h-[90%]">
+    <span class="loading loading-infinity loading-xs"></span>
+  </span>
+</button>

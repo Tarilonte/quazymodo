@@ -80,3 +80,20 @@ bloqueante para renderizacao, `404` e `500`.
 
 Proximo passo: validar que as paginas existentes continuam renderizando e
 concluir os criterios restantes da spec aceita.
+
+### Change Runtime Endpoint
+
+Status: `accepted`
+
+Spec registrada: `QMD-SDD-0003-change-runtime-endpoint.md`.
+
+Objetivo: criar endpoint local `/changeRuntime` para alternar persistentemente
+`APP_ENV` em `app/config/app.php` entre `development` e `production`.
+
+Decisoes:
+
+- a rota sera `GET /changeRuntime`;
+- a alternancia sera automatica, sem parametros;
+- somente hosts locais poderao executar a alteracao;
+- hosts locais aceitos: `localhost`, `127.0.0.1`, `::1` e `quazymodo`;
+- sucesso responde com `HX-Refresh: true` para o HTMX recarregar a pagina.
