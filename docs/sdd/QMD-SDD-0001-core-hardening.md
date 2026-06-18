@@ -162,6 +162,20 @@ A validacao com Playwright e recomendada para acompanhamento visual e funcional,
 mas nao bloqueia a conclusao da spec enquanto nao houver suite automatizada
 formal.
 
+Validacao manual executada em 2026-06-18:
+
+- `php -l` validou `quazymodo/App.php`, `quazymodo/BaseComponent.php`,
+  `quazymodo/ComponentDebug.php`, `quazymodo/Exceptions/*.php` e
+  `app/controllers/ErrorController.php` sem erros.
+- `GET /` em development respondeu `200` e renderizou a home atual.
+- `GET /` em production respondeu `200` em smoke test local.
+- rota inexistente em production respondeu `404` em smoke test local.
+- simulacao de `handleException()` em production confirmou resposta amigavel
+  `500` para excecao comum sem reaproveitar codigo arbitrario da excecao.
+- a escrita do Tracy em `app/writable/tracy` nao foi confirmada no contexto
+  local de CLI por falha de permissao; o fallback seguro da resposta amigavel
+  permaneceu funcionando.
+
 ## Riscos
 
 - Risco: logging em producao falhar por permissao de escrita.

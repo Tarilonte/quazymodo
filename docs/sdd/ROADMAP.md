@@ -31,18 +31,21 @@ Recortes adiados para specs futuras:
 
 ### 2. CLI Quazymodo v0.1
 
-Status: `pending-spec`
+Status: `accepted`
 Prioridade: `alta`
-Spec: `a criar`
+Spec: `QMD-SDD-0004-cli-quazymodo-v0-1.md`
 
 Objetivo: implementar uma CLI pequena para produtividade imediata.
 
 Decisoes ja tomadas:
 
-- manter o escopo v0.1 em `make:component`, `route:list` e `check`;
-- `make:component` sera interativo por padrao;
-- `make:component` perguntara o tipo do componente;
-- o comando de geracao no v0.1 sera apenas `make:component`;
+- entrada inicial via `php qzy ...`;
+- manter o escopo v0.1 em `make:component`, `make:controller`, `route:list` e
+  `check`;
+- `make:component` cobre apenas `page` e `plugin`;
+- `make:controller` sera separado e gera controller + rota;
+- `make:component` e `make:controller` serao interativos por padrao;
+- criacao de shortcut sera opcional e perguntada interativamente;
 - manter fora de escopo atual `dev`, `assets` e `db`;
 - nao criar aliases de comandos no v0.1.
 
@@ -50,6 +53,7 @@ Recortes previstos:
 
 - criar estrutura base da CLI e dispatcher;
 - implementar `make:component` com fluxo interativo;
+- implementar `make:controller` com fluxo interativo e geracao de rota;
 - implementar `route:list` com leitura de rotas atuais;
 - implementar `check` com escopo inicial definido;
 - validar execucao local e ajustar mensagens de erro.

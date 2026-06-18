@@ -29,20 +29,31 @@ Resultados:
 - familias recorrentes foram catalogadas: `new/create`, `dev/serve`, `build`,
   `make/generate`, `route/list`, `check/test`;
 - comandos mais uteis para DX em projeto PHP web foram priorizados;
-- escopo MVP definido: `make:component`, `route:list`, `check`;
+- escopo MVP inicial definido: `make:component`, `route:list`, `check`;
 - fora de escopo atual: `dev`, `assets`, `db`;
-- assinaturas v0.1 definidas:
-  `make:component [nome] [--type=page|plugin|controller] [--no-interaction]`,
-  `route:list`,
-  `check [--only=routes|components|security|config] [--strict] [--format=text|json]`;
+- a especificacao final separou `make:controller` de `make:component` para nao
+  misturar componente com camada HTTP.
 - estrutura atual confirma bom encaixe para `route:list` em `app/routes/*.php`
   e `make:component` em `app/components/pages|plugins`.
 
 ### Programacao da CLI Quazymodo
 
-Status: `pending-spec`
+Status: `accepted`
 
-Proximo passo: criar uma spec propria para CLI v0.1 antes de implementar.
+Spec ativa: `QMD-SDD-0004-cli-quazymodo-v0-1.md`.
+
+Decisoes consolidadas:
+
+- entrada inicial via `php qzy ...` com script raiz `qzy`;
+- escopo v0.1: `make:component`, `make:controller`, `route:list`, `check`;
+- `make:component` cobre apenas `page` e `plugin`;
+- `make:controller` gera controller + rota, com perguntas interativas de
+  arquivo de rota e verbo HTTP;
+- `route:list` lista `method`, `path`, `handler`, `middleware` best effort e
+  `scope`;
+- `check` cobre `routes`, `components` e `config` com `exit code 0/1`.
+
+Proximo passo: implementar o bootstrap da CLI e o dispatcher minimo do `qzy`.
 
 ### Core hardening
 
@@ -78,8 +89,23 @@ Escopo adiado para specs futuras:
 Validacao: Playwright pode ser usado como acompanhamento recomendado e nao
 bloqueante para renderizacao, `404` e `500`.
 
-Proximo passo: validar que as paginas existentes continuam renderizando e
-concluir os criterios restantes da spec aceita.
+Validacao executada em 2026-06-18:
+
+- `php -l` passou nos arquivos centrais do recorte;
+- `GET /` respondeu `200` em development;
+- `GET /` respondeu `200` em production;
+- rota inexistente respondeu `404` em production;
+- simulacao de `handleException()` em production confirmou pagina amigavel
+  `500` para excecao comum.
+
+Pendencia residual:
+
+- a escrita do Tracy em `app/writable/tracy` nao foi confirmada no contexto
+  local de CLI por falha de permissao; o fallback seguro da resposta amigavel
+  seguiu funcionando.
+
+Proximo passo: validar e ajustar permissoes de `app/writable/tracy` no ambiente
+alvo antes de promover a spec para `done`.
 
 ### Change Runtime Endpoint
 
