@@ -29,52 +29,26 @@ Recortes adiados para specs futuras:
 - criar validacao declarativa minima de inserts obrigatorios;
 - formalizar helper/component de CSRF para formularios.
 
-### 2. CLI Quazymodo v0.1
+### 2. Change Runtime Endpoint
 
-Status: `accepted`
-Prioridade: `alta`
-Spec: `QMD-SDD-0004-cli-quazymodo-v0-1.md`
-
-Objetivo: implementar uma CLI pequena para produtividade imediata.
-
-Decisoes ja tomadas:
-
-- entrada inicial via `php qzy ...`;
-- manter o escopo v0.1 em `make:component`, `make:controller`, `route:list` e
-  `check`;
-- `make:component` cobre apenas `page` e `plugin`;
-- `make:controller` sera separado e gera controller + rota;
-- `make:component` e `make:controller` serao interativos por padrao;
-- criacao de shortcut sera opcional e perguntada interativamente;
-- manter fora de escopo atual `dev`, `assets` e `db`;
-- nao criar aliases de comandos no v0.1.
-
-Recortes previstos:
-
-- criar estrutura base da CLI e dispatcher;
-- implementar `make:component` com fluxo interativo;
-- implementar `make:controller` com fluxo interativo e geracao de rota;
-- implementar `route:list` com leitura de rotas atuais;
-- implementar `check` com escopo inicial definido;
-- validar execucao local e ajustar mensagens de erro.
-
-### 3. Change Runtime Endpoint
-
-Status: `accepted`
+Status: `done`
 Prioridade: `media`
 Spec: `QMD-SDD-0003-change-runtime-endpoint.md`
 
-Objetivo: criar endpoint local `/changeRuntime` para alternar persistentemente
-`APP_ENV` em `app/config/app.php` entre `development` e `production`.
+Objetivo: endpoint local `/changeRuntime` implementado para alternar
+persistentemente `APP_ENV` em `app/config/app.php` entre `development` e
+`production`.
 
-Recortes previstos:
+Conclusao: recorte concluido e absorvido pela spec finalizada.
+
+Recortes executados:
 
 - criar rota `GET /changeRuntime`;
 - validar host local antes de alterar arquivo;
 - alternar `APP_ENV` diretamente em `app/config/app.php`;
 - responder com `HX-Refresh: true` para recarregar a pagina apos sucesso.
 
-### 4. Roadmap de releases v0.x
+### 3. Roadmap de releases v0.x
 
 Status: `pending-spec`
 Prioridade: `baixa`
@@ -89,6 +63,18 @@ Recortes previstos:
 - publicar criterio de prontidao por release.
 
 ## Itens absorvidos por specs existentes
+
+### CLI Quazymodo v0.1
+
+Status: `done`
+Prioridade original: `alta`
+Spec: `QMD-SDD-0004-cli-quazymodo-v0-1.md`
+
+Objetivo original: implementar uma CLI pequena para produtividade imediata.
+
+Conclusao: o v0.1 foi entregue com `qzy`, `make:component`,
+`make:controller`, `route:list` e `check`, com documentacao operacional em
+`docs/cli.md`.
 
 ### Estrategia de erros por dominio
 

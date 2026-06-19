@@ -1,14 +1,14 @@
 # QMD-SDD-0004 — CLI Quazymodo v0.1
 
-Status: `accepted`
+Status: `done`
 Prioridade: `alta`
 Area: `cli|docs|componentes|http`
 
 ## Contexto
 
-O Quazymodo ainda nao possui uma CLI propria. Hoje, criacao de componentes,
-controllers, leitura de rotas e checagens basicas de estrutura dependem de
-edicao manual e conhecimento previo da organizacao do projeto.
+O Quazymodo passou a ter uma CLI propria. Antes desta entrega, criacao de
+componentes, controllers, leitura de rotas e checagens basicas de estrutura
+dependiam de edicao manual e conhecimento previo da organizacao do projeto.
 
 Como brownfield, a primeira entrega da CLI deve ser pequena, explicita e
 centrada em produtividade imediata, sem introduzir container, framework externo
@@ -185,19 +185,19 @@ Checks minimos:
 
 ## Criterios de aceite
 
-- [ ] o projeto passa a ter um entrypoint `qzy` executavel via `php qzy ...`.
-- [ ] `make:component` gera `page` e `plugin` com `html + blueprint` no local
+- [x] o projeto passa a ter um entrypoint `qzy` executavel via `php qzy ...`.
+- [x] `make:component` gera `page` e `plugin` com `html + blueprint` no local
   esperado.
-- [ ] `make:component` pergunta sobre criacao de shortcut em modo interativo.
-- [ ] `make:controller` gera controller e rota seguindo o padrao atual de
+- [x] `make:component` pergunta sobre criacao de shortcut em modo interativo.
+- [x] `make:controller` gera controller e rota seguindo o padrao atual de
   `app/routes/*.php`.
-- [ ] `make:controller` pergunta arquivo de rota e verbo HTTP em modo
+- [x] `make:controller` pergunta arquivo de rota e verbo HTTP em modo
   interativo.
-- [ ] `route:list` lista ao menos `method`, `path`, `handler`, `middleware` best
+- [x] `route:list` lista ao menos `method`, `path`, `handler`, `middleware` best
   effort e `scope`.
-- [ ] `check` cobre `routes`, `components` e `config` com `exit code 0/1`
+- [x] `check` cobre `routes`, `components` e `config` com `exit code 0/1`
   consistente.
-- [ ] a CLI nao altera comportamento HTTP atual do app fora dos arquivos
+- [x] a CLI nao altera comportamento HTTP atual do app fora dos arquivos
   explicitamente gerados pelo usuario.
 
 ## Plano de migracao
@@ -223,6 +223,16 @@ php qzy make:controller --help
 php qzy route:list
 php qzy check
 ```
+
+Validacao executada em 2026-06-19:
+
+- `php qzy` exibiu a ajuda principal da CLI v0.1.
+- `php qzy make:component --help` exibiu a assinatura esperada do comando.
+- `php qzy make:controller --help` exibiu a assinatura esperada do comando.
+- `php qzy route:list` listou as rotas conhecidas com `method`, `path`,
+  `handler`, `middleware` e `scope`.
+- `php qzy check` concluiu com sucesso no estado atual do projeto.
+- a documentacao operacional da CLI foi registrada em `docs/cli.md`.
 
 Smoke tests manuais:
 
@@ -256,6 +266,12 @@ Smoke tests manuais:
 - O v0.1 nao tera aliases, `dev`, `assets` ou `db`.
 - `route:list` mostrara middleware em modo best effort.
 - `check` cobrira apenas `routes`, `components` e `config`.
+
+## Resultado
+
+O v0.1 foi entregue com entrypoint `qzy` na raiz e implementacao central em
+`quazymodo/CliApplication.php`, cobrindo os quatro comandos previstos pela
+spec: `make:component`, `make:controller`, `route:list` e `check`.
 
 ## Notas de implementacao
 

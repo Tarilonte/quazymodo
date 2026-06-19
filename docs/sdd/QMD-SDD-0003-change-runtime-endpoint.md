@@ -1,6 +1,6 @@
 # QMD-SDD-0003 — Change Runtime Endpoint
 
-Status: `accepted`
+Status: `done`
 Prioridade: `media`
 Area: `config|seguranca|http`
 
@@ -80,16 +80,16 @@ O host deve ser normalizado removendo porta e colchetes IPv6 antes da validacao.
 
 ## Criterios de aceite
 
-- [ ] Existe rota `GET /changeRuntime`.
-- [ ] A rota rejeita hosts nao locais.
-- [ ] A rota aceita `localhost`, `127.0.0.1`, `::1` e `quazymodo`.
-- [ ] A rota alterna `APP_ENV` de `development` para `production`.
-- [ ] A rota alterna `APP_ENV` de `production` para `development`.
-- [ ] A rota nao aceita nem grava valores diferentes de `development` e
+- [x] Existe rota `GET /changeRuntime`.
+- [x] A rota rejeita hosts nao locais.
+- [x] A rota aceita `localhost`, `127.0.0.1`, `::1` e `quazymodo`.
+- [x] A rota alterna `APP_ENV` de `development` para `production`.
+- [x] A rota alterna `APP_ENV` de `production` para `development`.
+- [x] A rota nao aceita nem grava valores diferentes de `development` e
   `production`.
-- [ ] A rota inclui `HX-Refresh: true` no response header apos sucesso.
-- [ ] O controller nao monta HTML.
-- [ ] A alteracao so precisa valer na proxima requisicao.
+- [x] A rota inclui `HX-Refresh: true` no response header apos sucesso.
+- [x] O controller nao monta HTML.
+- [x] A alteracao so precisa valer na proxima requisicao.
 
 ## Plano de migracao
 
@@ -102,11 +102,11 @@ O host deve ser normalizado removendo porta e colchetes IPv6 antes da validacao.
 
 ## Validacao
 
-- Verificar a sintaxe dos arquivos PHP alterados.
-- Confirmar que `app/config/app.php` alterna entre `development` e `production`.
-- Confirmar que host local e aceito.
-- Confirmar que host nao local e rejeitado.
-- Confirmar que a resposta de sucesso inclui `HX-Refresh: true`.
+- [x] Verificar a sintaxe dos arquivos PHP alterados.
+- [x] Confirmar que `app/config/app.php` alterna entre `development` e `production`.
+- [x] Confirmar que host local e aceito.
+- [x] Confirmar que host nao local e rejeitado.
+- [x] Confirmar que a resposta de sucesso inclui `HX-Refresh: true`.
 
 ## Riscos
 

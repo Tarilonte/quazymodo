@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+/*
+ * Quazymodo CLI entrypoint.
+ *
+ * Intencao: expor uma interface pequena de comandos locais sem interferir no
+ * bootstrap HTTP do projeto.
+ */
+
+require __DIR__ . '/vendor/autoload.php';
+
+$application = new Quazymodo\CliApplication(projectRoot: __DIR__);
+exit($application->run(arguments: $argv));

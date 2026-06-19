@@ -38,7 +38,7 @@ Resultados:
 
 ### Programacao da CLI Quazymodo
 
-Status: `accepted`
+Status: `done`
 
 Spec ativa: `QMD-SDD-0004-cli-quazymodo-v0-1.md`.
 
@@ -53,7 +53,17 @@ Decisoes consolidadas:
   `scope`;
 - `check` cobre `routes`, `components` e `config` com `exit code 0/1`.
 
-Proximo passo: implementar o bootstrap da CLI e o dispatcher minimo do `qzy`.
+Validacao executada em 2026-06-19:
+
+- `php qzy` exibiu a ajuda principal da CLI v0.1;
+- `php qzy make:component --help` confirmou a assinatura esperada;
+- `php qzy make:controller --help` confirmou a assinatura esperada;
+- `php qzy route:list` listou as rotas atuais com `method`, `path`, `handler`,
+  `middleware` e `scope`;
+- `php qzy check` concluiu com sucesso no estado atual do projeto.
+
+Conclusao: a CLI v0.1 foi implementada com entrypoint `qzy`, aplicacao central
+em `quazymodo/CliApplication.php` e documentacao operacional em `docs/cli.md`.
 
 ### Core hardening
 
@@ -109,12 +119,15 @@ alvo antes de promover a spec para `done`.
 
 ### Change Runtime Endpoint
 
-Status: `accepted`
+Status: `done`
 
 Spec registrada: `QMD-SDD-0003-change-runtime-endpoint.md`.
 
-Objetivo: criar endpoint local `/changeRuntime` para alternar persistentemente
-`APP_ENV` em `app/config/app.php` entre `development` e `production`.
+Objetivo: endpoint local `/changeRuntime` implementado para alternar
+persistentemente `APP_ENV` em `app/config/app.php` entre `development` e
+`production`.
+
+Conclusao: implementacao concluida e validacao registrada na spec.
 
 Decisoes:
 
@@ -123,3 +136,18 @@ Decisoes:
 - somente hosts locais poderao executar a alteracao;
 - hosts locais aceitos: `localhost`, `127.0.0.1`, `::1` e `quazymodo`;
 - sucesso responde com `HX-Refresh: true` para o HTMX recarregar a pagina.
+
+### Pagina Dev de Teste CSRF
+
+Status: `done`
+
+Spec registrada: `QMD-SDD-0005-dev-csrf-test-page.md`.
+
+Resultado:
+
+- rota dev `GET /csrf` criada para exibir o formulario de teste;
+- rota dev `POST /csrf` criada para receber e validar o token;
+- o mesmo `CsrfController` trata `GET` e `POST`;
+- a pagina mostra resultado visual simples de sucesso ou falha;
+- o recorte ficou explicitamente limitado a desenvolvimento e nao formaliza
+  ainda o fluxo oficial de CSRF do framework.

@@ -120,6 +120,49 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 *   Credenciais de banco de dados (`DB`)
 *   Constantes para assets comuns (e.g., `ASSET_HTMX`, `ASSET_JQUERY`)
 
+## CSRF
+
+O Quazymodo possui uma base simples de protecao contra CSRF em
+`quazymodo/Csrf.php`.
+
+Implementacao atual:
+
+*   `Csrf::setToken()`: gera um token aleatorio e armazena em `$_SESSION['csrf-token']`.
+*   `Csrf::verifyToken($token)`: compara o token recebido com o token salvo na sessao usando `hash_equals()`.
+*   A sessao precisa estar habilitada, o que hoje acontece via `app/config/session.php` quando `APP_SESSION_ENABLE === 1`.
+
+### Como usar
+
+Fluxo basico:
+
+1.  Gere o token no controller antes de renderizar o formulario.
+2.  Envie o token em um campo oculto do formulario.
+3.  Na submissao `POST`, recupere o valor enviado e valide com `Csrf::verifyToken(...)`.
+
+Exemplo conceitual:
+
+```php
+use Quazymodo\Csrf;
+
+$token = Csrf::setToken();
+
+// No POST:
+$isValid = Csrf::verifyToken(token: $_POST['csrf-token'] ?? '');
+```
+
+Exemplo de campo oculto no formulario:
+
+```html
+<input type="hidden" name="csrf-token" value="{{ csrf-token }}" />
+```
+
+### Observações importantes
+
+*   Hoje existe a base de geracao e validacao, mas ainda nao ha um fluxo global oficial para todos os formularios do framework.
+*   Ainda nao existe middleware global de CSRF.
+*   Cada formulario que precisar de protecao deve incluir o token e validar manualmente no endpoint correspondente.
+*   Existe uma pagina de teste em desenvolvimento em `/csrf`, usando o mesmo endpoint para `GET` e `POST`, apenas para exercitar a implementacao atual.
+
 ## Como Começar (Inferido)
 
 1.  **Instalar Dependências PHP:**
@@ -135,6 +178,14 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 4.  **Frontend Assets:**
     *   O frontend base carrega Tailwind CSS e daisyUI via CDN em runtime.
     *   Os ajustes visuais especificos do projeto ficam em arquivos CSS locais dos componentes, como `app/components/pages/base/base-cdn.css`.
+
+## CLI
+
+O projeto possui uma CLI local chamada `qzy` para scaffolding e inspecao basica.
+
+Manual de uso:
+
+- `docs/cli.md`
 
 ## Tecnologias Utilizadas (Principais)
 
