@@ -29,7 +29,24 @@ Recortes adiados para specs futuras:
 - criar validacao declarativa minima de inserts obrigatorios;
 - formalizar helper/component de CSRF para formularios.
 
-### 2. Change Runtime Endpoint
+### 2. Middleware de CSRF para rotas web
+
+Status: `accepted`
+Prioridade: `alta`
+Spec: `QMD-SDD-0006-csrf-middleware-web.md`
+
+Objetivo: centralizar a validacao de CSRF em middleware para rotas `web`
+mutantes, removendo a responsabilidade dos controllers nos fluxos cobertos.
+
+Recortes previstos:
+
+- criar `Middleware\CsrfMiddleware`;
+- aplicar o middleware globalmente ao escopo `web`;
+- validar `POST`, `PUT`, `PATCH` e `DELETE` com base no campo `csrf-token`;
+- responder `403` em caso de token ausente ou invalido;
+- preservar `api`, `dev` e `test` fora do escopo neste primeiro recorte.
+
+### 3. Change Runtime Endpoint
 
 Status: `done`
 Prioridade: `media`
@@ -48,7 +65,7 @@ Recortes executados:
 - alternar `APP_ENV` diretamente em `app/config/app.php`;
 - responder com `HX-Refresh: true` para recarregar a pagina apos sucesso.
 
-### 3. Roadmap de releases v0.x
+### 4. Roadmap de releases v0.x
 
 Status: `pending-spec`
 Prioridade: `baixa`

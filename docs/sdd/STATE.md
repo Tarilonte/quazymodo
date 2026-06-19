@@ -117,6 +117,26 @@ Pendencia residual:
 Proximo passo: validar e ajustar permissoes de `app/writable/tracy` no ambiente
 alvo antes de promover a spec para `done`.
 
+### Middleware de CSRF para rotas web
+
+Status: `accepted`
+
+Spec ativa: `QMD-SDD-0006-csrf-middleware-web.md`.
+
+Decisoes consolidadas:
+
+- o recorte inicial cobre apenas o escopo `web`;
+- a aplicacao sera global nas rotas `web`, nao opt-in por rota;
+- os metodos protegidos serao `POST`, `PUT`, `PATCH` e `DELETE`;
+- o middleware lera o token apenas do campo `csrf-token` no corpo da
+  requisicao;
+- token ausente ou invalido respondera com `403`;
+- `api`, `dev`, `test`, helper de formulario e header alternativo ficam fora do
+  escopo inicial.
+
+Proximo passo: implementar `Middleware\CsrfMiddleware` e aplicar a validacao ao
+bootstrap do escopo `web`.
+
 ### Change Runtime Endpoint
 
 Status: `done`
