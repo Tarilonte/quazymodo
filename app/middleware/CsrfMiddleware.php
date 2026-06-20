@@ -14,18 +14,11 @@ use Quazymodo\Csrf;
  */
 class CsrfMiddleware implements MiddlewareInterface
 {
-  private const array PROTECTED_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE'];
   private const string BODY_FIELD = 'csrf-token';
   private const string HEADER_NAME = 'X-CSRF-Token';
 
   public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
   {
-    $method = strtoupper($request->getMethod());
-
-    if (!in_array($method, self::PROTECTED_METHODS, true)) {
-      return $handler->handle(request: $request);
-    }
-
     $token = $this->resolveToken(request: $request);
 
     if ($token === null || !Csrf::verifyToken(token: $token)) {

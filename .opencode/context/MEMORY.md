@@ -13,3 +13,8 @@
  - Playwright pode ser usado como validacao assistida recomendada e nao bloqueante para acompanhar renderizacao, `404` e `500`.
  - O logging de excecoes em producao no Core Hardening usa o logger padrao do Tracy em arquivo.
  - Excecoes capturadas em producao devem ser enviadas explicitamente para `Tracy\\Debugger::log()` antes da pagina amigavel, com fallback seguro se o logging falhar.
+ - Referencias de componente no Quazymodo aceitam apenas segmentos `[A-Za-z0-9_-]` separados por `/`, com `/` opcional no inicio/fim; `.` `..` `\\` e segmentos vazios sao invalidos.
+ - O core normaliza referencias com barra final para o arquivo homonimo do ultimo segmento, preservando convencao brownfield como `/pages/home/` -> `/pages/home/home`.
+ - Metadados de componente renderizados em atributos HTML pelo core devem sair escapados com `htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`.
+ - `CsrfMiddleware` no Quazymodo nao decide mais por metodo HTTP; quando anexado a uma rota, sempre exige token valido por body `csrf-token` ou header `X-CSRF-Token`.
+ - A cobertura de CSRF no Quazymodo agora e opt-in por rota, com declaracao individual de `->middleware(middleware: new Middleware\CsrfMiddleware())` nas rotas protegidas.

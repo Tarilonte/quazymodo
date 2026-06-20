@@ -135,8 +135,9 @@ Spec ativa: `QMD-SDD-0006-csrf-middleware-web.md`.
 Decisoes consolidadas:
 
 - o recorte inicial cobre apenas o escopo `web`;
-- a aplicacao sera global nas rotas `web`, nao opt-in por rota;
-- os metodos protegidos serao `POST`, `PUT`, `PATCH` e `DELETE`;
+- a aplicacao sera opt-in por rota, nao global nas rotas `web`;
+- toda rota com `CsrfMiddleware` exigira token valido, independentemente do
+  metodo HTTP;
 - o middleware lera primeiro o campo `csrf-token` no corpo da requisicao, com
   fallback para o header `X-CSRF-Token`;
 - token ausente ou invalido respondera com `403`;
@@ -146,14 +147,15 @@ Decisoes consolidadas:
 Validacao executada em 2026-06-20:
 
 - `Middleware\CsrfMiddleware` foi criado em `app/middleware/CsrfMiddleware.php`;
-- o registro de `web` passou a aplicar o middleware a todas as rotas do arquivo
-  `app/routes/web.php`;
-- harness PSR-7 confirmou bypass para `GET`, sucesso com token valido por body
-  e header, e falha `403` para token ausente ou invalido;
+- `app/routes/web.php` passou a declarar rotas diretamente, sem aplicacao
+  global de CSRF;
+- rota sem `CsrfMiddleware` permaneceu livre de CSRF em smoke test local;
+- harness local confirmou `403` sem token e sucesso com `X-CSRF-Token` valido
+  quando o middleware e executado;
 - `api`, `dev` e `test` nao foram alterados no bootstrap de rotas.
 
 Conclusao: spec promovida para `done` com suporte inicial a body e header
-`X-CSRF-Token` no escopo `web`.
+`X-CSRF-Token`, com aplicacao explicita por rota no escopo `web`.
 
 ### Security hardening
 

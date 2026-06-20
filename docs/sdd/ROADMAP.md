@@ -39,17 +39,18 @@ Status: `done`
 Prioridade: `alta`
 Spec: `QMD-SDD-0006-csrf-middleware-web.md`
 
-Objetivo: centralizar a validacao de CSRF em middleware para rotas `web`
-mutantes, removendo a responsabilidade dos controllers nos fluxos cobertos.
+Objetivo: centralizar a validacao de CSRF em middleware reaproveitavel, com
+aplicacao explicita por rota nos fluxos cobertos.
 
-Conclusao: middleware dedicado foi aplicado ao registro de rotas `web`, com
-validacao por body `csrf-token` e fallback por header `X-CSRF-Token`.
+Conclusao: middleware dedicado passou a ser declarado individualmente nas rotas
+que exigem CSRF, validando por body `csrf-token` e fallback por header
+`X-CSRF-Token` sempre que estiver anexado.
 
 Recortes executados:
 
 - criar `Middleware\CsrfMiddleware`;
-- aplicar o middleware globalmente ao escopo `web`;
-- validar `POST`, `PUT`, `PATCH` e `DELETE` com base no campo `csrf-token`;
+- aplicar o middleware apenas nas rotas que exigem CSRF;
+- exigir token valido em qualquer rota que declare `CsrfMiddleware`;
 - responder `403` em caso de token ausente ou invalido;
 - preservar `api`, `dev` e `test` fora do escopo neste primeiro recorte;
 - aceitar `X-CSRF-Token` como fallback ja na primeira entrega.

@@ -122,14 +122,14 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 
 ## CSRF
 
-O Quazymodo possui protecao de CSRF baseada em sessao, com validacao centralizada
-em middleware para rotas do escopo `web`.
+O Quazymodo possui protecao de CSRF baseada em sessao, com validacao
+centralizada em middleware e aplicacao explicita por rota.
 
 Arquivos principais:
 
 *   `quazymodo/Csrf.php`: gera e verifica token em `$_SESSION['csrf-token']`.
-*   `app/middleware/CsrfMiddleware.php`: protege requisicoes mutantes do escopo `web`.
-*   `app/routes/web.php`: aplica o middleware a todas as rotas registradas nesse arquivo.
+*   `app/middleware/CsrfMiddleware.php`: exige token valido sempre que estiver anexado a uma rota.
+*   `app/routes/web.php`: declara `CsrfMiddleware` individualmente apenas nas rotas protegidas.
 
 ### Como funciona
 
@@ -137,13 +137,17 @@ Fluxo atual:
 
 1.  Gere token com `Csrf::setToken()` antes de renderizar form ou tela que fara submissao mutante.
 2.  Envie token no body como campo `csrf-token` ou no header `X-CSRF-Token`.
-3.  Em rotas `web`, o middleware valida automaticamente `POST`, `PUT`, `PATCH` e `DELETE`.
-4.  Se token estiver ausente ou invalido, requisicao para antes do controller com `403`.
+3.  Anexe `CsrfMiddleware` apenas na rota que deve exigir CSRF.
+4.  Quando middleware estiver anexado, ele sempre valida token antes do controller, independentemente do metodo HTTP.
+5.  Se token estiver ausente ou invalido, requisicao para antes do controller com `403`.
 
-O middleware ignora:
+Sem middleware anexado:
 
-*   `GET`, `HEAD` e demais metodos nao mutantes.
-*   Rotas fora de `app/routes/web.php`, como `api`, `dev` e `test`.
+*   rota nao exige CSRF por efeito lateral.
+
+Fora do escopo atual:
+
+*   rotas fora de `app/routes/web.php`, como `api`, `dev` e `test`, salvo declaracao explicita futura.
 
 ### Uso em formularios HTML
 
@@ -170,7 +174,7 @@ Direcao de uso:
 
 *   Gere token antes de renderizar formulario.
 *   Passe token para componente/template como insert normal.
-*   Inclua sempre campo oculto `csrf-token` em formularios `POST` do escopo `web`.
+*   Inclua campo oculto `csrf-token` em formularios que apontem para rotas com `CsrfMiddleware`.
 
 ### Uso com slot pre-preenchido em templates de formulario
 
@@ -197,7 +201,7 @@ Direcao de uso:
 *   O componente renderiza apenas `<input type="hidden" name="csrf-token" ...>`.
 *   O token atual e reutilizado da sessao quando ja existir; caso contrario, e gerado no render.
 *   Nao redeclare o mesmo slot depois da declaracao pre-preenchida; a normalizacao ja converte a declaracao para o slot simples internamente.
-*   O slot continua opcional: so injete quando formulario apontar para rota mutante do escopo `web`.
+*   O slot continua opcional: so injete quando formulario apontar para rota protegida com `CsrfMiddleware`.
 
 ### Uso com HTMX, fetch ou AJAX
 
@@ -224,9 +228,9 @@ Direcao de uso:
 ### Observacoes importantes
 
 *   A sessao precisa estar habilitada. Hoje isso ocorre via `app/config/session.php` quando `APP_SESSION_ENABLE === 1`.
-*   O middleware nao cobre rotas fora do escopo `web`.
+*   O middleware so cobre rotas onde ele for declarado explicitamente.
 *   Controllers cobertos por esse middleware nao precisam validar CSRF manualmente.
-*   Se uma nova rota mutante for registrada em `app/routes/web.php`, ela ja passa a exigir token automaticamente.
+*   Se uma nova rota mutante for registrada em `app/routes/web.php`, ela so exigira token quando declarar `CsrfMiddleware`.
 
 ## Como Começar (Inferido)
 
