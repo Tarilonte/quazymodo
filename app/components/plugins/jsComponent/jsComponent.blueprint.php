@@ -32,7 +32,6 @@ if ($fileScriptInput !== '') {
 return [
   'template' => 'plugins/jsComponent/jsComponent',
   'inserts' => [
-    "fileScriptSrc" => $fileScriptSource,
-    "nonce" => CSPManager::getNonce(),
+    "fileScriptSrc" => $fileScriptSource
   ]
 ];
