@@ -10,6 +10,7 @@ class Blueprint
 
   public function __construct($componentName, $inserts)
   {
+    $componentName = $this->normalizeComponentReference(componentName: (string) $componentName);
     $this->array = $this->parse_blueprint($componentName, $inserts);
     $this->array = array_merge(['blueprint' => "$componentName.php"], $this->array);
   }
@@ -38,11 +39,8 @@ class Blueprint
 
   private function load_blueprint($blueprintName, $inserts) : array
   {
-    // If $blueprintName ends with a slash, includes the file with the same name as the last folder in the string
-    // E.g. /pages/base/ => /pages/base/base.blueprint.php
-    if (substr($blueprintName, -1) === '/') {
-      $blueprintName .= basename($blueprintName);
-    }
+    $blueprintName = $this->normalizeComponentReference(componentName: (string) $blueprintName);
+
     // Require blueprint file
     if (file_exists("../app/components/$blueprintName.blueprint.php")) {
       return include "../app/components/$blueprintName.blueprint.php";
@@ -222,6 +220,56 @@ class Blueprint
   public function toArray(): array
   {
     return $this->array;
+  }
+
+  /*
+   * Aceita convencao brownfield com barras opcionais nas pontas, mas bloqueia
+   * traversal e segmentos fora do contrato de componentes.
+   */
+  private function normalizeComponentReference(string $componentName): string
+  {
+    $componentName = trim(string: $componentName);
+
+    if ($componentName === '') {
+      throw new \InvalidArgumentException('Nome de componente vazio nao e permitido.');
+    }
+
+    if (str_contains(haystack: $componentName, needle: '\\')) {
+      throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+    }
+
+    $hasLeadingSlash = str_starts_with(haystack: $componentName, needle: '/');
+    $hasTrailingSlash = str_ends_with(haystack: $componentName, needle: '/');
+    $trimmedComponent = trim(string: $componentName, characters: '/');
+
+    if ($trimmedComponent === '') {
+      throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+    }
+
+    $segments = explode(separator: '/', string: $trimmedComponent);
+
+    foreach ($segments as $segment) {
+      if (
+        $segment === ''
+        || $segment === '.'
+        || $segment === '..'
+        || !preg_match(pattern: '/^[A-Za-z0-9_-]+$/', subject: $segment)
+      ) {
+        throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+      }
+    }
+
+    $normalizedComponent = implode(separator: '/', array: $segments);
+
+    if ($hasLeadingSlash) {
+      $normalizedComponent = '/' . $normalizedComponent;
+    }
+
+    if ($hasTrailingSlash) {
+      $normalizedComponent .= '/' . end($segments);
+    }
+
+    return $normalizedComponent;
   }
 
 }

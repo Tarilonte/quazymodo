@@ -103,6 +103,7 @@ class BaseComponent
 
   private function buildTemplateComponent($templateName, $inserts = []): void
   {    
+    $templateName = $this->normalizeComponentReference(componentName: (string) $templateName);
     $this->html = $this->load_template($templateName);
     $this->parsePrefilledSlots();
     $this->slots = $this->map_slots($this->html);    
@@ -121,6 +122,7 @@ class BaseComponent
 
   private function buildBlueprintComponent($componentName, $inserts): void
   {
+    $componentName = $this->normalizeComponentReference(componentName: (string) $componentName);
     $this->blueprint = new Blueprint($componentName, $inserts);
     $this->registerLoadedBlueprintComponent($componentName);
 
@@ -210,11 +212,7 @@ class BaseComponent
 
   private function normalizeComponentName(string $componentName): string
   {
-    if (substr($componentName, -1) === '/') {
-      return $componentName . basename($componentName);
-    }
-
-    return $componentName;
+    return $this->normalizeComponentReference(componentName: $componentName);
   }
 
   private function resolveBlueprintPath(string $componentName): string
@@ -273,11 +271,7 @@ class BaseComponent
 
   private function load_template($templateName)
   {
-    // If $templateName ends with a slash, the template file has the same name as the last folder in the path
-    // E.g. /pages/home/ -> /pages/home/home.html
-    if (substr($templateName, -1) === '/') {
-      $templateName .= basename($templateName);
-    }
+    $templateName = $this->normalizeComponentReference(componentName: (string) $templateName);
 
     $path = "../app/components/$templateName.html";
 
@@ -447,11 +441,67 @@ class BaseComponent
 
   private function write_componentName($componentName) : void
   {
-    $insertion = ' component-name="'. $componentName . '" ';
+    // Metadado de componente vai para atributo HTML e precisa sair escapado.
+    $escapedComponentName = htmlspecialchars(
+      string: (string) $componentName,
+      flags: ENT_QUOTES | ENT_SUBSTITUTE,
+      encoding: 'UTF-8'
+    );
+    $insertion = ' component-name="'. $escapedComponentName . '" ';
     $pattern = '/(<\w+\s*)(.*?)(>)/im';
     $replacement = '${1}' . $insertion . '${2}${3}';
     $this->componentName = $componentName;
     $this->html = preg_replace($pattern, $replacement, $this->html, 1);
+  }
+
+  /*
+   * Aceita convencao brownfield com barras opcionais nas pontas, mas bloqueia
+   * traversal e segmentos fora do contrato de componentes/templates.
+   */
+  private function normalizeComponentReference(string $componentName): string
+  {
+    $componentName = trim(string: $componentName);
+
+    if ($componentName === '') {
+      throw new \InvalidArgumentException('Nome de componente vazio nao e permitido.');
+    }
+
+    if (str_contains(haystack: $componentName, needle: '\\')) {
+      throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+    }
+
+    $hasLeadingSlash = str_starts_with(haystack: $componentName, needle: '/');
+    $hasTrailingSlash = str_ends_with(haystack: $componentName, needle: '/');
+    $trimmedComponent = trim(string: $componentName, characters: '/');
+
+    if ($trimmedComponent === '') {
+      throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+    }
+
+    $segments = explode(separator: '/', string: $trimmedComponent);
+
+    foreach ($segments as $segment) {
+      if (
+        $segment === ''
+        || $segment === '.'
+        || $segment === '..'
+        || !preg_match(pattern: '/^[A-Za-z0-9_-]+$/', subject: $segment)
+      ) {
+        throw new \InvalidArgumentException("Nome de componente invalido: [$componentName]");
+      }
+    }
+
+    $normalizedComponent = implode(separator: '/', array: $segments);
+
+    if ($hasLeadingSlash) {
+      $normalizedComponent = '/' . $normalizedComponent;
+    }
+
+    if ($hasTrailingSlash) {
+      $normalizedComponent .= '/' . end($segments);
+    }
+
+    return $normalizedComponent;
   }
 
   private function fill_slots()

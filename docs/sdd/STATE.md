@@ -155,6 +155,39 @@ Validacao executada em 2026-06-20:
 Conclusao: spec promovida para `done` com suporte inicial a body e header
 `X-CSRF-Token` no escopo `web`.
 
+### Security hardening
+
+Status: `done`
+
+Spec ativa: `QMD-SDD-0008-security-hardening.md`.
+
+Escopo proposto:
+
+- validar e normalizar nomes de componente e blueprint no core;
+- bloquear path traversal e resolucao fora de `app/components/`;
+- escapar atributos HTML dinamicos gerados pelo core, com foco em
+  `component-name`.
+
+Fora de escopo nesta spec:
+
+- ferramentas dev-only nao expostas em producao;
+- mudancas de CSRF;
+- reescrita do motor de componentes.
+
+Resultados:
+
+- validacao e normalizacao defensiva foram adicionadas em
+  `quazymodo/Blueprint.php` e `quazymodo/BaseComponent.php`;
+- `component-name` passou a sair escapado no HTML gerado pelo core;
+- `php -l` passou nos arquivos alterados;
+- `php qzy check` confirmou resolucao dos componentes atuais, com uma falha de
+  rota pre-existente fora do escopo deste recorte.
+- `GET /` respondeu `200` em smoke test local apos endurecimento;
+- harness local confirmou rejeicao de traversal e escape de atributo HTML.
+
+Conclusao: spec promovida para `done` com endurecimento pequeno e localizado do
+motor de componentes, sem regressao observada na renderizacao principal.
+
 ### Codex Code Review no GitHub
 
 Status: `accepted`

@@ -73,7 +73,25 @@ Recortes executados:
 - alternar `APP_ENV` diretamente em `app/config/app.php`;
 - responder com `HX-Refresh: true` para recarregar a pagina apos sucesso.
 
-### 4. Roadmap de releases v0.x
+### 4. Security hardening
+
+Status: `done`
+Prioridade: `alta`
+Spec: `QMD-SDD-0008-security-hardening.md`
+
+Objetivo: endurecer resolucao de componentes e markup gerado pelo core contra
+path traversal e HTML injection, sem reescrever motor de componentes.
+
+Recortes previstos:
+
+- validar e normalizar nomes de componente e blueprint;
+- bloquear resolucao fora de `app/components/`;
+- escapar atributos HTML dinamicos gerados pelo core.
+
+Conclusao: nomes de componente passaram a ser validados e normalizados no core,
+com bloqueio de traversal e escape de `component-name` no HTML gerado.
+
+### 5. Roadmap de releases v0.x
 
 Status: `pending-spec`
 Prioridade: `baixa`
@@ -87,7 +105,7 @@ Recortes previstos:
 - organizar backlog por impacto tecnico;
 - publicar criterio de prontidao por release.
 
-### 5. Codex Code Review no GitHub
+### 6. Codex Code Review no GitHub
 
 Status: `accepted`
 Prioridade: `media`
