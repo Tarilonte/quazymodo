@@ -120,6 +120,50 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 *   Credenciais de banco de dados (`DB`)
 *   Constantes para assets comuns (e.g., `ASSET_HTMX`, `ASSET_JQUERY`)
 
+## CSP
+
+CSP (Content Security Policy) restringe origens de scripts, frames e outros recursos carregados pela página. Serve para reduzir XSS e conteúdo não autorizado.
+
+No Quazymodo:
+
+*   `Quazymodo\CSPManager` monta diretivas, gera nonce e adiciona `'nonce-...'` em `script-src`.
+*   `Quazymodo\AbstractController::html()` lê as diretivas e envia `Content-Security-Policy` nas respostas HTML.
+*   `BaseComponent` chama `CSPManager::setNonce()` em páginas, então o nonce fica disponível para componentes e templates.
+
+Como usar:
+
+*   Ative `APP_CSP_ENABLED`.
+*   Para liberar origem extra, use `CSPManager::addSource('script-src', 'https://exemplo.com')`.
+*   Para inline script com nonce, leia `CSPManager::getNonce()` e passe valor para template ou componente.
+*   Páginas criadas com `ComponentFactory::Page()` já entram no fluxo de nonce automaticamente.
+
+### Uso com componente de atributo nonce
+
+Quando o template precisa aplicar o nonce atual em uma tag `<script>`, o plugin
+`/plugins/nonceAttributeCp/` pode ser injetado diretamente no atributo da tag.
+
+Exemplo de uso por slot pre-preenchido:
+
+```html
+<script {{ nonce = plugin:/plugins/nonceAttributeCp/ }}>
+  console.log('script protegido por CSP');
+</script>
+```
+
+Depois do render, a tag recebe um fragmento como:
+
+```html
+<script nonce="...">
+  console.log('script protegido por CSP');
+</script>
+```
+
+Direcao de uso:
+
+*   use esse padrao para scripts inline que precisem obedecer ao `script-src` com nonce;
+*   prefira esse componente dentro da propria tag `<script>`, nao em slot de `body` solto;
+*   quando usar `/plugins/jsComponent/`, o nonce ja entra pelo fluxo do proprio componente.
+
 ## CSRF
 
 O Quazymodo possui protecao de CSRF baseada em sessao, com validacao
@@ -148,6 +192,24 @@ Sem middleware anexado:
 Fora do escopo atual:
 
 *   rotas fora de `app/routes/web.php`, como `api`, `dev` e `test`, salvo declaracao explicita futura.
+
+### Exemplo de rota protegida
+
+Exemplo de declaracao em `app/routes/web.php`:
+
+```php
+$router->map(
+  method: 'POST',
+  path: '/minha-rota-web',
+  handler: 'Controller\MinhaController::salvar',
+)->middleware(middleware: new Middleware\CsrfMiddleware());
+```
+
+Nesse padrao:
+
+*   a rota continua sendo registrada normalmente com `league/route`;
+*   o middleware e anexado apenas na rota que exige CSRF;
+*   qualquer requisicao nessa rota precisa enviar token valido por body `csrf-token` ou header `X-CSRF-Token`.
 
 ### Uso em formularios HTML
 
