@@ -3,7 +3,7 @@
 /*
  * Core application identity and runtime mode.
  */
-const APP_ENV = 'development'; // development, production
+const APP_ENV = 'production'; // development, production
 const APP_URL = 'https://localhost:8443';
 const APP_NAME = 'Quazymodo';
 const APP_TIMEZONE = 'America/Sao_Paulo';
