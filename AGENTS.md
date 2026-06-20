@@ -91,6 +91,15 @@ podman-compose -f Container/Nginx/docker-compose.yml up -d --build
 - Container image uses Alpine and PHP 8.4; ensure required extensions are installed.
 - Keep project management in `docs/sdd/`; `.opencode/` is only for agent rules/context.
 
+## Review guidelines
+- Prioritize bugs, behavioral regressions, security risks, and missing validation over style nits.
+- Treat missing CSRF protection on mutating web forms or routes as high priority.
+- Treat changes that inject HTML in controllers or JavaScript in templates as high priority.
+- Verify that changes preserve brownfield behavior described in active specs under `docs/sdd/`.
+- Flag code that bypasses `AbstractController` response helpers in normal controller flows.
+- Flag changes that alter core, HTTP, security, DB, CLI, or base component behavior without matching spec updates in `docs/sdd/`.
+- For frontend changes, prefer comments about broken states, accessibility regressions, or component contract drift; do not focus on subjective styling unless it hides a user-facing defect.
+
 ## When adding new code
 - Follow existing directory structure and naming.
 - Update route files under `app/routes/` for new endpoints.

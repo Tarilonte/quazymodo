@@ -79,6 +79,22 @@ Recortes previstos:
 - organizar backlog por impacto tecnico;
 - publicar criterio de prontidao por release.
 
+### 5. Codex Code Review no GitHub
+
+Status: `accepted`
+Prioridade: `media`
+Spec: `QMD-SDD-0007-codex-code-review-github.md`
+
+Objetivo: adicionar uma camada de revisao automatica de PR via Codex no GitHub,
+sem substituir revisao humana e sem alterar o core da aplicacao.
+
+Recortes previstos:
+
+- habilitar `Codex code review` no repositorio;
+- validar disparo manual com `@codex review`;
+- avaliar ativacao de `Automatic reviews`;
+- alinhar `AGENTS.md` como guia de revisao do repositorio.
+
 ## Itens absorvidos por specs existentes
 
 ### CLI Quazymodo v0.1

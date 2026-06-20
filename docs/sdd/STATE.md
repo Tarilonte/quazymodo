@@ -137,6 +137,25 @@ Decisoes consolidadas:
 Proximo passo: implementar `Middleware\CsrfMiddleware` e aplicar a validacao ao
 bootstrap do escopo `web`.
 
+### Codex Code Review no GitHub
+
+Status: `accepted`
+
+Spec ativa: `QMD-SDD-0007-codex-code-review-github.md`.
+
+Decisoes consolidadas:
+
+- a integracao sera tratada como fluxo de processo, nao como mudanca de
+  aplicacao;
+- o escopo inicial cobre apenas revisao de pull requests no GitHub;
+- a revisao manual deve funcionar com comentario `@codex review`;
+- `Automatic reviews` sera avaliado como opcional, nao pressuposto;
+- `AGENTS.md` sera a referencia principal de orientacao para o review;
+- a decisao final de merge continua humana.
+
+Proximo passo: revisar `AGENTS.md`, habilitar o review no Codex e validar o
+fluxo em um PR de teste.
+
 ### Change Runtime Endpoint
 
 Status: `done`
