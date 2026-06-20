@@ -69,6 +69,7 @@ COPY --from=builder /etc/php84 /etc/php84
 # Copy configuration files from the Container directory within the build context
 COPY Container/Nginx/nginx.conf /etc/nginx/http.d/default.conf
 COPY Container/Nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY Container/Nginx/bootstrap-writable.sh /usr/local/bin/bootstrap-writable.sh
 
 # Copy application files from the build context root
 WORKDIR /var/www/html
@@ -80,10 +81,11 @@ RUN chown -R nginx:nginx /var/www/html && \
     chmod -R 755 /var/www/html && \
     chown -R nginx:nginx /var/run/php-fpm && \
     chown -R nginx:nginx /var/log/supervisor && \
-    chown -R nginx:nginx /run/nginx
+    chown -R nginx:nginx /run/nginx && \
+    chmod +x /usr/local/bin/bootstrap-writable.sh
 
 # Expose web ports
 EXPOSE 80 443
 
-# Start supervisor to manage services
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Normalize bind-mounted writable paths before starting services.
+CMD ["/usr/local/bin/bootstrap-writable.sh"]

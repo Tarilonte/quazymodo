@@ -122,46 +122,111 @@ A configuração principal da aplicação reside em `app/config/index.php`. Este
 
 ## CSRF
 
-O Quazymodo possui uma base simples de protecao contra CSRF em
-`quazymodo/Csrf.php`.
+O Quazymodo possui protecao de CSRF baseada em sessao, com validacao centralizada
+em middleware para rotas do escopo `web`.
 
-Implementacao atual:
+Arquivos principais:
 
-*   `Csrf::setToken()`: gera um token aleatorio e armazena em `$_SESSION['csrf-token']`.
-*   `Csrf::verifyToken($token)`: compara o token recebido com o token salvo na sessao usando `hash_equals()`.
-*   A sessao precisa estar habilitada, o que hoje acontece via `app/config/session.php` quando `APP_SESSION_ENABLE === 1`.
+*   `quazymodo/Csrf.php`: gera e verifica token em `$_SESSION['csrf-token']`.
+*   `app/middleware/CsrfMiddleware.php`: protege requisicoes mutantes do escopo `web`.
+*   `app/routes/web.php`: aplica o middleware a todas as rotas registradas nesse arquivo.
 
-### Como usar
+### Como funciona
 
-Fluxo basico:
+Fluxo atual:
 
-1.  Gere o token no controller antes de renderizar o formulario.
-2.  Envie o token em um campo oculto do formulario.
-3.  Na submissao `POST`, recupere o valor enviado e valide com `Csrf::verifyToken(...)`.
+1.  Gere token com `Csrf::setToken()` antes de renderizar form ou tela que fara submissao mutante.
+2.  Envie token no body como campo `csrf-token` ou no header `X-CSRF-Token`.
+3.  Em rotas `web`, o middleware valida automaticamente `POST`, `PUT`, `PATCH` e `DELETE`.
+4.  Se token estiver ausente ou invalido, requisicao para antes do controller com `403`.
 
-Exemplo conceitual:
+O middleware ignora:
+
+*   `GET`, `HEAD` e demais metodos nao mutantes.
+*   Rotas fora de `app/routes/web.php`, como `api`, `dev` e `test`.
+
+### Uso em formularios HTML
+
+No controller:
 
 ```php
 use Quazymodo\Csrf;
 
 $token = Csrf::setToken();
-
-// No POST:
-$isValid = Csrf::verifyToken(token: $_POST['csrf-token'] ?? '');
 ```
 
-Exemplo de campo oculto no formulario:
+No template HTML:
 
 ```html
-<input type="hidden" name="csrf-token" value="{{ csrf-token }}" />
+<form method="POST" action="/minha-rota-web">
+  <input type="hidden" name="csrf-token" value="{{ csrf-token }}">
+  <button type="submit">
+    Enviar
+  </button>
+</form>
 ```
 
-### Observações importantes
+Direcao de uso:
 
-*   Hoje existe a base de geracao e validacao, mas ainda nao ha um fluxo global oficial para todos os formularios do framework.
-*   Ainda nao existe middleware global de CSRF.
-*   Cada formulario que precisar de protecao deve incluir o token e validar manualmente no endpoint correspondente.
-*   Existe uma pagina de teste em desenvolvimento em `/csrf`, usando o mesmo endpoint para `GET` e `POST`, apenas para exercitar a implementacao atual.
+*   Gere token antes de renderizar formulario.
+*   Passe token para componente/template como insert normal.
+*   Inclua sempre campo oculto `csrf-token` em formularios `POST` do escopo `web`.
+
+### Uso com slot pre-preenchido em templates de formulario
+
+Quando o template do formulario ja usa slots pre-preenchidos, o componente
+`/plugins/csrfTokenComponent/` pode ser injetado direto no HTML do template,
+evitando repetir o hidden input manualmente.
+
+Exemplo:
+
+```html
+<form method="POST" action="/minha-rota-web">
+  {{ csrf-field = plugin:/plugins/csrfTokenComponent/ }}
+
+  <input type="email" name="email">
+  <button type="submit">
+    Enviar
+  </button>
+</form>
+```
+
+Direcao de uso:
+
+*   Use esse padrao em templates de formulario reutilizaveis.
+*   O componente renderiza apenas `<input type="hidden" name="csrf-token" ...>`.
+*   O token atual e reutilizado da sessao quando ja existir; caso contrario, e gerado no render.
+*   Nao redeclare o mesmo slot depois da declaracao pre-preenchida; a normalizacao ja converte a declaracao para o slot simples internamente.
+*   O slot continua opcional: so injete quando formulario apontar para rota mutante do escopo `web`.
+
+### Uso com HTMX, fetch ou AJAX
+
+Quando submissao nao usar form tradicional, envie token no header `X-CSRF-Token`.
+
+Exemplo conceitual com `fetch`:
+
+```js
+fetch('/minha-rota-web', {
+  method: 'POST',
+  headers: {
+    'X-CSRF-Token': csrfToken,
+  },
+  body: formData,
+});
+```
+
+Direcao de uso:
+
+*   Reutilize mesmo token gerado no render da pagina.
+*   Prefira body `csrf-token` em forms.
+*   Use `X-CSRF-Token` como fallback para HTMX/AJAX/fetch quando body nao for conveniente.
+
+### Observacoes importantes
+
+*   A sessao precisa estar habilitada. Hoje isso ocorre via `app/config/session.php` quando `APP_SESSION_ENABLE === 1`.
+*   O middleware nao cobre rotas fora do escopo `web`.
+*   Controllers cobertos por esse middleware nao precisam validar CSRF manualmente.
+*   Se uma nova rota mutante for registrada em `app/routes/web.php`, ela ja passa a exigir token automaticamente.
 
 ## Como Começar (Inferido)
 

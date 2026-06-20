@@ -2,6 +2,7 @@
  - Slots pre-preenchidos sao processados por `BaseComponent::parsePrefilledSlots()`, que normaliza o HTML em memoria para slots simples e armazena os defaults em `$prefilledSlots`.
  - `ComponentData` preserva a precedencia processando `prefilledSlots` antes de inserts do blueprint e inserts de runtime.
  - Declaracoes de slots pre-preenchidos usam o mesmo `componentName` aceito pelas factories, sem shorthand de caminho.
+ - Ao declarar slot pre-preenchido, nao redeclarar o mesmo slot em seguida no HTML; a declaracao ja e normalizada internamente para `{{ slot }}`.
  - Slots pre-preenchidos em bloco sao processados antes dos slots simples; o bloco inteiro e normalizado no HTML do pai para `{{ slot }}`.
  - O conteudo interno de um bloco pre-preenchido e convertido em inserts do componente declarado no slot externo.
  - Dentro de blocos pre-preenchidos, todo conteudo deve declarar um slot de destino; conteudo sem slot e invalido.

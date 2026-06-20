@@ -8,19 +8,23 @@ proximo recorte esperado.
 
 ### 1. Core hardening
 
-Status: `accepted`
+Status: `done`
 Prioridade: `alta`
 Spec: `QMD-SDD-0001-core-hardening.md`
 
 Objetivo: endurecer os pontos de maior risco do core sem reescrever o
 framework.
 
-Recortes previstos:
+Conclusao: compatibilidade PHP 8.4, status HTTP seguro, logging explicito em
+producao e validacao de permissao do Tracy foram concluídos neste recorte.
+
+Recortes executados:
 
 - corrigir compatibilidade PHP 8.4 nos construtores de componentes;
 - padronizar mapeamento de excecao para HTTP status;
 - garantir logging explicito de excecoes capturadas em producao;
-- preservar o comportamento atual das paginas existentes.
+- preservar o comportamento atual das paginas existentes;
+- validar `app/writable/tracy` em container, host e CLI.
 
 Recortes adiados para specs futuras:
 
@@ -31,20 +35,24 @@ Recortes adiados para specs futuras:
 
 ### 2. Middleware de CSRF para rotas web
 
-Status: `accepted`
+Status: `done`
 Prioridade: `alta`
 Spec: `QMD-SDD-0006-csrf-middleware-web.md`
 
 Objetivo: centralizar a validacao de CSRF em middleware para rotas `web`
 mutantes, removendo a responsabilidade dos controllers nos fluxos cobertos.
 
-Recortes previstos:
+Conclusao: middleware dedicado foi aplicado ao registro de rotas `web`, com
+validacao por body `csrf-token` e fallback por header `X-CSRF-Token`.
+
+Recortes executados:
 
 - criar `Middleware\CsrfMiddleware`;
 - aplicar o middleware globalmente ao escopo `web`;
 - validar `POST`, `PUT`, `PATCH` e `DELETE` com base no campo `csrf-token`;
 - responder `403` em caso de token ausente ou invalido;
-- preservar `api`, `dev` e `test` fora do escopo neste primeiro recorte.
+- preservar `api`, `dev` e `test` fora do escopo neste primeiro recorte;
+- aceitar `X-CSRF-Token` como fallback ja na primeira entrega.
 
 ### 3. Change Runtime Endpoint
 

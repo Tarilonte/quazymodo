@@ -67,7 +67,7 @@ em `quazymodo/CliApplication.php` e documentacao operacional em `docs/cli.md`.
 
 ### Core hardening
 
-Status: `accepted`
+Status: `done`
 
 Spec ativa: `QMD-SDD-0001-core-hardening.md`.
 
@@ -81,6 +81,9 @@ Andamento:
   explicitamente via Tracy antes da pagina amigavel, com fallback seguro se o
   logging falhar. O logger padrao do Tracy em arquivo foi mantido; SQLite foi
   descartado para esta entrega.
+- Recorte 4 concluido: renderizacao existente permaneceu estavel em container,
+  host e CLI, com ajuste de permissao para `app/writable/tracy` e segregacao de
+  logs de CLI em `app/writable/tracy/cli`.
 
 Escopo aceito:
 
@@ -108,18 +111,24 @@ Validacao executada em 2026-06-18:
 - simulacao de `handleException()` em production confirmou pagina amigavel
   `500` para excecao comum.
 
-Pendencia residual:
+Validacao complementar executada em 2026-06-20:
 
-- a escrita do Tracy em `app/writable/tracy` nao foi confirmada no contexto
-  local de CLI por falha de permissao; o fallback seguro da resposta amigavel
-  seguiu funcionando.
+- `podman-compose -f Container/Nginx/docker-compose.yml up -d --build`
+  reconstruiu o ambiente com bootstrap de permissao do Tracy.
+- `curl -k -L https://localhost:8443/` respondeu `200`.
+- `curl -k -L https://localhost:8443/core-hardening-missing-route` respondeu
+  `404`.
+- escrita do usuario `nginx` em `app/writable/tracy` foi confirmada no
+  container.
+- escrita do Tracy foi confirmada em host CLI e CLI do container por meio de
+  `app/writable/tracy/cli`.
 
-Proximo passo: validar e ajustar permissoes de `app/writable/tracy` no ambiente
-alvo antes de promover a spec para `done`.
+Conclusao: spec promovida para `done` apos validacao de permissao e smoke tests
+de runtime.
 
 ### Middleware de CSRF para rotas web
 
-Status: `accepted`
+Status: `done`
 
 Spec ativa: `QMD-SDD-0006-csrf-middleware-web.md`.
 
@@ -128,14 +137,23 @@ Decisoes consolidadas:
 - o recorte inicial cobre apenas o escopo `web`;
 - a aplicacao sera global nas rotas `web`, nao opt-in por rota;
 - os metodos protegidos serao `POST`, `PUT`, `PATCH` e `DELETE`;
-- o middleware lera o token apenas do campo `csrf-token` no corpo da
-  requisicao;
+- o middleware lera primeiro o campo `csrf-token` no corpo da requisicao, com
+  fallback para o header `X-CSRF-Token`;
 - token ausente ou invalido respondera com `403`;
 - `api`, `dev`, `test`, helper de formulario e header alternativo ficam fora do
-  escopo inicial.
+  escopo inicial, exceto `X-CSRF-Token` ja aceito neste primeiro recorte.
 
-Proximo passo: implementar `Middleware\CsrfMiddleware` e aplicar a validacao ao
-bootstrap do escopo `web`.
+Validacao executada em 2026-06-20:
+
+- `Middleware\CsrfMiddleware` foi criado em `app/middleware/CsrfMiddleware.php`;
+- o registro de `web` passou a aplicar o middleware a todas as rotas do arquivo
+  `app/routes/web.php`;
+- harness PSR-7 confirmou bypass para `GET`, sucesso com token valido por body
+  e header, e falha `403` para token ausente ou invalido;
+- `api`, `dev` e `test` nao foram alterados no bootstrap de rotas.
+
+Conclusao: spec promovida para `done` com suporte inicial a body e header
+`X-CSRF-Token` no escopo `web`.
 
 ### Codex Code Review no GitHub
 

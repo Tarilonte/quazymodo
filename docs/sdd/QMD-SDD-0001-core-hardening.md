@@ -1,6 +1,6 @@
 # QMD-SDD-0001 — Core Hardening
 
-Status: `accepted`
+Status: `done`
 Prioridade: `alta`
 Area: `core|http|observabilidade`
 
@@ -115,8 +115,8 @@ componentes, rotas e paginas existentes.
 - [x] Excecoes capturadas em producao sao logadas antes da pagina amigavel ser
   renderizada.
 - [x] Falha de logging nao quebra a resposta final ao usuario.
-- [ ] Paginas existentes continuam renderizando sem mudanca de contrato publico.
-- [ ] A spec registra explicitamente que escape, contratos de componente e CSRF
+- [x] Paginas existentes continuam renderizando sem mudanca de contrato publico.
+- [x] A spec registra explicitamente que escape, contratos de componente e CSRF
   foram adiados para specs futuras.
 
 ## Plano de migracao
@@ -176,10 +176,27 @@ Validacao manual executada em 2026-06-18:
   local de CLI por falha de permissao; o fallback seguro da resposta amigavel
   permaneceu funcionando.
 
+Validacao complementar executada em 2026-06-20:
+
+- `podman-compose -f Container/Nginx/docker-compose.yml up -d --build`
+  reconstruiu o ambiente com bootstrap de permissao para `app/writable/tracy`.
+- `curl -k -L https://localhost:8443/` respondeu `200` no ambiente
+  containerizado.
+- `curl -k -L https://localhost:8443/core-hardening-missing-route` respondeu
+  `404` no ambiente containerizado.
+- `podman exec --user nginx Quazymodo php84 -r 'file_put_contents(...)'`
+  confirmou escrita do usuario web em `app/writable/tracy`.
+- `php -r '... Tracy\\Debugger::log(...) ...'` confirmou escrita do Tracy em
+  host CLI usando subdiretorio `app/writable/tracy/cli`.
+- `podman exec --user nginx Quazymodo php84 -r '... Tracy\\Debugger::log(...) ...'`
+  confirmou escrita do Tracy no contexto de CLI do container usando o mesmo
+  subdiretorio `app/writable/tracy/cli`.
+
 ## Riscos
 
 - Risco: logging em producao falhar por permissao de escrita.
-- Mitigacao: validar `app/writable/` e fallback seguro sem quebrar resposta.
+- Mitigacao: validar `app/writable/`, separar logs de CLI em
+  `app/writable/tracy/cli` e manter fallback seguro sem quebrar resposta.
 
 - Risco: mapeamento de status HTTP alterar comportamento de excecoes existentes.
 - Mitigacao: preservar `404` e `405` do router e transformar apenas status
@@ -190,6 +207,8 @@ Validacao manual executada em 2026-06-18:
 - O core deve evoluir por endurecimento incremental, nao por reescrita.
 - Esta primeira entrega da spec foca em runtime: PHP 8.4, status HTTP e logging.
 - O logging desta entrega usa o logger padrao do Tracy em arquivo, sem SQLite.
+- O Tracy usa `app/writable/tracy` para web e `app/writable/tracy/cli` para
+  execucoes de CLI, evitando colisao de ownership entre runtimes locais.
 - Escape, contratos de componente e CSRF ficam adiados para specs futuras.
 - Templates continuam passivos; loops e regras de composicao permanecem em PHP.
 

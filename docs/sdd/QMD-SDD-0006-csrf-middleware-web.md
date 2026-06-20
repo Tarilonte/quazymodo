@@ -1,6 +1,6 @@
 # QMD-SDD-0006 — CSRF Middleware para Rotas Web
 
-Status: `accepted`
+Status: `done`
 Prioridade: `alta`
 Area: `seguranca|http|core`
 
@@ -44,13 +44,12 @@ Observacao brownfield:
 ## Objetivo
 
 Criar um middleware de CSRF aplicado globalmente ao escopo `web`, responsavel
-por validar o campo `csrf-token` em requisicoes `POST`, `PUT`, `PATCH` e
-`DELETE` antes de o controller ser executado.
+por validar o campo `csrf-token` ou o header `X-CSRF-Token` em requisicoes
+`POST`, `PUT`, `PATCH` e `DELETE` antes de o controller ser executado.
 
 ## Fora de escopo
 
 - criar helper global de formulario nesta spec;
-- aceitar token por header neste primeiro recorte;
 - aplicar protecao de CSRF a `api`, `dev` ou `test`;
 - desenhar fluxo dedicado para HTMX ou AJAX;
 - criar resposta HTML customizada de falha;
@@ -67,7 +66,8 @@ Regras do recorte:
 1. o middleware roda apenas no escopo `web`;
 2. o middleware ignora `GET`, `HEAD` e demais metodos nao mutantes;
 3. o middleware valida `POST`, `PUT`, `PATCH` e `DELETE`;
-4. o token deve ser lido de `parsed body` no campo `csrf-token`;
+4. o token deve ser lido de `parsed body` no campo `csrf-token` e pode usar o
+   header `X-CSRF-Token` como fallback;
 5. token ausente ou invalido interrompe a requisicao com `403`;
 6. token valido permite a continuacao normal da pipeline.
 
@@ -76,14 +76,15 @@ Regras do recorte:
 ### Middleware
 
 - nome alvo: `Middleware\CsrfMiddleware`
-- ponto de aplicacao: bootstrap de rotas do escopo `web`
+- ponto de aplicacao: registro/bootstrap de rotas do escopo `web`
 - entrada: `ServerRequestInterface`
 - dependencia funcional: `Quazymodo\Csrf::verifyToken()`
 
 ### Regras de validacao
 
 - `POST`, `PUT`, `PATCH` e `DELETE` no escopo `web` exigem `csrf-token`;
-- o valor do token deve vir do corpo parseado da requisicao;
+- o valor do token deve vir do corpo parseado da requisicao ou do header
+  `X-CSRF-Token`;
 - ausencia do campo deve ser tratada como falha de validacao;
 - token invalido deve ser tratado como falha de validacao.
 
@@ -94,16 +95,16 @@ Regras do recorte:
 
 ## Criterios de aceite
 
-- [ ] existe um middleware dedicado para validacao de CSRF no projeto;
-- [ ] o middleware e aplicado globalmente ao escopo `web`;
-- [ ] requisicoes `GET` do escopo `web` nao sao bloqueadas por CSRF;
-- [ ] requisicoes `POST`, `PUT`, `PATCH` e `DELETE` do escopo `web` exigem o
-  campo `csrf-token`;
-- [ ] token valido permite a execucao normal do controller;
-- [ ] token ausente retorna `403`;
-- [ ] token invalido retorna `403`;
-- [ ] `api`, `dev` e `test` permanecem fora do escopo deste recorte;
-- [ ] controllers nao precisam validar CSRF manualmente nos fluxos cobertos por
+- [x] existe um middleware dedicado para validacao de CSRF no projeto;
+- [x] o middleware e aplicado globalmente ao escopo `web`;
+- [x] requisicoes `GET` do escopo `web` nao sao bloqueadas por CSRF;
+- [x] requisicoes `POST`, `PUT`, `PATCH` e `DELETE` do escopo `web` exigem o
+  campo `csrf-token` ou o header `X-CSRF-Token`;
+- [x] token valido permite a execucao normal do controller;
+- [x] token ausente retorna `403`;
+- [x] token invalido retorna `403`;
+- [x] `api`, `dev` e `test` permanecem fora do escopo deste recorte;
+- [x] controllers nao precisam validar CSRF manualmente nos fluxos cobertos por
   este middleware.
 
 ## Plano de migracao
@@ -134,12 +135,23 @@ Smoke tests manuais:
 - repetir com token invalido e confirmar `403`;
 - confirmar que rotas `dev` e `api` nao passam a exigir CSRF por efeito lateral.
 
+Validacao executada em 2026-06-20:
+
+- `php -l app/middleware/CsrfMiddleware.php` passou;
+- `php -l app/routes/web.php` passou;
+- harness PSR-7 executado a partir de `public/` confirmou `GET` livre de CSRF;
+- harness PSR-7 confirmou `POST` com `csrf-token` valido retornando fluxo normal;
+- harness PSR-7 confirmou `POST` com `X-CSRF-Token` valido retornando fluxo
+  normal;
+- harness PSR-7 confirmou `POST` sem token retornando `403`;
+- harness PSR-7 confirmou `POST` com token invalido retornando `403`.
+
 ## Riscos
 
 - Risco: aplicar CSRF globalmente no `web` bloquear futuras rotas mutantes sem
   formulario preparado.
-- Mitigacao: documentar o contrato do campo `csrf-token` e manter falha
-  previsivel com `403`.
+- Mitigacao: documentar o contrato do campo `csrf-token` e do header
+  `X-CSRF-Token`, mantendo falha previsivel com `403`.
 
 - Risco: divergencia entre a spec `0005` e o codigo atual gerar interpretacao
   errada sobre cobertura de testes visuais de CSRF.
@@ -151,10 +163,10 @@ Smoke tests manuais:
 - O primeiro recorte sera limitado ao escopo `web`.
 - A aplicacao sera global no conjunto `web`, nao opt-in por rota.
 - Os metodos protegidos neste recorte serao `POST`, `PUT`, `PATCH` e `DELETE`.
-- A leitura do token sera apenas pelo campo `csrf-token` do corpo da requisicao.
+- A leitura do token priorizara o campo `csrf-token` do corpo da requisicao,
+  com fallback para o header `X-CSRF-Token`.
 - A falha de validacao respondera com `403`.
-- `api`, `dev`, `test`, HTMX por header e helper de formulario ficam para specs
-  futuras.
+- `api`, `dev`, `test` e helper de formulario ficam para specs futuras.
 
 ## Notas de implementacao
 
