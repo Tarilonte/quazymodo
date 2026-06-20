@@ -1,8 +1,9 @@
-<button
+<div
   class="
-    btn btn-xs
+    badge badge-soft
     relative
-    {{ aes-button-class }}
+    cursor-pointer
+    {{ aes-badge-class }}
   "
   hx-get="/changeRuntime"
   hx-swap="none"
@@ -10,7 +11,7 @@
 >
   {{ app-enviromnent }}
   <span 
-    class="htmx-indicator absolute top-0.5 bg-inherit w-[90%] h-[90%]">
+    class="htmx-indicator absolute top-0.5 bg-inherit w-[90%] h-[90%] text-center">
     <span class="loading loading-infinity loading-xs"></span>
   </span>
-</button>
+</div>

@@ -9,6 +9,6 @@ return [
   ],
   'inserts' => [
     'app-enviromnent' => APP_ENV,
-    'aes-button-class' => APP_ENV === 'production' ? 'btn-error' : 'btn-info',
+    'aes-badge-class' => APP_ENV === 'production' ? 'badge-error' : 'badge-info',
   ]
 ];
