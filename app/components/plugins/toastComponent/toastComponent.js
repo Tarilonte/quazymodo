@@ -92,8 +92,10 @@ class ToastComponent {
     // Clona o template
     const previousPositions = this.captureToastPositions();
     const $toast = this.template.clone();
+    const $toastPanel = $toast.find('.toast_panel');
     const normalizedType = this.normalizeToastType(toastType);
     const totalDuration = Math.max(1, Number(duration) || 5000);
+    const entryAnimationClasses = 'animate__animated animate__slideInUp';
 
     // Estiliza o toast
 
@@ -101,9 +103,12 @@ class ToastComponent {
       .removeClass('hidden')
       .addClass('block')
 
+    // Anima apenas o painel interno para nao conflitar com o transform do toast.
+    $toastPanel.addClass(entryAnimationClasses);
+
     if (normalizedType) {
       // Adiciona a classe de toastType
-      $toast.addClass('alert-' + normalizedType);
+      $toastPanel.addClass('alert-' + normalizedType);
     }
 
     // Aplica o icone no lado esquerdo, alinhado ao centro.
@@ -117,6 +122,12 @@ class ToastComponent {
     
     // Adiciona ao container
     this.container.append($toast);
+
+    // Limpa as classes de entrada para evitar interferencia com estados futuros.
+    $toastPanel.on('animationend webkitAnimationEnd oAnimationEnd', function() {
+      $(this).removeClass(entryAnimationClasses);
+    });
+
     this.animateToastStackShift({ previousPositions });
 
     // Controle de vida do toast (pausa no hover e retomada precisa).
@@ -263,10 +274,14 @@ class ToastComponent {
   }
 
   static removeToast(toast) {
-    toast
+    const $toastPanel = toast.find('.toast_panel');
+
+    // Reaproveita o Animate.css so no painel interno para preservar o FLIP do wrapper.
+    $toastPanel
+        .removeClass('animate__slideInUp animate__backOutRight')
         .addClass("animate__animated animate__backOutRight")
         .on("animationend webkitAnimationEnd oAnimationEnd", function() {
-          $(this).remove();
+          toast.remove();
         });
   }
 }

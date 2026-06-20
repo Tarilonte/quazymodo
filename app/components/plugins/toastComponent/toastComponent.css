@@ -6,7 +6,12 @@
   --toast-shift-y: 0px;
   transform-origin: bottom right;
   transform: translateY(var(--toast-shift-y)) scale(var(--toast-scale));
-  transition: transform 180ms ease;
+  transition: transform 360ms ease-out;
+  will-change: transform;
+}
+
+/* Keep the animated surface isolated from the wrapper transform rules. */
+.toast_panel {
   will-change: transform;
 }
 
@@ -51,28 +56,28 @@ progress::-webkit-progress-value {
  * applies them at runtime instead of through static template classes.
  */
 
- .toast_message.alert {
+.toast_panel.alert {
   border: none;
   border-width: 0;  
  }
 
 
-.toast_message.alert-info {
+.toast_panel.alert-info {
   --alert-color: var(--color-info);
   color: var(--color-info-content);
 }
 
-.toast_message.alert-success {
+.toast_panel.alert-success {
   --alert-color: var(--color-success);
   color: var(--color-success-content);
 }
 
-.toast_message.alert-warning {
+.toast_panel.alert-warning {
   --alert-color: var(--color-warning);
   color: var(--color-warning-content);
 }
 
-.toast_message.alert-error {
+.toast_panel.alert-error {
   --alert-color: var(--color-error);
   color: var(--color-error-content);
 }

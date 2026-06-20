@@ -2,15 +2,17 @@
   id="toasts_container"
   class="toast z-10"
 >
-  <div class="toast_message rounded-none p-8 hidden flex alert min-w-[300px] relative items-center gap-3">
-    <span class="toast_icon mdi text-4xl leading-none shrink-0"></span>
-    <div class="toast_actions absolute top-2 right-2 flex items-center gap-2">
-      <span class="toast_action toast_action_hint mdi mdi-pause" aria-hidden="true"></span>
-      <button type="button" class="toast_action btn-close-toast mdi mdi-close" aria-label="Fechar toast"></button>
-    </div>
-    <div class="toast_text block font-bold"></div>
-    <div class="absolute bottom-0 left-0 w-full">
-      <progress class="progress text-current block h-[6px] w-full opacity-30" value="100" max="100"></progress>
+  <div class="toast_message hidden min-w-[300px]">
+    <div class="toast_panel rounded-none p-8 flex alert relative items-center gap-3">
+      <span class="toast_icon mdi text-4xl leading-none shrink-0"></span>
+      <div class="toast_actions absolute top-2 right-2 flex items-center gap-2">
+        <span class="toast_action toast_action_hint mdi mdi-pause" aria-hidden="true"></span>
+        <button type="button" class="toast_action btn-close-toast mdi mdi-close" aria-label="Fechar toast"></button>
+      </div>
+      <div class="toast_text block font-bold"></div>
+      <div class="absolute bottom-0 left-0 w-full">
+        <progress class="progress text-current block h-[6px] w-full opacity-30" value="100" max="100"></progress>
+      </div>
     </div>
   </div>
 </div>
