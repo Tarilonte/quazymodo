@@ -192,7 +192,7 @@ motor de componentes, sem regressao observada na renderizacao principal.
 
 ### Codex Code Review no GitHub
 
-Status: `accepted`
+Status: `rejected`
 
 Spec ativa: `QMD-SDD-0007-codex-code-review-github.md`.
 
@@ -206,8 +206,20 @@ Decisoes consolidadas:
 - `AGENTS.md` sera a referencia principal de orientacao para o review;
 - a decisao final de merge continua humana.
 
-Proximo passo: revisar `AGENTS.md`, habilitar o review no Codex e validar o
-fluxo em um PR de teste.
+Conclusao: spec rejeitada. O repositorio nao seguira com a integracao de
+`Codex code review` no GitHub neste momento.
+
+### Spec pendente
+
+Status: `pending`
+
+Observacao: recorte de releases v0.x ainda sem spec formal.
+
+Decisoes consolidadas:
+
+- `ROADMAP.md` segue como indice operacional e `STATE.md` como registro ativo;
+- escopo, milestones e criterio de prontidao ficam para spec futura;
+- backlog de releases permanece sem detalhamento ate nova definicao.
 
 ### Change Runtime Endpoint
 

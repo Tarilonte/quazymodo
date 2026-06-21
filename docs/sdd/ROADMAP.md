@@ -92,28 +92,31 @@ Recortes previstos:
 Conclusao: nomes de componente passaram a ser validados e normalizados no core,
 com bloqueio de traversal e escape de `component-name` no HTML gerado.
 
-### 5. Roadmap de releases v0.x
+### 5. Spec pendente
 
-Status: `pending-spec`
-Prioridade: `baixa`
-Spec: `a criar se a decisao exigir detalhamento`
+Status: `draft`
+Prioridade: `media`
+Spec: `a definir`
 
-Objetivo: organizar milestones curtos e criterio de prontidao por release.
+Objetivo: reservar espaco para proximo recorte ainda nao fechado.
 
 Recortes previstos:
 
-- estabelecer milestones curtos para v0.x;
-- organizar backlog por impacto tecnico;
-- publicar criterio de prontidao por release.
+- definir escopo do proximo recorte;
+- registrar spec formal quando houver consenso;
+- alinhar prioridade com `STATE.md`.
 
 ### 6. Codex Code Review no GitHub
 
-Status: `accepted`
+Status: `rejected`
 Prioridade: `media`
 Spec: `QMD-SDD-0007-codex-code-review-github.md`
 
 Objetivo: adicionar uma camada de revisao automatica de PR via Codex no GitHub,
 sem substituir revisao humana e sem alterar o core da aplicacao.
+
+Conclusao: recorte rejeitado. O repositorio nao seguira com essa integracao no
+estado atual.
 
 Recortes previstos:
 

@@ -1,6 +1,6 @@
 # QMD-SDD-0007 — Codex Code Review no GitHub
 
-Status: `accepted`
+Status: `rejected`
 Prioridade: `media`
 Area: `docs`
 
@@ -149,3 +149,9 @@ Passos minimos:
   documentais minimos.
 - Se a ativacao exigir convencoes novas de revisao, atualizar `AGENTS.md` em
   recorte controlado.
+
+## Motivo da rejeicao
+
+- A integracao com `Codex code review` no GitHub foi descartada para o
+  repositorio neste momento.
+- O fluxo de revisao continua sem dependencia dessa automacao externa.
